@@ -277,7 +277,7 @@ const Header = () => {
   return (
       <div className="w-full bg-white md:bg-gradient-to-r md:from-blue-900 md:to-slate-900 relative z-50">
         {/* Mobile View */}
-        <div className="md:hidden w-full bg-gradient-to-r from-blue-900 to-slate-900 shadow">
+        <div className="lg:hidden w-full bg-gradient-to-r from-blue-900 to-slate-900 shadow">
           <div className="w-full px-4 py-3 flex items-center justify-between">
             <img src={CCETLogo} alt="CCET Logo" className="h-10 w-auto" />
             <div className="flex-1 text-center px-2">
@@ -301,6 +301,8 @@ const Header = () => {
             </button>
           </div>
         </div>
+
+
 
         {/* Desktop View */}
         <div className="hidden lg:flex flex-col items-center px-2 py-3 w-full max-w-[1436px] mx-auto">
