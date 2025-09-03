@@ -6,7 +6,9 @@ const AboutUsMenu = () => {
     {
       title: "About",
       links: [
-        "History",
+        <Link to="/about/history" className="block w-full" key="history">
+          History
+        </Link>,
         <Link to="/vision-mission" className="block w-full" key="vision-mission">
           Vision and Mission
         </Link>,
@@ -39,7 +41,9 @@ const AboutUsMenu = () => {
         "Class Rooms",
         "Canteen",
         "Infrastructure",
-        "Policy on use of IT Resources",
+        <Link to="https://ccet.ac.in/pdf/notices/general/Policy_on_use_of_IT%20_esources_of_Government_of_India_0%20(1).pdf" className="block w-full">
+          Policy on use of IT Resources
+        </Link>,
         <Link to="/sports-facility" className="block w-full">
           Sports Facility
         </Link>,
@@ -47,27 +51,22 @@ const AboutUsMenu = () => {
     },
   ];
 
-  return (
-    <div className="absolute top-full -left-20 transform overflow-x-auto -translate-x-[9%] hidden group-hover:grid grid-cols-3 bg-white/70 backdrop-blur-md shadow-xl z-50 p-6 gap-8 text-1xl text-gray-800 rounded-lg border border-gray-100 w-[1000px] max-w-[90vw] right-0 mx-auto">
-      {sections.map((section, i) => (
-        <div key={i}>
-          <div className="font-semibold border-b border-gray-200 pb-2 mb-3 text-red-700">
-            {section.title}
-          </div>
-          <ul className="space-y-2">
-            {section.links.map((link, j) => (
-              <li
-                key={j}
-                className="hover:bg-[#FB923C] hover:text-white cursor-pointer transition-colors duration-200 px-2 py-1 rounded"
-              >
-                {link}
-              </li>
+    return (
+        <div className="absolute top-full -left-20 transform overflow-x-auto -translate-x-[9%] hidden group-hover:grid grid-cols-3 bg-white/80 shadow-xl z-50 p-6 gap-8 text-1xl text-gray-800 rounded-lg border border-gray-100 w-[1000px] max-w-[90vw] right-0 mx-auto">
+            {sections.map((section, i) => (
+                <div key={i}>
+                    <div className="font-semibold border-b border-gray-200 pb-2 mb-3 text-red-700">{section.title}</div>
+                    <ul className="space-y-2">
+                        {section.links.map((link, j) => (
+                            <li key={j} className="hover:bg-[#FB923C] hover:text-white cursor-pointer transition-colors duration-200 px-2 py-1 rounded">
+                                {link}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             ))}
-          </ul>
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default AboutUsMenu;
