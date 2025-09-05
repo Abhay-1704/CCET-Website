@@ -4,11 +4,11 @@ import CCETLogo from '../../assets/header/CCET-Logo.png';
 import IndianEmblem from '../../assets/header/Indian-Emblem.png';
 
 // For Desktops
-import AboutUsMenu from "./AboutUsMenu";
-import AcademicsMenu from "./AcademicsMenu";
-import StudentsSectionMenu from "./StudentsSectionMenu";
-import NoticesMenu from "./NoticesMenu";
-import AdmissionsMenu from "./AdmissionsMenu";
+import AboutUsMenu from './AboutUsMenu';
+import AcademicsMenu from './AcademicsMenu';
+import StudentsSectionMenu from './StudentsSectionMenu';
+import NoticesMenu from './NoticesMenu';
+import AdmissionsMenu from './AdmissionsMenu';
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -79,11 +79,11 @@ const Header = () => {
 				{
 					title: 'Academic Departments',
 					links: [
-						{ name: 'Computer Science Engineering', path: '/academics/cse' },
-						{ name: 'Mechanical Engineering', path: '/academics/me' },
+						{ name: 'Computer Science Engineering', path: '/academics/cse/overview' },
+						{ name: 'Mechanical Engineering', path: '/academics/mechanical/overview' },
 						{ name: 'Electronics And Communication Engineering', path: '/academics/ece' },
-						{ name: 'Civil Engineering', path: '/academics/civil' },
-						{ name: 'Applied Science', path: '/academics/applied-science' }
+						{ name: 'Civil Engineering', path: '/academics/civil/overview' },
+						{ name: 'Applied Science', path: '/academics/appliedscience/overview' }
 					],
 				},
 				{
@@ -226,7 +226,7 @@ const Header = () => {
 					],
 				},
 				{
-					title: "E-News Letters (pdf's)",
+					title: 'E-News Letters (pdf\'s)',
 					links: [
 						{ name: 'FingerPrint (Volume-VII, Issue I)', path: '/notices/fingerprint-vol7-i' },
 						{ name: 'FingerPrint (Volume-VII, Issue II)', path: '/notices/fingerprint-vol7-ii' }
@@ -261,12 +261,15 @@ const Header = () => {
 		setExpandedMenu(null);
 	};
 
+	// Handle main menu item clicks
 	const handleMainMenuClick = (menuItem) => {
 		if (menuItem.path) {
+			// Direct navigation for items with paths
 			navigate(menuItem.path);
 			setActiveNav(menuItem.label);
 			setMenuOpen(false);
 		} else if (menuItem.sections) {
+			// Toggle submenu for items with sections
 			toggleSubmenu(menuItem.label);
 		}
 	};
@@ -299,7 +302,8 @@ const Header = () => {
 				</div>
 			</div>
 
-			{/* Desktop */}
+
+
 			<div className="hidden lg:flex flex-col items-center px-2 py-3 w-full max-w-[1436px] mx-auto">
 				<div className="flex w-full items-center justify-center gap-2">
 					<div className="flex items-center h-full mx-14 min-w-[96px]">
@@ -411,17 +415,10 @@ const Header = () => {
 									</div>
 								)}
 							</div>
-						))}				
-								{/* Insert ThemeToggle here */}
-							<div className="px-py-" >
-								<ToggleTheme />
-								</div>
-
+						))}
 					</div>
 				</div>
 			)}
-			
-
 		</div>
 	);
 };
