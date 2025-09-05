@@ -5,13 +5,14 @@ import Footer from "./components/footer/Footer.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./index.css";
+
 import NoPage from "./pages/Nopage/NoPage.jsx";
 import FAQ from "./pages/FAQ/faq";
 import VisionMission from "./pages/vision-mission/vision-mission.jsx";
 import Infrastructure from "./pages/infrastructure/infrastructure.jsx";
 import Convocation from "./pages/Convocation/Convocation.jsx";
 import AntiRagging from "./pages/Students-Section/Student-Welfare/Anti-Ragging/AntiRagging.jsx";
-import AntiRaggingCommittee from "./pages/Students-Section/Student-Welfare/Anti-Ragging-Committee/AntiRaggingCommittee";
+import AntiRaggingCommittee from "./pages/Students-Section/Student-Welfare/Anti-Ragging-Committee/AntiRaggingCommittee.jsx";
 import Academicheads from "./pages/AcadmicHeads/Academicheads.jsx";
 import Courses from "./pages/Courses/Courses.jsx";
 import Principal from "./pages/Principal/Principal.jsx";
@@ -30,317 +31,72 @@ import Tenders from "./pages/Tenders/Tenders.jsx";
 import History from "./pages/History/History.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
+
+// ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
 import ECE_Faculty from "./pages/ECE-Department/ece-faculty.jsx";
 import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 
 function App() {
-  return (
-    <HashRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Header />
-              <Home />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/faq"
-          element={
-            <>
-              <Header />
-              <FAQ />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/anti-ragging"
-          element={
-            <>
-              <Header />
-              <AntiRagging />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/anti-ragging-committee"
-          element={
-            <>
-              <Header />
-              <AntiRaggingCommittee />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/about/academic-heads"
-          element={
-            <>
-              <Header />
-              <Academicheads />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/courses"
-          element={
-            <>
-              <Header />
-              <Courses />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/news"
-          element={
-            <NewsDetails />
-          }
-        />
-
-        <Route
-          path="/about/principal"
-          element={
-            <>
-              <Header />
-              <Principal />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/infrastructure"
-          element={
-            <>
-              <Header />
-              <Infrastructure />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/vision-mission"
-          element={
-            <>
-              <Header />
-              <VisionMission />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/convocation"
-          element={
-            <>
-              <Header />
-              <Convocation />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/prospectus"
-          element={
-            <>
-              <Header />
-              <AcademicProspectusPage />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/contact"
-          element={
-            <>
-              <Header />
-              <ContactUs />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/academics/nirf"
-          element={
-            <>
-              <Header />
-              <NIRF />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/helpdesk"
-          element={
-            <>
-              <Header />
-              <HelpDesk />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/ecell"
-          element={
-            <>
-              <Header />
-              <ECell />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/examinations"
-          element={
-            <>
-              <Header />
-              <Examinations />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/sports-facility"
-          element={
-            <>
-              <Header />
-              <SportsFacility />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/fit-india"
-          element={
-            <>
-              <Header />
-              <FitIndiaPage />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/programmes/pu-leet"
-          element={
-            <>
-              <Header />
-              <Leet />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/programmes/phd"
-          element={
-            <>
-              <Header />
-              <Doctorate />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/programmes/degree"
-          element={
-            <>
-              <Header />
-              <Degree />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/notices/tenders"
-          element={
-            <>
-              <Header />
-              <Tenders />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/about/history"
-          element={
-            <>
-              <Header />
-              <History />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/student-chapters-clubs"
-          element={<StudentChaptersandClubs />}
-        />
-
-        {/* Fallback */}
-        <Route
-          path="*"
-          element={
-            <>
-              <Header />
-              <NoPage />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route path="/ece" element={
-          <>
+    return (
+        <HashRouter>
             <Header />
-            <EceOverview />
-            <Footer />
-          </>
-        } />
+            <Routes>
+                {/* Home & Default */}
+                <Route path="/" element={<Home />} />
+                <Route path="*" element={<NoPage />} />
 
-        <Route path="/ece/ece-faculty" element={
-          <>
-            <Header />
-            <ECE_Faculty />
-            <Footer />
-          </>
-        } />
+                {/* Static Pages */}
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/vision-mission" element={<VisionMission />} />
+                <Route path="/infrastructure" element={<Infrastructure />} />
+                <Route path="/convocation" element={<Convocation />} />
+                <Route path="/contact" element={<ContactUs />} />
 
-        <Route path="/ece/ece-labs" element={
-          <>
-            <Header />
-            <EceLabs />
-            <Footer />
-          </>
-        } />
+                {/* Student Section */}
+                <Route path="/anti-ragging" element={<AntiRagging />} />
+                <Route path="/anti-ragging-committee" element={<AntiRaggingCommittee />} />
+                <Route path="/student-chapters-clubs" element={<StudentChaptersandClubs />} />
 
-      </Routes>
-    </HashRouter>
-  );
+                {/* About Section */}
+                <Route path="/about/academic-heads" element={<Academicheads />} />
+                <Route path="/about/principal" element={<Principal />} />
+                <Route path="/about/history" element={<History />} />
+
+                {/* Programmes */}
+                <Route path="/programmes/pu-leet" element={<Leet />} />
+                <Route path="/programmes/phd" element={<Doctorate />} />
+                <Route path="/programmes/degree" element={<Degree />} />
+
+                {/* Academics */}
+                <Route path="/courses" element={<Courses />} />
+                <Route path="/prospectus" element={<AcademicProspectusPage />} />
+                <Route path="/academics/nirf" element={<NIRF />} />
+                <Route path="/examinations" element={<Examinations />} />
+
+                {/* Facilities */}
+                <Route path="/sports-facility" element={<SportsFacility />} />
+                <Route path="/fit-india" element={<FitIndiaPage />} />
+                <Route path="/infrastructure" element={<Infrastructure />} />
+
+                {/* Committees & Notices */}
+                <Route path="/notices/tenders" element={<Tenders />} />
+
+                {/* Others */}
+                <Route path="/helpdesk" element={<HelpDesk />} />
+                <Route path="/ecell" element={<ECell />} />
+
+                {/* News */}
+                <Route path="/news" element={<NewsDetails />} />
+
+                {/* ECE Department */}
+                <Route path="/ece" element={<EceOverview />} />
+                <Route path="/ece/ece-faculty" element={<ECE_Faculty />} />
+                <Route path="/ece/ece-labs" element={<EceLabs />} />
+            </Routes>
+            <Footer />
+        </HashRouter>
+    );
 }
 
 export default App;

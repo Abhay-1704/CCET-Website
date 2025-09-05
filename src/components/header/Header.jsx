@@ -4,15 +4,11 @@ import CCETLogo from '../../assets/header/CCET-Logo.png';
 import IndianEmblem from '../../assets/header/Indian-Emblem.png';
 
 // For Desktops
-
 import AboutUsMenu from "./AboutUsMenu";
 import AcademicsMenu from "./AcademicsMenu";
 import StudentsSectionMenu from "./StudentsSectionMenu";
 import NoticesMenu from "./NoticesMenu";
 import AdmissionsMenu from "./AdmissionsMenu";
-import ToggleTheme from "../ToggleTheme";
-
-
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -230,7 +226,7 @@ const Header = () => {
 					],
 				},
 				{
-					title: 'E-News Letters (pdf\'s)',
+					title: "E-News Letters (pdf's)",
 					links: [
 						{ name: 'FingerPrint (Volume-VII, Issue I)', path: '/notices/fingerprint-vol7-i' },
 						{ name: 'FingerPrint (Volume-VII, Issue II)', path: '/notices/fingerprint-vol7-ii' }
@@ -265,15 +261,12 @@ const Header = () => {
 		setExpandedMenu(null);
 	};
 
-	// Handle main menu item clicks
 	const handleMainMenuClick = (menuItem) => {
 		if (menuItem.path) {
-			// Direct navigation for items with paths
 			navigate(menuItem.path);
 			setActiveNav(menuItem.label);
 			setMenuOpen(false);
 		} else if (menuItem.sections) {
-			// Toggle submenu for items with sections
 			toggleSubmenu(menuItem.label);
 		}
 	};
@@ -306,8 +299,7 @@ const Header = () => {
 				</div>
 			</div>
 
-
-
+			{/* Desktop */}
 			<div className="hidden lg:flex flex-col items-center px-2 py-3 w-full max-w-[1436px] mx-auto">
 				<div className="flex w-full items-center justify-center gap-2">
 					<div className="flex items-center h-full mx-14 min-w-[96px]">
@@ -353,15 +345,8 @@ const Header = () => {
 								</div>
 							)}
 						</div>
-						
-					)) }
-					
-					<div className="ml-2">
-                        <ToggleTheme />
-                    </div>
-					
+					))}
 				</nav>
-				
 			</div>
 
 			{/* Mobile Slide Drawer */}
@@ -383,10 +368,8 @@ const Header = () => {
 							</button>
 						</div>
 
-
 						{menuItems.map((menuItem) => (
 							<div key={menuItem.label} className="border-b border-gray-200">
-								
 								<div
 									className={`px-4 py-3 cursor-pointer transition-all duration-200 font-medium flex justify-between items-center
                     ${activeNav === menuItem.label ? 'bg-yellow-400 text-red-700' : 'text-gray-800 hover:bg-gray-100'}`}

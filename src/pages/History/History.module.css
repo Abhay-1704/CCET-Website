@@ -17,7 +17,7 @@ body::before {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    z-index: -2;
+    z-index: -0.5;
 }
 
 /* Black overlay for entire page */
