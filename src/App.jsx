@@ -29,6 +29,7 @@ import Doctorate from "./pages/Doctorate/PhdProgrammes.jsx";
 import Degree from "./pages/Degree/Degree.jsx";
 import Tenders from "./pages/Tenders/Tenders.jsx";
 import History from "./pages/History/History.jsx";
+import RecentUpdates from "./pages/RecentUpdates.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
 
@@ -97,6 +98,5 @@ function App() {
             <Footer />
         </HashRouter>
     );
-}
 
 export default App;
