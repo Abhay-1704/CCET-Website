@@ -9,6 +9,7 @@ import Gallery from './Gallery'
 import EventCalendar from './EventCalendar'
 import bannerImg from "../../assets/home/banner.png"
 import Achievements from './Achievements';
+import RecentUpdates from "../RecentUpdates.jsx";  
 
 function Home() {
   return (
@@ -26,17 +27,19 @@ function Home() {
         </style>
         <img className="home-banner" src={bannerImg} alt="Banner" />
       </div>
+
+      <RecentUpdates />
+
       <div className="flex flex-col md:flex-row gap-4 justify-center">
         <LatestEvents />
         <div className="flex justify-center items-center">
           <NewsPanel />
         </div>
       </div>
+
       <EventCalendar />
       <NoticePanel />
-      
       <Achievements />
-
       <Gallery />
       <NewAlumni />
       {/* <OurAlumni /> */}
@@ -46,4 +49,3 @@ function Home() {
 }
 
 export default Home;
-
