@@ -41,62 +41,63 @@ import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 function App() {
     return (
         <HashRouter>
-            <Header />
+            <Header/>
             <Routes>
                 {/* Home & Default */}
-                <Route path="/" element={<Home />} />
-                <Route path="*" element={<NoPage />} />
+                <Route path="/" element={<Home/>}/>
+                <Route path="*" element={<NoPage/>}/>
 
                 {/* Static Pages */}
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/vision-mission" element={<VisionMission />} />
-                <Route path="/infrastructure" element={<Infrastructure />} />
-                <Route path="/convocation" element={<Convocation />} />
-                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/faq" element={<FAQ/>}/>
+                <Route path="/vision-mission" element={<VisionMission/>}/>
+                <Route path="/infrastructure" element={<Infrastructure/>}/>
+                <Route path="/convocation" element={<Convocation/>}/>
+                <Route path="/contact" element={<ContactUs/>}/>
 
                 {/* Student Section */}
-                <Route path="/anti-ragging" element={<AntiRagging />} />
-                <Route path="/anti-ragging-committee" element={<AntiRaggingCommittee />} />
-                <Route path="/student-chapters-clubs" element={<StudentChaptersandClubs />} />
+                <Route path="/anti-ragging" element={<AntiRagging/>}/>
+                <Route path="/anti-ragging-committee" element={<AntiRaggingCommittee/>}/>
+                <Route path="/student-chapters-clubs" element={<StudentChaptersandClubs/>}/>
 
                 {/* About Section */}
-                <Route path="/about/academic-heads" element={<Academicheads />} />
-                <Route path="/about/principal" element={<Principal />} />
-                <Route path="/about/history" element={<History />} />
+                <Route path="/about/academic-heads" element={<Academicheads/>}/>
+                <Route path="/about/principal" element={<Principal/>}/>
+                <Route path="/about/history" element={<History/>}/>
 
                 {/* Programmes */}
-                <Route path="/programmes/pu-leet" element={<Leet />} />
-                <Route path="/programmes/phd" element={<Doctorate />} />
-                <Route path="/programmes/degree" element={<Degree />} />
+                <Route path="/programmes/pu-leet" element={<Leet/>}/>
+                <Route path="/programmes/phd" element={<Doctorate/>}/>
+                <Route path="/programmes/degree" element={<Degree/>}/>
 
                 {/* Academics */}
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/prospectus" element={<AcademicProspectusPage />} />
-                <Route path="/academics/nirf" element={<NIRF />} />
-                <Route path="/examinations" element={<Examinations />} />
+                <Route path="/courses" element={<Courses/>}/>
+                <Route path="/prospectus" element={<AcademicProspectusPage/>}/>
+                <Route path="/academics/nirf" element={<NIRF/>}/>
+                <Route path="/examinations" element={<Examinations/>}/>
 
                 {/* Facilities */}
-                <Route path="/sports-facility" element={<SportsFacility />} />
-                <Route path="/fit-india" element={<FitIndiaPage />} />
-                <Route path="/infrastructure" element={<Infrastructure />} />
+                <Route path="/sports-facility" element={<SportsFacility/>}/>
+                <Route path="/fit-india" element={<FitIndiaPage/>}/>
+                <Route path="/infrastructure" element={<Infrastructure/>}/>
 
                 {/* Committees & Notices */}
-                <Route path="/notices/tenders" element={<Tenders />} />
+                <Route path="/notices/tenders" element={<Tenders/>}/>
 
                 {/* Others */}
-                <Route path="/helpdesk" element={<HelpDesk />} />
-                <Route path="/ecell" element={<ECell />} />
+                <Route path="/helpdesk" element={<HelpDesk/>}/>
+                <Route path="/ecell" element={<ECell/>}/>
 
                 {/* News */}
-                <Route path="/news" element={<NewsDetails />} />
+                <Route path="/news" element={<NewsDetails/>}/>
 
                 {/* ECE Department */}
-                <Route path="/ece" element={<EceOverview />} />
-                <Route path="/ece/ece-faculty" element={<ECE_Faculty />} />
-                <Route path="/ece/ece-labs" element={<EceLabs />} />
+                <Route path="/ece" element={<EceOverview/>}/>
+                <Route path="/ece/ece-faculty" element={<ECE_Faculty/>}/>
+                <Route path="/ece/ece-labs" element={<EceLabs/>}/>
             </Routes>
-            <Footer />
+            <Footer/>
         </HashRouter>
     );
+}
 
 export default App;
