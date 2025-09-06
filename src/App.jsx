@@ -33,12 +33,22 @@ import RecentUpdates from "./pages/RecentUpdates.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
 
+
 // ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
 import ECE_Faculty from "./pages/ECE-Department/ece-faculty.jsx";
 import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
+
+//CSE Department
+import CseOverview from "./pages/CSE-Department/CseOverview.jsx";
+import CseFaculty from "./pages/CSE-Department/CseFaculty.jsx";
+import CseHod from "./pages/CSE-Department/CseHod";
+import CseLabs from "./pages/CSE-Department/CseLabs.jsx";
+import CseTimeTable from "./pages/CSE-Department/CseTimeTable.jsx";
+import CseSyllabus from "./pages/CSE-Department/CseSyllabus.jsx";
+import CseResearch from "./pages/CSE-Department/CseResearch.jsx";
 
 function App() {
     return (
@@ -96,6 +106,16 @@ function App() {
                 <Route path="/ece" element={<EceOverview/>}/>
                 <Route path="/ece/ece-faculty" element={<ECE_Faculty/>}/>
                 <Route path="/ece/ece-labs" element={<EceLabs/>}/>
+
+                {/* CSE Department */}
+                <Route path="/academics/cse/overview" element={<CseOverview />} />
+                <Route path="/academics/cse/csefaculty" element={<CseFaculty />}  />
+                <Route path="/academics/cse/hod" element={<CseHod />} />
+                <Route path="/academics/cse/cselabs" element={<CseLabs />}  />
+                <Route path="/academics/cse/csetimetable" element={<CseTimeTable />}  />
+                <Route path="/academics/cse/csesyllabus" element={<CseSyllabus />}  />
+                <Route path="/academics/cse/cseresearch" element={<CseResearch />}  />
+
             </Routes>
             <Footer/>
         </HashRouter>
