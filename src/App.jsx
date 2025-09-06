@@ -51,6 +51,7 @@ import ASResearch from "./pages/AS-Department/ASResearch.jsx";
 import ASSyllabus from "./pages/AS-Department/ASSyllabus.jsx";
 import ASTimeTable from "./pages/AS-Department/ASTimeTable.jsx";
 
+
 //Civil Department
 import CivilOverview from "./pages/Civil-Department/CivilOverview.jsx";
 import CivilHod from "./pages/Civil-Department/CivilHod.jsx";
@@ -59,6 +60,16 @@ import CivilLabs from "./pages/Civil-Department/CivilLabs.jsx";
 import CivilResearch from "./pages/Civil-Department/CivilResearch.jsx";
 import CivilSyllabus from "./pages/Civil-Department/CivilSyllabus.jsx";
 import CivilTimeTable from "./pages/Civil-Department/CivilTimeTable.jsx";
+
+//Mechanical Department
+import MechOverview from "./pages/Mech-Department/MechOverview.jsx";
+import MechFaculty from "./pages/Mech-Department/MechFaculty.jsx";
+import MechHod from "./pages/Mech-Department/MechHod.jsx";
+import MechLabs from "./pages/Mech-Department/MechLabs.jsx";
+import MechTimeTable from "./pages/Mech-Department/MechTimeTable.jsx";
+import MechSyllabus from "./pages/Mech-Department/MechSyllabus.jsx";
+import MechResearch from "./pages/Mech-Department/MechResearch.jsx";
+
 
 function App() {
     return (
@@ -128,6 +139,15 @@ function App() {
                 <Route path="/academics/civil/civilsyllabus" element={<CivilSyllabus />}  />
                 <Route path="/academics/civil/civiltimetable" element={<CivilTimeTable />}  />
 
+                {/* Mechanical Department */}
+                <Route path="/academics/mechanical/overview" element={<MechOverview />} />
+                <Route path="/academics/mechanical/mechfaculty" element={<MechFaculty />}  />
+                <Route path="/academics/mechanical/hod" element={<MechHod />} />
+                <Route path="/academics/mechanical/mechlabs" element={<MechLabs />}  />
+                <Route path="/academics/mechanical/mechtimetable" element={<MechTimeTable />}  />
+                <Route path="/academics/mechanical/mechsyllabus" element={<MechSyllabus />}  />
+                <Route path="/academics/mechanical/mechresearch" element={<MechResearch />}  />
+
                 {/* Applied Sciences Department */}
                 <Route path="/academics/appliedscience/overview" element={<ASOverview />} />
                 <Route path="/academics/appliedscience/asfaculty" element={<ASFaculty />}  />
@@ -136,6 +156,7 @@ function App() {
                 <Route path="/academics/appliedscience/asresearch" element={<ASResearch />}  />
                 <Route path="/academics/appliedscience/astimetable" element={<ASTimeTable />}  />
                 <Route path="/academics/appliedscience/assyllabus" element={<ASSyllabus />}  />
+
 
             </Routes>
             <Footer/>

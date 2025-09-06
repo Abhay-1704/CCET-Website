@@ -7,7 +7,7 @@ const AcademicsMenu = () => {
       title: "Academic Departments",
       links: [
         { name: "Computer Science Engineering", path: "/cse" },
-        { name: "Mechanical Engineering", path: "/mech" },
+        { name: "Mechanical Engineering", path: "/academics/mechanical/overview" },
         { name: "Electronics and Communication Engineering", path: "/ece" },
         { name: "Civil Engineering", path: "/academics/civil/overview" },
         { name: "Applied Science", path: "/academics/appliedscience/overview" },
