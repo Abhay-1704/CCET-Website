@@ -40,6 +40,15 @@ import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 
+//Civil Department
+import CivilOverview from "./pages/Civil-Department/CivilOverview.jsx";
+import CivilHod from "./pages/Civil-Department/CivilHod.jsx";
+import CivilFaculty from "./pages/Civil-Department/CivilFaculty.jsx";
+import CivilLabs from "./pages/Civil-Department/CivilLabs.jsx";
+import CivilResearch from "./pages/Civil-Department/CivilResearch.jsx";
+import CivilSyllabus from "./pages/Civil-Department/CivilSyllabus.jsx";
+import CivilTimeTable from "./pages/Civil-Department/CivilTimeTable.jsx";
+
 function App() {
     return (
         <HashRouter>
@@ -96,6 +105,16 @@ function App() {
                 <Route path="/ece" element={<EceOverview/>}/>
                 <Route path="/ece/ece-faculty" element={<ECE_Faculty/>}/>
                 <Route path="/ece/ece-labs" element={<EceLabs/>}/>
+
+                {/* Civil Department */}
+                <Route path="/academics/civil/overview" element={<CivilOverview />} />
+                <Route path="/academics/civil/hod" element={<CivilHod />} />
+                <Route path="/academics/civil/civilfaculty" element={<CivilFaculty />}  />
+                <Route path="/academics/civil/civillabs" element={<CivilLabs />}  />
+                <Route path="/academics/civil/civilresearch" element={<CivilResearch />}  />
+                <Route path="/academics/civil/civilsyllabus" element={<CivilSyllabus />}  />
+                <Route path="/academics/civil/civiltimetable" element={<CivilTimeTable />}  />
+
             </Routes>
             <Footer/>
         </HashRouter>
