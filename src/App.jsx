@@ -37,6 +37,8 @@ import NewsDetails from "./pages/Home/NewsDetails.jsx";
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
 import ECE_Faculty from "./pages/ECE-Department/ece-faculty.jsx";
 import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
+import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
+import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 
 function App() {
     return (
@@ -50,7 +52,6 @@ function App() {
                 {/* Static Pages */}
                 <Route path="/faq" element={<FAQ/>}/>
                 <Route path="/vision-mission" element={<VisionMission/>}/>
-                <Route path="/infrastructure" element={<Infrastructure/>}/>
                 <Route path="/convocation" element={<Convocation/>}/>
                 <Route path="/contact" element={<ContactUs/>}/>
 
@@ -63,6 +64,7 @@ function App() {
                 <Route path="/about/academic-heads" element={<Academicheads/>}/>
                 <Route path="/about/principal" element={<Principal/>}/>
                 <Route path="/about/history" element={<History/>}/>
+                <Route path="/life/virtual-tour" element={<CampusVirtualTour/>}/>  
 
                 {/* Programmes */}
                 <Route path="/programmes/pu-leet" element={<Leet/>}/>
