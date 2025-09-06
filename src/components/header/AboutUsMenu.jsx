@@ -14,9 +14,9 @@ const AboutUsMenu = () => {
         <Link to="/vision-mission" className="block w-full" key="vision-mission">
           Vision and Mission
         </Link>,
-        <span key="campus-map" className="block w-full cursor-default">
+        <Link to="/about/campus-map" className="block w-full" key="campus-map">
           Campus Map
-        </span>,
+        </Link>,,
         <Link to="/contact" className="block w-full" key="contact">
           How To Reach Us
         </Link>,
@@ -73,9 +73,9 @@ const AboutUsMenu = () => {
         <Link to="/classrooms" className="block w-full" key="classrooms">
           Class Rooms
         </Link>,
-        <span key="canteen" className="block w-full cursor-default">
-          Canteen
-        </span>,
+          <Link to="/about/canteen" className="block w-full" key="canteen">
+              Canteen
+          </Link>,
         <Link
             to="/infrastructure"
             className="block w-full"
