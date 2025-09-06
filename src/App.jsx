@@ -32,6 +32,7 @@ import History from "./pages/History/History.jsx";
 import RecentUpdates from "./pages/RecentUpdates.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
+import Canteen from "./pages/Canteen/Canteen.jsx";
 
 // ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
@@ -39,6 +40,16 @@ import ECE_Faculty from "./pages/ECE-Department/ece-faculty.jsx";
 import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
+import CampusMap from "./pages/CampusMap/CampusMap.jsx";
+
+//Applied Sciences Department
+import ASOverview from "./pages/AS-Department/ASOverview.jsx";
+import ASFaculty from "./pages/AS-Department/ASFaculty.jsx";
+import ASHod from "./pages/AS-Department/ASHod.jsx";
+import ASLabs from "./pages/AS-Department/ASLabs.jsx";
+import ASResearch from "./pages/AS-Department/ASResearch.jsx";
+import ASSyllabus from "./pages/AS-Department/ASSyllabus.jsx";
+import ASTimeTable from "./pages/AS-Department/ASTimeTable.jsx";
 
 //Mechanical Department
 import MechOverview from "./pages/Mech-Department/MechOverview.jsx";
@@ -73,7 +84,9 @@ function App() {
                 <Route path="/about/academic-heads" element={<Academicheads/>}/>
                 <Route path="/about/principal" element={<Principal/>}/>
                 <Route path="/about/history" element={<History/>}/>
-                <Route path="/life/virtual-tour" element={<CampusVirtualTour/>}/>  
+                <Route path="/life/virtual-tour" element={<CampusVirtualTour/>}/>
+                <Route path="/about/campus-map" element={<CampusMap />}  />
+                <Route path="/about/canteen" element={<Canteen />}  />
 
                 {/* Programmes */}
                 <Route path="/programmes/pu-leet" element={<Leet/>}/>
@@ -106,6 +119,7 @@ function App() {
                 <Route path="/ece/ece-faculty" element={<ECE_Faculty/>}/>
                 <Route path="/ece/ece-labs" element={<EceLabs/>}/>
 
+
                 {/* Mechanical Department */}
                 <Route path="/academics/mechanical/overview" element={<MechOverview />} />
                 <Route path="/academics/mechanical/mechfaculty" element={<MechFaculty />}  />
@@ -114,6 +128,16 @@ function App() {
                 <Route path="/academics/mechanical/mechtimetable" element={<MechTimeTable />}  />
                 <Route path="/academics/mechanical/mechsyllabus" element={<MechSyllabus />}  />
                 <Route path="/academics/mechanical/mechresearch" element={<MechResearch />}  />
+
+                {/* Applied Sciences Department */}
+                <Route path="/academics/appliedscience/overview" element={<ASOverview />} />
+                <Route path="/academics/appliedscience/asfaculty" element={<ASFaculty />}  />
+                <Route path="/academics/appliedscience/ashod" element={<ASHod />} />
+                <Route path="/academics/appliedscience/aslabs" element={<ASLabs />}  />
+                <Route path="/academics/appliedscience/asresearch" element={<ASResearch />}  />
+                <Route path="/academics/appliedscience/astimetable" element={<ASTimeTable />}  />
+                <Route path="/academics/appliedscience/assyllabus" element={<ASSyllabus />}  />
+
 
             </Routes>
             <Footer/>
