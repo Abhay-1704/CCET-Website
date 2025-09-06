@@ -40,6 +40,15 @@ import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 
+//Applied Sciences Department
+import ASOverview from "./pages/AS-Department/ASOverview.jsx";
+import ASFaculty from "./pages/AS-Department/ASFaculty.jsx";
+import ASHod from "./pages/AS-Department/ASHod.jsx";
+import ASLabs from "./pages/AS-Department/ASLabs.jsx";
+import ASResearch from "./pages/AS-Department/ASResearch.jsx";
+import ASSyllabus from "./pages/AS-Department/ASSyllabus.jsx";
+import ASTimeTable from "./pages/AS-Department/ASTimeTable.jsx";
+
 function App() {
     return (
         <HashRouter>
@@ -96,6 +105,16 @@ function App() {
                 <Route path="/ece" element={<EceOverview/>}/>
                 <Route path="/ece/ece-faculty" element={<ECE_Faculty/>}/>
                 <Route path="/ece/ece-labs" element={<EceLabs/>}/>
+
+                {/* Applied Sciences Department */}
+                <Route path="/academics/appliedscience/overview" element={<ASOverview />} />
+                <Route path="/academics/appliedscience/asfaculty" element={<ASFaculty />}  />
+                <Route path="/academics/appliedscience/ashod" element={<ASHod />} />
+                <Route path="/academics/appliedscience/aslabs" element={<ASLabs />}  />
+                <Route path="/academics/appliedscience/asresearch" element={<ASResearch />}  />
+                <Route path="/academics/appliedscience/astimetable" element={<ASTimeTable />}  />
+                <Route path="/academics/appliedscience/assyllabus" element={<ASSyllabus />}  />
+
             </Routes>
             <Footer/>
         </HashRouter>

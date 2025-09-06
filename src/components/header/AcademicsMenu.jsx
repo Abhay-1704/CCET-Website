@@ -10,7 +10,7 @@ const AcademicsMenu = () => {
         { name: "Mechanical Engineering", path: "/mech" },
         { name: "Electronics and Communication Engineering", path: "/ece" },
         { name: "Civil Engineering", path: "/civil" },
-        { name: "Applied Science", path: "/applied-science" },
+        { name: "Applied Science", path: "/academics/appliedscience/overview" },
       ],
     },
     {
