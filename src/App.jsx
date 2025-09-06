@@ -40,6 +40,15 @@ import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 
+//Mechanical Department
+import MechOverview from "./pages/Mech-Department/MechOverview.jsx";
+import MechFaculty from "./pages/Mech-Department/MechFaculty.jsx";
+import MechHod from "./pages/Mech-Department/MechHod.jsx";
+import MechLabs from "./pages/Mech-Department/MechLabs.jsx";
+import MechTimeTable from "./pages/Mech-Department/MechTimeTable.jsx";
+import MechSyllabus from "./pages/Mech-Department/MechSyllabus.jsx";
+import MechResearch from "./pages/Mech-Department/MechResearch.jsx";
+
 function App() {
     return (
         <HashRouter>
@@ -96,6 +105,16 @@ function App() {
                 <Route path="/ece" element={<EceOverview/>}/>
                 <Route path="/ece/ece-faculty" element={<ECE_Faculty/>}/>
                 <Route path="/ece/ece-labs" element={<EceLabs/>}/>
+
+                {/* Mechanical Department */}
+                <Route path="/academics/mechanical/overview" element={<MechOverview />} />
+                <Route path="/academics/mechanical/mechfaculty" element={<MechFaculty />}  />
+                <Route path="/academics/mechanical/hod" element={<MechHod />} />
+                <Route path="/academics/mechanical/mechlabs" element={<MechLabs />}  />
+                <Route path="/academics/mechanical/mechtimetable" element={<MechTimeTable />}  />
+                <Route path="/academics/mechanical/mechsyllabus" element={<MechSyllabus />}  />
+                <Route path="/academics/mechanical/mechresearch" element={<MechResearch />}  />
+
             </Routes>
             <Footer/>
         </HashRouter>
