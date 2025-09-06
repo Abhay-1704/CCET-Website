@@ -2,7 +2,7 @@ import React from 'react';
 import SharedCseLayout from './SharedCseLayout';
 import styles from './CseHod.module.css';
 
-import hodProfileImage from '../../assets/Cse-Department/CSE-hodDesk.jpg';
+import hodProfileImage from '../../assets/CSE-Department/CSE-hodDesk.jpg';
 
 const CseHod = () => {
     return (
