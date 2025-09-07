@@ -34,6 +34,7 @@ import RecentUpdates from "./pages/RecentUpdates.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
 import Canteen from "./pages/Canteen/Canteen.jsx";
+import EventCalendar from "./pages/EventCalendar/EventCalendar.jsx";
 
 
 // ECE Department
@@ -89,6 +90,7 @@ function App() {
             <Routes>
                 {/* Home & Default */}
                 <Route path="/" element={<Home/>}/>
+                <Route path="/event-calendar" element={<EventCalendar/>}/>
                 <Route path="*" element={<NoPage/>}/>
 
                 {/* Static Pages */}
