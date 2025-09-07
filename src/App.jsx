@@ -8,6 +8,7 @@ import "./index.css";
 
 import NoPage from "./pages/Nopage/NoPage.jsx";
 import FAQ from "./pages/FAQ/faq";
+import Nss from "./pages/Nss/Nss.jsx";
 import VisionMission from "./pages/vision-mission/vision-mission.jsx";
 import Infrastructure from "./pages/infrastructure/infrastructure.jsx";
 import Convocation from "./pages/Convocation/Convocation.jsx";
@@ -93,6 +94,7 @@ function App() {
                 {/* Static Pages */}
                 <Route path="/faq" element={<FAQ/>}/>
                 <Route path="/vision-mission" element={<VisionMission/>}/>
+                <Route path="/nss" element={<Nss/>}/>
                 <Route path="/convocation" element={<Convocation/>}/>
                 <Route path="/contact" element={<ContactUs/>}/>
 

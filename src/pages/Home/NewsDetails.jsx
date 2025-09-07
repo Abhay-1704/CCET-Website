@@ -31,7 +31,6 @@ const newsList = [
 const NewsDetails = () => {
     return (
         <>
-        <Header />
         <section className="news-section">
             <h2 className="news-title1">Latest News</h2>
             <div className="news-list">
@@ -44,7 +43,6 @@ const NewsDetails = () => {
                 ))}
             </div>
         </section>
-        <Footer />
         </>
     );
 };
