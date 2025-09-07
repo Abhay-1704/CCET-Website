@@ -35,6 +35,7 @@ import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChap
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
 import Canteen from "./pages/Canteen/Canteen.jsx";
 import EventCalendar from "./pages/EventCalendar/EventCalendar.jsx";
+import AcademicCalendar from "./pages/AcademicCalendar/AcademicCalendar.jsx";
 
 
 // ECE Department
@@ -123,6 +124,7 @@ function App() {
                 <Route path="/prospectus" element={<AcademicProspectusPage/>}/>
                 <Route path="/academics/nirf" element={<NIRF/>}/>
                 <Route path="/examinations" element={<Examinations/>}/>
+                <Route path="/academics/calendar" element={<AcademicCalendar/>}/>
 
                 {/* Facilities */}
                 <Route path="/sports-facility" element={<SportsFacility/>}/>

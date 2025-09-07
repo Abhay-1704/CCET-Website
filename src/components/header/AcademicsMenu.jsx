@@ -38,7 +38,7 @@ const AcademicsMenu = () => {
       title: "Overview",
       links: [
         { name: "Courses Offered", path: "/courses" },
-        { name: "Academic Calendar", path: "/calendar" },
+        { name: "Academic Calendar", path: "/academics/calendar" },
         { name: "Academic Prospectus", path: "/prospectus" },
         { name: "Affiliating University", path: "https://puchd.ac.in/" },
       ],
