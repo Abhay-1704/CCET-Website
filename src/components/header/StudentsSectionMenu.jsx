@@ -7,10 +7,14 @@ const StudentsSectionMenu = () => {
       title: "Academics",
       links: [
         { name: "Student Forms", url: "/student-forms" },
-        { name: "Vidya Lakshmi (Education Loan)", url: "/vidya-lakshmi" },
         {
-          name: "National Apprenticeship Training",
-          url: "/national-apprenticeship",
+          name: "Vidya Lakshmi (Education Loan)",
+          external : true,
+          url: "https://pmvidyalaxmi.co.in/StudentLogin.aspx" },
+        {
+          name: 'National Apprenticeship Training',
+          external: true,
+          url: 'https://nats.education.gov.in/'
         },
         { name: "Scholarships", url: "/scholarships" },
         { name: "Fit India", url: "/fit-india" },

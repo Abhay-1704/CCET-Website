@@ -126,8 +126,8 @@ const Header = () => {
 					title: 'Academics',
 					links: [
 						{ name: 'Student Forms', path: '/student-forms' },
-						{ name: 'Vidya Lakshmi (Education Loan)', path: '/vidya-lakshmi' },
-						{ name: 'National Apprenticeship Training', path: '/national-apprenticeship' },
+						{ name: 'Vidya Lakshmi (Education Loan)',external: true, url: 'https://pmvidyalaxmi.co.in/StudentLogin.aspx' },
+						{name: 'National Apprenticeship Training', external: true, url: 'https://nats.education.gov.in/'},
 						{ name: 'Scholarships', path: '/scholarships' },
 						{ name: 'Fit India', path: '/fit-india' }
 					],
