@@ -101,9 +101,10 @@ const Header = () => {
 				{
 					title: 'Mandatory Disclosure',
 					links: [
-						{ name: 'EoA Report 2024-25', path: '/academics/eoa-report-2024-25' },
+						{ name: 'EoA Report 2025-26', path: '/academics/eoa-report-latest' },
 						{ name: 'Application Part-1', path: '/academics/application-part-1' },
 						{ name: 'Application Part-2', path: '/academics/application-part-2' },
+						{ name: 'Deficiency Report', path: '/academics/deficiency-report' },
 						{ name: 'OLD AICTE EoAs', path: '/academics/old-aicte-eoas' }
 					],
 				},

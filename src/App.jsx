@@ -36,6 +36,11 @@ import NewsDetails from "./pages/Home/NewsDetails.jsx";
 import Canteen from "./pages/Canteen/Canteen.jsx";
 import EventCalendar from "./pages/EventCalendar/EventCalendar.jsx";
 import AcademicCalendar from "./pages/AcademicCalendar/AcademicCalendar.jsx";
+import EoaLatest from "./pages/MandatoryDisclosure/EoaLatest.jsx";
+import Partone from "./pages/MandatoryDisclosure/ApplicationPart-1.jsx";
+import Parttwo from "./pages/MandatoryDisclosure/ApplicationPart-2.jsx";
+import DeficiencyReport from "./pages/MandatoryDisclosure/DeficiencyReport.jsx";
+import OldEOA from "./pages/MandatoryDisclosure/OldEoas.jsx";
 
 
 // ECE Department
@@ -125,6 +130,11 @@ function App() {
                 <Route path="/academics/nirf" element={<NIRF/>}/>
                 <Route path="/examinations" element={<Examinations/>}/>
                 <Route path="/academics/calendar" element={<AcademicCalendar/>}/>
+                <Route path="/academics/eoa-report-latest" element={<EoaLatest/>}/>
+                <Route path="/academics/application-part-1" element={<Partone />} />
+                <Route path="/academics/application-part-2" element={<Parttwo />} />
+                <Route path="/academics/deficiency-report" element={<DeficiencyReport />} />
+                <Route path="/academics/old-aicte-eoas" element={<OldEOA />} />
 
                 {/* Facilities */}
                 <Route path="/sports-facility" element={<SportsFacility/>}/>
