@@ -326,3 +326,131 @@
     padding: 0 8px;
   }
 }
+/* ================= Animations & Transitions ================= */
+
+/* Fade-in for sections */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Scale-in effect for cards */
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------------- Smooth Transitions ---------------- */
+.info-card,
+.schedule-item,
+.speaker-card,
+.update-box,
+.venue-info,
+.contact-info {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover,
+.schedule-item:hover,
+.speaker-card:hover,
+.update-box:hover,
+.venue-info:hover,
+.contact-info:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+/* ---------------- Applying Animations ---------------- */
+.convocation-header {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.annual-title {
+  animation: fadeInUp 1.2s ease-in-out;
+}
+
+.convocation-info .info-card {
+  animation: scaleIn 0.6s ease-in-out forwards;
+}
+.convocation-info .info-card:nth-child(1) { animation-delay: 0.2s; }
+.convocation-info .info-card:nth-child(2) { animation-delay: 0.4s; }
+.convocation-info .info-card:nth-child(3) { animation-delay: 0.6s; }
+.convocation-info .info-card:nth-child(4) { animation-delay: 0.8s; }
+
+.gallery-box {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-in-out forwards;
+}
+.gallery-box:nth-child(1) { animation-delay: 0.2s; }
+.gallery-box:nth-child(2) { animation-delay: 0.4s; }
+.gallery-box:nth-child(3) { animation-delay: 0.6s; }
+.gallery-box:nth-child(4) { animation-delay: 0.8s; }
+.gallery-box:nth-child(5) { animation-delay: 1s; }
+.gallery-box:nth-child(6) { animation-delay: 1.2s; }
+
+.schedule-item {
+  opacity: 0;
+  animation: fadeInUp 0.9s ease-in-out forwards;
+}
+.schedule-item:nth-child(1) { animation-delay: 0.2s; }
+.schedule-item:nth-child(2) { animation-delay: 0.4s; }
+.schedule-item:nth-child(3) { animation-delay: 0.6s; }
+.schedule-item:nth-child(4) { animation-delay: 0.8s; }
+.schedule-item:nth-child(5) { animation-delay: 1s; }
+.schedule-item:nth-child(6) { animation-delay: 1.2s; }
+
+.speaker-card {
+  opacity: 0;
+  animation: fadeInUp 1s ease-in-out forwards;
+}
+.speaker-card:nth-child(1) { animation-delay: 0.3s; }
+.speaker-card:nth-child(2) { animation-delay: 0.6s; }
+.speaker-card:nth-child(3) { animation-delay: 0.9s; }
+
+.update-box {
+  opacity: 0;
+  animation: fadeInUp 1s ease-in-out forwards;
+  animation-delay: 0.4s;
+}
+
+.venue-info {
+  opacity: 0;
+  animation: fadeInUp 1s ease-in-out forwards;
+  animation-delay: 0.6s;
+}
+
+.contact-info {
+  opacity: 0;
+  animation: fadeInUp 1s ease-in-out forwards;
+  animation-delay: 0.8s;
+}
+/* Hidden state before scroll */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease-out;
+}
+
+/* Visible state after scroll */
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+

@@ -9,7 +9,7 @@ const Convocation = () => {
        
         <div className="annual-title">
           <div className="annual-text">Annual</div>
-          <div className="convocation-year">Convocation 2024</div>
+          <div className="convocation-year">Convocation 2023</div>
         </div>
       </div>
 

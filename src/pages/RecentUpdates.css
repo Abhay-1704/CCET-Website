@@ -1,0 +1,37 @@
+.recent-updates-strip {
+  display: flex;
+  align-items: center;
+  background: #fffbe6;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.recent-label {
+  background: #ff9800;
+  color: white;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px 4px 0 0;
+  margin-right: 10px;
+  font-size: 13px;
+}
+
+.update-item {
+  margin-right: 40px;
+}
+
+.new-tag {
+  color: red;
+  font-weight: bold;
+  margin-right: 5px;
+  animation: blink 1s infinite; /* blinking NEW */
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
