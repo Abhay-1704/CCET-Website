@@ -119,6 +119,7 @@ function App() {
         <Route path="/student-welfare/officials" element={<StudentWelfare/>}/>
         <Route path="/boys-hostel" element={<BoysHostel/>}/>
         <Route path="/girls-hostel" element={<GirlsHostel/>}/>
+        <Route path="//sports-facilities" element={<SportsFacility/>}/>
 
         {/* About Section */}
         <Route path="/about/academic-heads" element={<Academicheads />} />

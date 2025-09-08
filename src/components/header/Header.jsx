@@ -128,8 +128,7 @@ const Header = () => {
 						{ name: 'Student Forms', path: '/student-forms' },
 						{ name: 'Vidya Lakshmi (Education Loan)',external: true, url: 'https://pmvidyalaxmi.co.in/StudentLogin.aspx' },
 						{name: 'National Apprenticeship Training', external: true, url: 'https://nats.education.gov.in/'},
-						{ name: 'Scholarships', path: '/scholarships' },
-						{ name: 'Fit India', path: '/fit-india' }
+						{ name: 'Scholarships', path: '/scholarships' }
 					],
 				},
 				{
@@ -169,9 +168,8 @@ const Header = () => {
 				{
 					title: 'Sports',
 					links: [
-						{ name: 'Sports Facilities', path: '/sports/facilities' },
-						{ name: 'Fit India Initiative', path: '/sports/fit-india' },
-						{ name: 'Sports Tournaments', path: '/sports/tournaments' }
+						{ name: 'Sports Facilities', path: '/sports-facilities' },
+						{ name: 'Fit India Initiative', path: '/fit-india' }
 					],
 				},
 			]

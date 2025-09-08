@@ -16,8 +16,7 @@ const StudentsSectionMenu = () => {
           external: true,
           url: 'https://nats.education.gov.in/'
         },
-        { name: "Scholarships", url: "/scholarships" },
-        { name: "Fit India", url: "/fit-india" },
+        { name: "Scholarships", url: "/scholarships" }
       ],
     },
     {
@@ -67,8 +66,7 @@ const StudentsSectionMenu = () => {
       title: "Sports",
       links: [
         { name: "Sports Facilities", url: "/sports-facilities" },
-        { name: "Fit India Initiative", url: "/fit-india-initiative" },
-        { name: "Sports Tournaments", url: "/sports-tournaments" },
+        { name: "Fit India Initiative", url: "/fit-india" }
       ],
     },
   ];
