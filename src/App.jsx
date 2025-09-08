@@ -48,6 +48,10 @@ import CampusMap from "./pages/CampusMap/CampusMap.jsx";
 import StudentWelfare from "./pages/StudentWelfare/StudentWelfare.jsx"
 import BoysHostel from "./pages/BoysHostel/BoysHostel.jsx";
 import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx";
+import FingerPrintIssue1 from "./pages/FingerPrint/FingerPrint1.jsx";
+import FingerPrintIssue2 from "./pages/FingerPrint/FingerPrint2.jsx";
+import ExamNotice1 from "./pages/ExamNotice/ExamNotice1.jsx";
+import ExamNotice2 from "./pages/ExamNotice/ExamNotice2.jsx";
 
 // ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
@@ -198,6 +202,12 @@ function App() {
         <Route path="/academics/appliedscience/asresearch" element={<ASResearch />}/>
         <Route path="/academics/appliedscience/astimetable" element={<ASTimeTable />}/>
         <Route path="/academics/appliedscience/assyllabus" element={<ASSyllabus />}/>
+
+        {/* Notices */}
+        <Route path="/magazine/fingerprint-vii-1" element={<FingerPrintIssue1 />} />
+        <Route path="/magazine/fingerprint-vii-2" element={<FingerPrintIssue2 />} />
+        <Route path="/notices/exam-notice-1" element={<ExamNotice1 />} />
+        <Route path="/notices/exam-notice-2" element={<ExamNotice2 />} />
 
       </Routes>
       <Footer />
