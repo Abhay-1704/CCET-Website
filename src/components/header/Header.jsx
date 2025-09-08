@@ -91,7 +91,6 @@ const Header = () => {
 					links: [
 						{ name: 'Convocation 2023', path: '/academics/convocation-2023' },
 						{ name: 'Students Feedback', path: '/academics/feedback' },
-						{ name: 'Examination', path: '/academics/examination' },
 						{ name: 'E-Akademik', path: '/academics/e-akademik' },
 						{ name: 'E-Cell', path: '/academics/e-cell' },
 						{ name: 'NIRF', path: '/academics/nirf' },

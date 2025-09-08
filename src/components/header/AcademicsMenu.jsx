@@ -18,7 +18,6 @@ const AcademicsMenu = () => {
       links: [
         { name: "Convocation 2023", path: "/convocation" },
         { name: "Students Feedback", path: "https://smartcookie.in/" },
-        { name: "Examination", path: "/examination" },
         { name: "E-Akademik", path: "https://eakadamik.in/ccet/" },
         { name: "E-Cell", path: "/ecell" },
         { name: "NIRF", path: "/academics/nirf" },
