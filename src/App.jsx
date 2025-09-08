@@ -46,6 +46,8 @@ import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 import CampusMap from "./pages/CampusMap/CampusMap.jsx";
 import StudentWelfare from "./pages/StudentWelfare/StudentWelfare.jsx"
+import BoysHostel from "./pages/BoysHostel/BoysHostel.jsx";
+import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx"
 
 // ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
@@ -110,6 +112,8 @@ function App() {
         <Route path="/anti-ragging-committee" element={<AntiRaggingCommittee />}/>
         <Route path="/student-chapters-clubs" element={<StudentChaptersandClubs />}/>
         <Route path="/student-welfare/officials" element={<StudentWelfare/>}/>
+        <Route path="/boys-hostel" element={<BoysHostel/>}/>
+        <Route path="/girls-hostel" element={<GirlsHostel/>}/>
 
         {/* About Section */}
         <Route path="/about/academic-heads" element={<Academicheads />} />
