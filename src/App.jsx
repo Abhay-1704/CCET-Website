@@ -47,7 +47,7 @@ import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 import CampusMap from "./pages/CampusMap/CampusMap.jsx";
 import StudentWelfare from "./pages/StudentWelfare/StudentWelfare.jsx"
 import BoysHostel from "./pages/BoysHostel/BoysHostel.jsx";
-import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx"
+import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx";
 
 // ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
@@ -106,6 +106,7 @@ function App() {
         <Route path="/nss" element={<Nss />} />
         <Route path="/convocation" element={<Convocation />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/admissions/help-desk" element={<HelpDesk />} />
 
         {/* Student Section */}
         <Route path="/anti-ragging" element={<AntiRagging />} />

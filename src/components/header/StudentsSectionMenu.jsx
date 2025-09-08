@@ -40,7 +40,7 @@ const StudentsSectionMenu = () => {
           name: "Student Fee Payment",
           url: "https://paydirect.eduqfix.com/app/3qTjKfysWsfqEyNTM4giVFX4VGVYGZss5NYRHpY65DaJgmu14S3Ff6NKoVa3l2Ay/6593",
         },
-        { name: "Application form to be a New Voter", url: "/new-voter" },
+        { name: "Application form to be a New Voter", url: "https://voters.eci.gov.in/" },
       ],
     },
     {
@@ -54,7 +54,7 @@ const StudentsSectionMenu = () => {
       title: "Events",
       links: [
         { name: "Student Chapters/Clubs", url: "/student-chapters-clubs" }, 
-        { name: "Apratim", url: "/apratim" },
+        { name: "Apratim", url: "https://apratim.ccet.ac.in/" },
         { name: "ACM @ CCET", url: "https://ccet.acm.org/" },
         {
           name: "ASME @ CCET",

@@ -147,7 +147,7 @@ const Header = () => {
 						{ name: 'Anti Ragging', path: '/student-welfare/anti-ragging' },
 						{ name: 'Anti Ragging Committee', path: '/student-welfare/anti-ragging-committee' },
 						{ name: 'Student Fee Payment (HDFC)', path: '/student-welfare/fee-payment' },
-						{ name: 'Application form to be a New Voter', path: '/student-welfare/new-voter' }
+						{ name: 'Application form to be a New Voter', external: true, url: 'https://voters.eci.gov.in/' }
 					],
 				},
 				{
@@ -161,7 +161,7 @@ const Header = () => {
 					title: 'Events',
 					links: [
 						{ name: 'Student Chapters/Clubs', path: '/events/clubs' },
-						{ name: 'Apratim', path: '/events/apratim' },
+						{ name: 'Apratim', external: true, url: 'https://apratim.ccet.ac.in/' },
 						{ name: 'ACM @ CCET', path: 'https://ccet.acm.org/', external: true },
 						{ name: 'ASME @ CCET', path: '/events/asme' },
 						{ name: 'NSS', path: '/events/nss' }
