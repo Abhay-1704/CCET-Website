@@ -32,7 +32,7 @@ const StudentsSectionMenu = () => {
     {
       title: "Student Welfare",
       links: [
-        { name: "Officials @ Student Welfare", url: "/officials" },
+        { name: "Officials @ Student Welfare", url: "/student-welfare/officials" },
         { name: "Student Council", url: "/student-council" },
         { name: "Anti Ragging", url: "/anti-ragging" },
         { name: "Anti Ragging Committee", url: "/anti-ragging-committee" },
