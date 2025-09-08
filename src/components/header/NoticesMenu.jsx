@@ -8,10 +8,6 @@ const NoticesMenu = () => {
       links: [
         { name: "Forms", url: "/forms" },
         { name: "Tenders", url: "/notices/tenders" },
-        {
-          name: "Online Fee Payment Link",
-          url: "https://paydirect.eduqfix.com/app/3qTjKfysWsfqEyNTM4giVFX4VGVYGZss5NYRHpY65DaJgmu14S3Ff6NKoVa3l2Ay/6593",
-        },
       ],
     },
     {

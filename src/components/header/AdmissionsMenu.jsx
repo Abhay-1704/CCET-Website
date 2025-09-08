@@ -38,7 +38,7 @@ const AdmissionsMenu = () => {
     },
     {
       title: "Criteria",
-      links: [{ name: "Eligibility", path: "/criteria/eligibility" }],
+      links: [{ name: "Eligibility", url: "https://jacchd.admissions.nic.in/eligibility-status/" }],
     },
   ];
 

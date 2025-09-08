@@ -37,7 +37,7 @@ const DegreeCourseLeet = () => {
         <ul>
           <li>
             <a
-              href="https://puleet.puchd.ac.in/important-dates.php"
+              href="https://puleet.puchd.ac.in/importantdates.php"
               target="_blank"
               rel="noopener noreferrer"
             >

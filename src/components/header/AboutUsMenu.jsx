@@ -70,8 +70,8 @@ const AboutUsMenu = () => {
         >
           Library
         </a>,
-        <Link to="/classrooms" className="block w-full" key="classrooms">
-          Class Rooms
+        <Link to="/about/classrooms" className="block w-full" key="classrooms">
+        Class Rooms
         </Link>,
           <Link to="/about/canteen" className="block w-full" key="canteen">
               Canteen
