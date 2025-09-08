@@ -47,7 +47,7 @@ const StudentsSectionMenu = () => {
       title: "Hostel",
       links: [
         { name: "Boys Hostel", url: "/boys-hostel" },
-        { name: "Girls Hostel", url: "/girls-hostel" },
+        { name: 'Girls Hostel', url: '/girls-hostel' }
       ],
     },
     {

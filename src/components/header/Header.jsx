@@ -153,8 +153,8 @@ const Header = () => {
 				{
 					title: 'Hostel',
 					links: [
-						{ name: 'Boys Hostel', path: '/hostel/boys' },
-						{ name: 'Girls Hostel', path: '/hostel/girls' }
+						{ name: 'Boys Hostel', path: "/boys-hostel" },
+						{ name: 'Girls Hostel', path: '/girls-hostel' }
 					],
 				},
 				{
