@@ -119,7 +119,7 @@ function App() {
         <Route path="/student-welfare/officials" element={<StudentWelfare/>}/>
         <Route path="/boys-hostel" element={<BoysHostel/>}/>
         <Route path="/girls-hostel" element={<GirlsHostel/>}/>
-        <Route path="//sports-facilities" element={<SportsFacility/>}/>
+        <Route path="/sports-facilities" element={<SportsFacility/>}/>
 
         {/* About Section */}
         <Route path="/about/academic-heads" element={<Academicheads />} />
@@ -148,7 +148,6 @@ function App() {
         <Route path="/academics/old-aicte-eoas" element={<OldEOA />} />
 
         {/* Facilities */}
-        <Route path="/sports-facility" element={<SportsFacility />} />
         <Route path="/fit-india" element={<FitIndiaPage />} />
         <Route path="/infrastructure" element={<Infrastructure />} />
 
