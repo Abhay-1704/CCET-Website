@@ -1,4 +1,9 @@
+ main
+// src/components/header/AboutUsMenu.jsx
+import React from "react";
+
 import React, { useState } from "react";
+ main
 import { Link } from "react-router-dom";
 
 const AboutUsMenu = () => {
@@ -28,6 +33,15 @@ const AboutUsMenu = () => {
         <Link to="/about/principal" className="block w-full" key="principal">
           Principal
         </Link>,
+ main
+        <Link to="/about/officials" className="block w-full" key="officials">
+          Officials at CCET
+        </Link>,
+        <Link to="/about/academic-heads" className="block w-full" key="academic-heads">
+          Academic Heads
+        </Link>,
+        "Administrator",
+
         <span key="officials" className="block w-full cursor-default">
           Officials at CCET
         </span>,
@@ -53,11 +67,29 @@ const AboutUsMenu = () => {
               </ul>
           )}
         </div>,
+ main
       ],
     },
     {
       title: "Life @ CCET",
       links: [
+ main
+        "Campus Virtual Tour",
+        <a
+          href="https://ccet.ac.in/library/"
+          className="block w-full"
+          key="library"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Library
+        </a>,
+        "Class Rooms",
+        "Canteen",
+        "Infrastructure",
+        "Policy on use of IT Resources",
+        <Link to="/sports-facility" className="block w-full" key="sports-facility">
+
         <Link to="/life/virtual-tour" className="block w-full" key="tour">
           Campus Virtual Tour
         </Link>,
@@ -92,11 +124,43 @@ const AboutUsMenu = () => {
         >
           Policy on use of IT Resources
         </a>,
+ main
+        <Link
+            to="/sports-facility"
+            className="block w-full"
+            key="sports-facility"
+        >
+ main
+          Sports Facility
+        </Link>,
+
+ main
       ],
     },
   ];
 
   return (
+ main
+    <div className="absolute top-full -left-20 transform overflow-x-auto -translate-x-[9%] hidden group-hover:grid grid-cols-3 bg-white/70 backdrop-blur-md shadow-xl z-50 p-6 gap-8 text-1xl text-gray-800 rounded-lg border border-gray-100 w-[1000px] max-w-[90vw] right-0 mx-auto">
+      {sections.map((section, i) => (
+        <div key={i}>
+          <div className="font-semibold border-b border-gray-200 pb-2 mb-3 text-red-700">
+            {section.title}
+          </div>
+          <ul className="space-y-2">
+            {section.links.map((link, j) => (
+              <li
+                key={j}
+                className="hover:bg-[#FB923C] hover:text-white cursor-pointer transition-colors duration-200 px-2 py-1 rounded"
+              >
+                {React.isValidElement(link) ? link : <span className="block w-full">{link}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
       <div className="absolute top-full -left-20 transform overflow-x-auto -translate-x-[9%] hidden group-hover:grid grid-cols-3 bg-white/80 shadow-xl z-50 p-6 gap-8 text-1xl text-gray-800 rounded-lg border border-gray-100 w-[1000px] max-w-[90vw] right-0 mx-auto">
         {sections.map((section, i) => (
             <div key={i}>
@@ -116,6 +180,7 @@ const AboutUsMenu = () => {
             </div>
         ))}
       </div>
+ main
   );
 };
 

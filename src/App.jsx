@@ -1,3 +1,16 @@
+ main
+// src/App.jsx
+import { HashRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home/Home.jsx";
+import Header from "./components/header/Header.jsx";
+import Footer from "./components/Footer/Footer.jsx";
+import VisionMission from "./pages/vision-mission/vision-mission.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import "./index.css";
+import NoPage from "./pages/Nopage/NoPage.jsx";
+import FAQ from "./pages/FAQ/faq";
+
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home.jsx";
 import Header from "./components/header/Header.jsx";
@@ -12,6 +25,7 @@ import Nss from "./pages/Nss/Nss.jsx";
 import VisionMission from "./pages/vision-mission/vision-mission.jsx";
 import Infrastructure from "./pages/infrastructure/infrastructure.jsx";
 import Convocation from "./pages/Convocation/Convocation.jsx";
+main
 import AntiRagging from "./pages/Students-Section/Student-Welfare/Anti-Ragging/AntiRagging.jsx";
 import AntiRaggingCommittee from "./pages/Students-Section/Student-Welfare/Anti-Ragging-Committee/AntiRaggingCommittee.jsx";
 import Academicheads from "./pages/AcadmicHeads/Academicheads.jsx";
@@ -20,6 +34,12 @@ import Principal from "./pages/Principal/Principal.jsx";
 import AcademicProspectusPage from "./pages/Academic-Prospectus/AcademicProspectusPage.jsx";
 import ContactUs from "./pages/ContactUs/ContactUs.jsx";
 import NIRF from "./pages/NIRF/nirf.jsx";
+ main
+import Examinations from "./pages/Examinations/Examinations.jsx";
+import ECell from "./pages/ECell/ECell.jsx";
+import SportsFacility from "./pages/Sports/SportsFacility.jsx";
+import OfficialsPage from "./pages/Officials-Page/OfficialsPage.jsx"; // ✅ Correct import
+
 import HelpDesk from "./pages/HelpDesk/HelpDesk.jsx";
 import Examinations from "./pages/Examinations/Examinations.jsx";
 import ECell from "./pages/ECell/ECell.jsx";
@@ -96,6 +116,7 @@ import CseLabs from "./pages/CSE-Department/CseLabs.jsx";
 import CseTimeTable from "./pages/CSE-Department/CseTimeTable.jsx";
 import CseSyllabus from "./pages/CSE-Department/CseSyllabus.jsx";
 import CseResearch from "./pages/CSE-Department/CseResearch.jsx";
+main
 
 function App() {
   return (
@@ -104,6 +125,11 @@ function App() {
       <Routes>
         {/* Home & Default */}
         <Route path="/" element={<Home />} />
+main
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/anti-ragging" element={<AntiRagging />} />
+        <Route path="/anti-ragging-committee" element={<AntiRaggingCommittee />} />
+
         <Route path="/event-calendar" element={<EventCalendar/>}/>
         <Route path="*" element={<NoPage />} />
 
@@ -128,6 +154,7 @@ function App() {
         <Route path="/student-forms" element={<Forms/>} />
 
         {/* About Section */}
+ main
         <Route path="/about/academic-heads" element={<Academicheads />} />
         <Route path="/about/principal" element={<Principal />} />
         <Route path="/about/history" element={<History />} />
@@ -143,8 +170,25 @@ function App() {
 
         {/* Academics */}
         <Route path="/courses" element={<Courses />} />
+ main
+        <Route path="/vision-mission" element={<VisionMission />} />
+        <Route path="/about/principal" element={<Principal />} />
+        <Route path="/students-section/courses" element={<Courses />} />
+
+main
         <Route path="/prospectus" element={<AcademicProspectusPage />} />
         <Route path="/academics/nirf" element={<NIRF />} />
+main
+        <Route path="/ecell" element={<ECell />} />
+        <Route path="/examinations" element={<Examinations />} />
+        <Route path="/sports-facility" element={<SportsFacility />} />
+
+        {/* ✅ New Officials Page route */}
+        <Route path="/about/officials" element={<OfficialsPage />} />
+
+        {/* catch-all 404 */}
+        <Route path="*" element={<NoPage />} />
+
         <Route path="/examinations" element={<Examinations />} />
         <Route path="/academics/calendar" element={<AcademicCalendar/>}/>
         <Route path="/academics/eoa-report-latest" element={<EoaLatest/>}/>
@@ -215,6 +259,7 @@ function App() {
         <Route path="/notices/exam-notice-1" element={<ExamNotice1 />} />
         <Route path="/notices/exam-notice-2" element={<ExamNotice2 />} />
 
+ main
       </Routes>
       <Footer />
     </HashRouter>
