@@ -54,11 +54,16 @@ import BoysHostel from "./pages/BoysHostel/BoysHostel.jsx";
 import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx";
 import FingerPrintIssue1 from "./pages/FingerPrint/FingerPrint1.jsx";
 import FingerPrintIssue2 from "./pages/FingerPrint/FingerPrint2.jsx";
+import Webmasters from "./pages/webmasters.jsx";
 import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx"
 
 import ExamNotice2 from "./pages/ExamNotice/ExamNotice2.jsx";
 import Scholarship from './pages/Students-Section/Scholarship.jsx';
 import Forms from './pages/Forms/Forms.jsx';
+import NBA_CSE from "./pages/NBA/NBA_CSE";
+import NBA_ECE from "./pages/NBA/NBA_ECE";
+import NBA_MECH from "./pages/NBA/NBA_MECH";
+import NBA_CIVIL from "./pages/NBA/NBA_CE";
 
 // ECE Department
 import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
@@ -147,6 +152,10 @@ function App() {
                  <Route path="/administrator/audit-report" element={<AuditReport />} />
                  <Route path="/administrator/nba" element={<Nba />} />
                 <Route path="/about/ccet-official" element={<OfficialCCET/>} />
+                 <Route path="/nba/cse" element={<NBA_CSE />} />
+                 <Route path="/nba/ece" element={<NBA_ECE />} />
+                 <Route path="/nba/mech" element={<NBA_MECH />} />
+                 <Route path="/nba/civil" element={<NBA_CIVIL />} />
 
                 {/* Programmes */}
                 <Route path="/programmes/pu-leet" element={<Leet />} />
@@ -157,7 +166,7 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/prospectus" element={<AcademicProspectusPage />} />
                 <Route path="/academics/nirf" element={<NIRF />} />
-                <Route path="/examination" element={<Examinations />} />
+                <Route path="/examinations" element={<Examinations />} />
                 <Route path="/academics/calendar" element={<AcademicCalendar />} />
                 <Route path="/academics/eoa-report-latest" element={<EoaLatest />} />
                 <Route path="/academics/application-part-1" element={<Partone />} />
@@ -229,6 +238,9 @@ function App() {
                 <Route path="/magazine/fingerprint-vii-2" element={<FingerPrintIssue2 />} />
 
                 <Route path="/notices/exam-notice-2" element={<ExamNotice2 />} />
+
+                {/*Webmasters*/}
+                <Route path="/webmasters" element={<Webmasters />} />
 
             </Routes>
             <Footer />
