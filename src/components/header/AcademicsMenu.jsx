@@ -22,6 +22,7 @@ const AcademicsMenu = () => {
         { name: "E-Cell", path: "/ecell" },
         { name: "NIRF", path: "/academics/nirf" },
         { name: "FAQs", path: "/faq" },
+        { name: "Scholarships", path: "/scholarships" }   
       ],
     },
     {
