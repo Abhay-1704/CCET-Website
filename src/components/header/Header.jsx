@@ -186,6 +186,10 @@ const Header = () => {
 							name: "Students Feedback",
 							path: "/academics/feedback",
 						},
+						{
+							name: "Examinations",
+							path: "/examination",
+						},
 						{ name: "E-Akademik", path: "/academics/e-akademik" },
 						{ name: "E-Cell", path: "/academics/e-cell" },
 						{ name: "NIRF", path: "/academics/nirf" },
