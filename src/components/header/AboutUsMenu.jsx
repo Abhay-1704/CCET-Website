@@ -129,13 +129,6 @@ const AboutUsMenu = () => {
         >
           Policy on use of IT Resources
         </a>,
-        <Link
-          to="/sports-facility"
-          className="block w-full"
-          key="sports-facility"
-        >
-          Sports Facility
-        </Link>,
       ],
     },
   ];

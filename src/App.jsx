@@ -76,6 +76,7 @@ import ASResearch from "./pages/AS-Department/ASResearch.jsx";
 import ASSyllabus from "./pages/AS-Department/ASSyllabus.jsx";
 import ASTimeTable from "./pages/AS-Department/ASTimeTable.jsx";
 
+
 //Civil Department
 import CivilOverview from "./pages/Civil-Department/CivilOverview.jsx";
 import CivilHod from "./pages/Civil-Department/CivilHod.jsx";
