@@ -6,25 +6,24 @@ const NoticesMenu = () => {
     {
       title: "Old Notices",
       links: [
-        { name: "Forms", url: "/forms" },
         { name: "Tenders", url: "/notices/tenders" },
       ],
     },
     {
       title: "E-News Letters (pdf's)",
       links: [
-        { name: "FingerPrint (Volume-VII, Issue I)", url: "/newsletter/v7-i1" },
+        { name: "FingerPrint (Volume-VII, Issue I)", url: "/magazine/fingerprint-vii-1" },
         {
           name: "FingerPrint (Volume-VII, Issue II)",
-          url: "/newsletter/v7-i2",
+          url: "/magazine/fingerprint-vii-2",
         },
       ],
     },
     {
       title: "Detailed Info (B.E. Exams)",
       links: [
-        { name: "Exam Notice 1", url: "/exam-notice-1" },
-        { name: "Exam Notice 2", url: "/exam-notice-2" },
+        { name: "All Even Semester reappear students have to send their answer sheets on the email Id:- reappeareven032022@ccet.ac.in. In case of any query, Kindly contact Er. Animesh Singh(Asstt Professor CSE) :- +919584035345",url:"" },
+        { name: "Date-sheet for B.E. Even Semester Examination to be held in Jan-June, 2025", url: "/notices/exam-notice-2" },
       ],
     },
   ];

@@ -16,8 +16,7 @@ const StudentsSectionMenu = () => {
           external: true,
           url: 'https://nats.education.gov.in/'
         },
-        { name: "Scholarships", url: "/scholarships" },
-        { name: "Fit India", url: "/fit-india" },
+        { name: "Scholarships", url: "/scholarships" }
       ],
     },
     {
@@ -40,21 +39,21 @@ const StudentsSectionMenu = () => {
           name: "Student Fee Payment",
           url: "https://paydirect.eduqfix.com/app/3qTjKfysWsfqEyNTM4giVFX4VGVYGZss5NYRHpY65DaJgmu14S3Ff6NKoVa3l2Ay/6593",
         },
-        { name: "Application form to be a New Voter", url: "/new-voter" },
+        { name: "Application form to be a New Voter", url: "https://voters.eci.gov.in/" },
       ],
     },
     {
       title: "Hostel",
       links: [
         { name: "Boys Hostel", url: "/boys-hostel" },
-        { name: "Girls Hostel", url: "/girls-hostel" },
+        { name: 'Girls Hostel', url: '/girls-hostel' }
       ],
     },
     {
       title: "Events",
       links: [
         { name: "Student Chapters/Clubs", url: "/student-chapters-clubs" }, 
-        { name: "Apratim", url: "/apratim" },
+        { name: "Apratim", url: "https://apratim.ccet.ac.in/" },
         { name: "ACM @ CCET", url: "https://ccet.acm.org/" },
         {
           name: "ASME @ CCET",
@@ -67,8 +66,7 @@ const StudentsSectionMenu = () => {
       title: "Sports",
       links: [
         { name: "Sports Facilities", url: "/sports-facilities" },
-        { name: "Fit India Initiative", url: "/fit-india-initiative" },
-        { name: "Sports Tournaments", url: "/sports-tournaments" },
+        { name: "Fit India Initiative", url: "/fit-india" }
       ],
     },
   ];

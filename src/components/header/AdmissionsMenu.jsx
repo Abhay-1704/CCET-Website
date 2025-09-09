@@ -7,7 +7,7 @@ const AdmissionsMenu = () => {
       title: "Admissions",
       links: [
         { name: "Admission Notices", path: "/admissions/notices" },
-        { name: "Help Desk", path: "/admissions/helpdesk" },
+        { name: "Help Desk", path: "/admissions/help-desk" },
       ],
     },
     {

@@ -66,16 +66,6 @@ export default function NewsPanel() {
           &#8250;
         </button>
       </div>
-      <div className="carousel-indicators">
-        {newsItems.map((_, idx) => (
-          <span
-            key={idx}
-            className={`indicator-dot ${idx === activeIndex ? "active" : ""}`}
-            onClick={() => setActiveIndex(idx)}
-            aria-label={`Go to news ${idx + 1}`}
-          ></span>
-        ))}
-      </div>
       <div className="news-link-wrapper">
         <button
           className="news-link"

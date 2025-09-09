@@ -1,6 +1,5 @@
 import React from "react";
 
-const departments = ["CSE", "ECE", "ALL", "MECH", "CIVIL"];
 const notices = [
   { title: "Notice Regarding Confirmation of Examination Schedule", date: "2025-05-29" },
   { title: "Walk For Drug Free Chandigarh", date: "2025-05-01" },
@@ -13,18 +12,6 @@ export default function NoticePanel() {
   return (
     <div className="flex justify-center items-start bg-[#f7f4f4] dark:bg-gray-700 p-8 gap-16 font-sans mt-8 mb-8 mr-2 ml-2 rounded-3xl shadow-lg transition-colors duration-300">
       
-      {/* Sidebar buttons */}
-      <div className="flex flex-col gap-4">
-        {departments.map((dept, index) => (
-          <button
-            key={index}
-            className="bg-white dark:bg-gray-800 text-black dark:text-white font-semibold px-8 py-3 rounded-full border-4 border-[#30709aff] hover:bg-[#1a2347] dark:hover:bg-[#2a3568] transition"
-          >
-            {dept}
-          </button>
-        ))}
-      </div>
-
       {/* Notices Panel */}
       <div className="w-full max-w-2xl">
         <h1 className="text-5xl font-semibold text-center mb-6 text-black dark:text-[#30709aff]
