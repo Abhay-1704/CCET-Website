@@ -174,7 +174,7 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/prospectus" element={<AcademicProspectusPage />} />
                 <Route path="/academics/nirf" element={<NIRF />} />
-                <Route path="/examinations" element={<Examinations />} />
+                <Route path="/examination" element={<Examinations />} />
                 <Route path="/academics/calendar" element={<AcademicCalendar />} />
                 <Route path="/academics/eoa-report-latest" element={<EoaLatest />} />
                 <Route path="/academics/application-part-1" element={<Partone />} />
