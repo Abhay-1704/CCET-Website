@@ -9,15 +9,6 @@ const AcademicProspectusPage = () => {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
 
-  // Hardcoded previous years' data
-  const previousProspectuses = [
-    { year: "2024-25", url: "/ccet-website/public/pdfs/Prospectus-2024.pdf" },
-    { year: "2023-24", url: "/ccet-website/public/pdfs/Prospectus-2023.pdf" },
-    { year: "2022-23", url: "/ccet-website/public/pdfs/Prospectus-2022.pdf" },
-    { year: "2021-22", url: "/ccet-website/public/pdfs/Prospectus-2022.pdf" },
-    { year: "2020-21", url: "/ccet-website/public/pdfs/Prospectus-2022.pdf" },
-  ];
-
   useEffect(() => {
     // Fetch the latest prospectus data from backend
     fetch(API_URL)
@@ -79,17 +70,6 @@ const AcademicProspectusPage = () => {
           Download PDF
         </a>
       )}
-
-      {/* Previous Years Prospectus */}
-      <h2 style={{ marginTop: "2rem" }}>Previous Year Prospectuses</h2>
-      <div className="previous-prospectus-list">
-        {previousProspectuses.map(({ year, url }) => (
-          <div key={year} className="prospectus-item">
-            <span>Prospectus {year}</span>
-            <a href={url} download>Download</a>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
