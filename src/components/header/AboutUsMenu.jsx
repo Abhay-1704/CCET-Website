@@ -110,15 +110,15 @@ const AboutUsMenu = () => {
                     <li className="px-4 py-2 hover:bg-orange-400 hover:text-white rounded">
                       <Link
                         to="https://ccet.ac.in/pdf/notices/general/NBA%20Accreditation%20Letter.pdf"
-                        className="block w-full"
+                        className="block w-full text-black"
                       >
                         NBA Accreditation Letter
                       </Link>
                     </li>
-                    <li className="px-4 py-2 hover:bg-orange-400 hover:text-white rounded">
+                    <li className="px-4 py-2  hover:bg-orange-400 hover:text-white rounded">
                       <Link
                         to="/nba/cse"
-                        className="block w-full"
+                        className="block w-full text-black"
                       >
                         CSE
                       </Link>
@@ -126,7 +126,7 @@ const AboutUsMenu = () => {
                     <li className="px-4 py-2 hover:bg-orange-400 hover:text-white rounded">
                       <Link
                         to="/nba/ece"
-                        className="block w-full"
+                        className="block w-full text-black"
                       >
                         ECE
                       </Link>
@@ -134,7 +134,8 @@ const AboutUsMenu = () => {
                     <li className="px-4 py-2 hover:bg-orange-400 hover:text-white rounded">
                       <Link
                         to="/nba/mech"
-                        className="block w-full"
+                        className="block w-full text-black"
+
                       >
                         MECH
                       </Link>
@@ -142,7 +143,7 @@ const AboutUsMenu = () => {
                     <li className="px-4 py-2 hover:bg-orange-400 hover:text-white rounded">
                       <Link
                         to="/nba/civil"
-                        className="block w-full"
+                        className="block w-full text-black"
                       >
                         CIVIL
                       </Link>
@@ -188,7 +189,6 @@ const AboutUsMenu = () => {
         >
           Policy on use of IT Resources
         </a>,
-
         <Link to="/sports-facility" className="block w-full" key="sports-facility">
           Sports Facility
         </Link>,
@@ -197,7 +197,7 @@ const AboutUsMenu = () => {
   ];
 
   return (
-    <div className="absolute top-full -left-20 transform overflow-x-auto -translate-x-[9%] hidden group-hover:grid grid-cols-3 bg-white/80 shadow-xl z-50 p-6 gap-8 text-1xl text-gray-800 rounded-lg border border-gray-100 w-[1000px] max-w-[90vw] right-0 mx-auto">
+    <div className="absolute top-full -left-20 transform overflow-x-auto -translate-x-[9%] hidden group-hover:grid grid-cols-3 bg-white/80 backdrop-blur-md shadow-xl z-50 p-6 gap-8 text-1xl text-gray-800 rounded-lg border border-gray-100 w-[1000px] max-w-[90vw] right-0 mx-auto">
       {sections.map((section, i) => (
         <div key={i}>
           <div className="font-semibold border-b border-gray-200 pb-2 mb-3 text-red-700">

@@ -109,6 +109,10 @@ import CseLabs from "./pages/CSE-Department/CseLabs.jsx";
 import CseTimeTable from "./pages/CSE-Department/CseTimeTable.jsx";
 import CseSyllabus from "./pages/CSE-Department/CseSyllabus.jsx";
 import CseResearch from "./pages/CSE-Department/CseResearch.jsx";
+import IIRC from "./pages/IIRC/IIRC.jsx";
+import Research from "./pages/Research/Research.jsx";
+import IPRC from "./pages/IPRC/IPRC.jsx";
+import ComputerCentre from "./pages/ComputerCentre/ComputerCentre.jsx";
 
 function App() {
     return (
@@ -127,6 +131,10 @@ function App() {
                 <Route path="/convocation" element={<Convocation />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/admissions/help-desk" element={<HelpDesk />} />
+                <Route path="/iirc" element={<IIRC />} />
+                <Route path="/research" element={<Research />} />
+                <Route path="/iprc" element={<IPRC />} />
+                <Route path="/computercentre" element={<ComputerCentre />} />
 
                 {/* Student Section */}
                 <Route path="/anti-ragging" element={<AntiRagging />} />
@@ -166,7 +174,7 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/prospectus" element={<AcademicProspectusPage />} />
                 <Route path="/academics/nirf" element={<NIRF />} />
-                <Route path="/examinations" element={<Examinations />} />
+                <Route path="/examination" element={<Examinations />} />
                 <Route path="/academics/calendar" element={<AcademicCalendar />} />
                 <Route path="/academics/eoa-report-latest" element={<EoaLatest />} />
                 <Route path="/academics/application-part-1" element={<Partone />} />
