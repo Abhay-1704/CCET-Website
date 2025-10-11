@@ -57,7 +57,7 @@ import FingerPrintIssue2 from "./pages/FingerPrint/FingerPrint2.jsx";
 import Webmasters from "./pages/webmasters.jsx";
 import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx"
 
-import ExamNotice2 from "./pages/ExamNotice/ExamNotice2.jsx";
+import ExamNotice from "./pages/ExamNotice/ExamNotice.jsx";
 import Scholarship from './pages/Students-Section/Scholarship.jsx';
 import Forms from './pages/Forms/Forms.jsx';
 import NBA_CSE from "./pages/NBA/NBA_CSE";
@@ -245,7 +245,7 @@ function App() {
                 <Route path="/magazine/fingerprint-vii-1" element={<FingerPrintIssue1 />} />
                 <Route path="/magazine/fingerprint-vii-2" element={<FingerPrintIssue2 />} />
 
-                <Route path="/notices/exam-notice-2" element={<ExamNotice2 />} />
+                <Route path="/notices/exam-notice-2" element={<ExamNotice />} />
 
                 {/*Webmasters*/}
                 <Route path="/webmasters" element={<Webmasters />} />
