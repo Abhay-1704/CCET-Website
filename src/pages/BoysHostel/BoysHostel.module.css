@@ -262,6 +262,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-left: auto;
     background: linear-gradient(135deg, #1e40af, #1d4ed8);
     color: white;
     border: none;
