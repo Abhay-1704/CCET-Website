@@ -1,35 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Canteen.module.css';
 
-import Menu1 from '../../assets/Canteen/Menu-1.jpg';
-import Menu2 from '../../assets/Canteen/Menu-2.jpg';
-
-import CanteenImage1 from '../../assets/Canteen/Canteen-1.jpg';
-import CanteenImage2 from '../../assets/Canteen/Canteen-2.jpg';
-import CanteenImage3 from '../../assets/Canteen/Canteen-3.jpg';
-import CanteenImage4 from '../../assets/Canteen/Canteen-4.jpg';
-import CanteenImage5 from '../../assets/Canteen/Canteen-5.jpg';
-import CanteenImage6 from '../../assets/Canteen/Canteen-6.jpg';
+const API_BASE_URL = 'https://ccet.ac.in/api/canteen.php';
 
 const Canteen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [menus, setMenus] = useState([]);
+    const [gallery, setGallery] = useState([]);
+    const [hours, setHours] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchCanteenData();
+    }, []);
+
+    const fetchCanteenData = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const [menusRes, galleryRes, hoursRes] = await Promise.all([
+                fetch(`${API_BASE_URL}?resource=menus&is_active=true`),
+                fetch(`${API_BASE_URL}?resource=gallery&is_active=true`),
+                fetch(`${API_BASE_URL}?resource=hours&is_active=true`)
+            ]);
+
+            const [menusData, galleryData, hoursData] = await Promise.all([
+                menusRes.json(),
+                galleryRes.json(),
+                hoursRes.json()
+            ]);
+
+            if (Array.isArray(menusData)) setMenus(menusData);
+            if (Array.isArray(galleryData)) setGallery(galleryData);
+            if (Array.isArray(hoursData)) setHours(hoursData);
+        } catch (err) {
+            setError("Error loading canteen information");
+            console.error("Canteen data fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFullUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) return path;
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+    };
 
     const openModal = (image) => {
         setSelectedImage(image);
         setIsModalOpen(true);
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+        document.body.style.overflow = 'hidden';
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        document.body.style.overflow = 'unset'; // Re-enable scrolling
+        document.body.style.overflow = 'unset';
     };
 
-    const galleryImages = [
-        CanteenImage1, CanteenImage2, CanteenImage3,
-        CanteenImage4, CanteenImage5, CanteenImage6
-    ];
+    const formatTime = (timeString) => {
+        if (!timeString) return '';
+        const [hours, minutes] = timeString.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 || 12;
+        return `${displayHour}:${minutes} ${ampm}`;
+    };
+
+    const getDayLabel = (dayOfWeek) => {
+        const days = {
+            'monday': 'Monday',
+            'tuesday': 'Tuesday',
+            'wednesday': 'Wednesday',
+            'thursday': 'Thursday',
+            'friday': 'Friday',
+            'saturday': 'Saturday',
+            'sunday': 'Sunday'
+        };
+        return days[dayOfWeek.toLowerCase()] || dayOfWeek;
+    };
+
+    if (loading) {
+        return (
+            <div className={styles.canteenContainer}>
+                <div className={styles.backgroundPattern}></div>
+                <div className={styles.header}>
+                    <h1 className={styles.heading}>Canteen</h1>
+                </div>
+                <div className="flex justify-center items-center py-16">
+                    <span className="text-gray-500">Loading canteen information...</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.canteenContainer}>
@@ -41,56 +107,92 @@ const Canteen = () => {
                 <p className={styles.subheading}>Delicious food in a comfortable environment</p>
             </div>
 
-            <div className={styles.menuSection}>
-                <h2>Our Menus</h2>
-                <div className={styles.menuImages}>
-                    <div className={styles.menuItem}>
-                        <div className={styles.imageContainer} onClick={() => openModal(Menu1)}>
-                            <img src={Menu1} alt="Weekly Menu 1" />
-                            <div className={styles.overlay}>
-                                <span className={styles.viewText}>View Full Size</span>
+            {menus.length > 0 && (
+                <div className={styles.menuSection}>
+                    <h2>Our Menus</h2>
+                    <div className={styles.menuImages}>
+                        {menus.map((menu) => (
+                            <div key={menu.id} className={styles.menuItem}>
+                                <div
+                                    className={styles.imageContainer}
+                                    onClick={() => openModal(getFullUrl(menu.image_url))}
+                                >
+                                    <img
+                                        src={getFullUrl(menu.image_url)}
+                                        alt={menu.title}
+                                        onError={(e) => e.target.src = 'https://via.placeholder.com/600x800?text=Menu+Image'}
+                                    />
+                                    <div className={styles.overlay}>
+                                        <span className={styles.viewText}>View Full Size</span>
+                                    </div>
+                                </div>
+                                <p>{menu.title}</p>
+                                {menu.description && (
+                                    <span className={styles.menuDescription}>{menu.description}</span>
+                                )}
                             </div>
-                        </div>
-                        <p>Weekly Regular Menu</p>
+                        ))}
                     </div>
-                    <div className={styles.menuItem}>
-                        <div className={styles.imageContainer} onClick={() => openModal(Menu2)}>
-                            <img src={Menu2} alt="Weekly Menu 2" />
-                            <div className={styles.overlay}>
-                                <span className={styles.viewText}>View Full Size</span>
+                </div>
+            )}
+
+            {gallery.length > 0 && (
+                <div className={styles.gallerySection}>
+                    <h2>Canteen Gallery</h2>
+                    <div className={styles.gallery}>
+                        {gallery.map((image) => (
+                            <div
+                                key={image.id}
+                                className={styles.galleryItem}
+                                onClick={() => openModal(getFullUrl(image.image_url))}
+                            >
+                                <img
+                                    src={getFullUrl(image.image_url)}
+                                    alt={image.alt_text || image.caption || 'Canteen view'}
+                                    onError={(e) => e.target.src = 'https://via.placeholder.com/400x300?text=Canteen+Image'}
+                                />
+                                <div className={styles.overlay}>
+                                    <span className={styles.viewText}>View Full Size</span>
+                                </div>
+                                {image.caption && (
+                                    <p className={styles.imageCaption}>{image.caption}</p>
+                                )}
                             </div>
-                        </div>
-                        <p>Drinks Menu</p>
+                        ))}
                     </div>
                 </div>
-            </div>
+            )}
 
-            <div className={styles.gallerySection}>
-                <h2>Canteen Gallery</h2>
-                <div className={styles.gallery}>
-                    {galleryImages.map((image, index) => (
-                        <div
-                            key={index}
-                            className={styles.galleryItem}
-                            onClick={() => openModal(image)}
-                        >
-                            <img src={image} alt={`Canteen view ${index + 1}`} />
-                            <div className={styles.overlay}>
-                                <span className={styles.viewText}>View Full Size</span>
-                            </div>
-                        </div>
-                    ))}
+            {hours.length > 0 && (
+                <div className={styles.infoSection}>
+                    <h2>Operating Hours</h2>
+                    <div className={styles.hours}>
+                        {hours.map((hour) => (
+                            <p key={hour.id}>
+                                <strong>{getDayLabel(hour.day_of_week)}:</strong>{' '}
+                                {hour.is_closed ? (
+                                    'Closed'
+                                ) : hour.opening_time && hour.closing_time ? (
+                                    `${formatTime(hour.opening_time)} - ${formatTime(hour.closing_time)}`
+                                ) : (
+                                    'Hours not specified'
+                                )}
+                                {hour.special_note && (
+                                    <span className={styles.specialNote}> ({hour.special_note})</span>
+                                )}
+                            </p>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
-            <div className={styles.infoSection}>
-                <h2>Operating Hours</h2>
-                <div className={styles.hours}>
-                    <p><strong>Monday - Friday:</strong> 9:30 AM - 5:30 PM</p>
-                    <p><strong>Saturday:</strong> Closed</p>
-                    <p><strong>Sunday:</strong> Closed</p>
+            {error && (
+                <div className={styles.errorSection}>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                        <p className="text-red-700">{error}</p>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {isModalOpen && (
                 <div className={styles.modal} onClick={closeModal}>
