@@ -1,34 +1,138 @@
-import React, { useState } from "react";
-import alumniInfo from "../../assets/home/Alumni/alumniInfo";
-
+import React, { useState, useEffect } from "react";
 import "./NewAlumni.css";
 
 const NewAlumni = () => {
-	const items = 5;
-	const [activeIndex, setActiveIndex] = useState(Math.floor(items / 2));
+	const [alumniData, setAlumniData] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const [activeIndex, setActiveIndex] = useState(0);
+	const [isPaused, setIsPaused] = useState(false);
+
+	useEffect(() => {
+		fetchAlumni();
+	}, []);
+
+	useEffect(() => {
+		if (alumniData.length > 0) {
+			setActiveIndex(Math.floor(alumniData.length / 2));
+		}
+	}, [alumniData.length]);
+
+	useEffect(() => {
+		if (alumniData.length <= 1 || isPaused) return;
+
+		const interval = setInterval(() => {
+			setActiveIndex((prev) => {
+				if (prev >= alumniData.length - 1) {
+					return 0;
+				}
+				return prev + 1;
+			});
+		}, 3000);
+
+		return () => clearInterval(interval);
+	}, [alumniData.length, isPaused]);
+
+	const fetchAlumni = async () => {
+		setLoading(true);
+		setError(null);
+
+		try {
+			const response = await fetch('https://ccet.ac.in/api/alumni.php');
+			const result = await response.json();
+
+			if (Array.isArray(result) && result.length > 0) {
+				setAlumniData(result);
+			} else if (result.success === false) {
+				setError(result.error || "No alumni data available");
+				setAlumniData([]);
+			} else {
+				setError("No alumni data available");
+				setAlumniData([]);
+			}
+		} catch (err) {
+			setError("Error connecting to server");
+			console.error("Fetch error:", err);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const handleRadioChange = (index) => {
 		setActiveIndex(index);
 	};
 
+	const getFullUrl = (path) => {
+		if (!path) return null;
+		if (path.startsWith('http')) {
+			return path;
+		}
+		return `https://ccet.ac.in/${path}`;
+	};
+
+	const getDefaultImage = () => {
+		return "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80";
+	};
+
+	if (loading) {
+		return (
+			<div className="">
+				<div className="text-center m-2 p-2">
+					<h2 className="text-4xl lg:text-5xl font-bold text-gray-700 dark:text-[#30709aff] mb-4 relative inline-block">
+						Our Alumni
+					</h2>
+				</div>
+				<div className="carousel-container">
+					<div className="text-center text-gray-600 py-8">
+						Loading alumni data...
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (error || alumniData.length === 0) {
+		return (
+			<div className="">
+				<div className="text-center m-2 p-2">
+					<h2 className="text-4xl lg:text-5xl font-bold text-gray-700 dark:text-[#30709aff] mb-4 relative inline-block">
+						Our Alumni
+					</h2>
+				</div>
+				<div className="carousel-container">
+					<div className="text-center text-gray-600 py-8">
+						{error || "No alumni data available"}
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	const items = alumniData.length;
+
 	return (
-		<div className="">
+		<div
+			className=""
+			onMouseEnter={() => setIsPaused(true)}
+			onMouseLeave={() => setIsPaused(false)}
+		>
 			<div className="text-center m-2 p-2">
 				<h2 className="text-4xl lg:text-5xl font-bold text-gray-700 dark:text-[#30709aff] mb-4 relative inline-block">
 					Our Alumni
 				</h2>
 			</div>
-			<div className="carousel-container">
+			<div className="carousel-container" style={{ gridTemplateColumns: `1fr ${alumniData.map(() => '30px').join(' ')} 1fr` }}>
 				<button
-					className="text-xl rounded-full text-center bg-blue-600 w-12 h-12 text-white hover:cursor-pointer hover:w-14 hover:h-14 transition-all"
+					className="text-xl rounded-full text-center bg-blue-600 w-12 h-12 text-white hover:cursor-pointer hover:w-14 hover:h-14 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+					style={{ gridRow: '2 / 3', gridColumn: '1 / 2', justifySelf: 'end', marginRight: '20px' }}
 					onClick={() => {
-						activeIndex > 0
-							? setActiveIndex(activeIndex - 1)
-							: setActiveIndex(0);
+						if (activeIndex > 0) {
+							setActiveIndex(activeIndex - 1);
+						}
 					}}
+					disabled={activeIndex === 0}
 				>
-					{" "}
-					&larr;{" "}
+					&larr;
 				</button>
 
 				{Array.from({ length: items }).map((_, index) => (
@@ -38,51 +142,55 @@ const NewAlumni = () => {
 						name="position"
 						checked={activeIndex === index}
 						onChange={() => handleRadioChange(index)}
-						className={`radio-${index + 1}`}
+						style={{ gridColumn: `${index + 2} / ${index + 3}`, gridRow: '2 / 3' }}
 					/>
 				))}
 
 				<button
-					className="text-xl rounded-full text-center bg-blue-600 w-12 h-12 text-white hover:cursor-pointer hover:w-14 hover:h-14 transition-all"
+					className="text-xl rounded-full text-center bg-blue-600 w-12 h-12 text-white hover:cursor-pointer hover:w-14 hover:h-14 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+					style={{ gridRow: '2 / 3', gridColumn: `${items + 2} / ${items + 3}`, justifySelf: 'start', marginLeft: '20px' }}
 					onClick={() => {
-						activeIndex < items - 1
-							? setActiveIndex(activeIndex + 1)
-							: null;
+						if (activeIndex < items - 1) {
+							setActiveIndex(activeIndex + 1);
+						}
 					}}
+					disabled={activeIndex === items - 1}
 				>
-					{" "}
-					&rarr;{" "}
+					&rarr;
 				</button>
 
-				{/* Carousel */}
-				<main id="carousel" style={{ "--position": activeIndex + 1 }}>
-					{Array.from({ length: items }).map((_, index) => (
+				<main id="carousel" style={{
+					'--position': activeIndex + 1,
+					'--items': items,
+					gridColumn: `1 / ${items + 3}`
+				}}>
+					{alumniData.map((alumni, index) => (
 						<div
-							key={index}
-							className="item bg-white flex items-center rounded-lg shadow-lg border-2 border-gray-200 "
+							key={alumni.id || index}
+							className="item bg-white flex items-center rounded-lg shadow-lg border-2 border-gray-200"
 							style={{
-								"--offset": index + 1,
+								'--offset': index + 1,
 							}}
 						>
-							<div className="w-full max-w-sm ">
+							<div className="w-full max-w-sm">
 								<div className="flex flex-col items-center text-center">
 									<img
 										className="w-32 h-32 mb-3 rounded-full object-cover shadow-md"
-										src={
-											alumniInfo[index].image ??
-											"https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_hybrid&w=740&q=80"
-										}
-										alt={`${alumniInfo[index].name} image`}
+										src={getFullUrl(alumni.image) || getDefaultImage()}
+										alt={`${alumni.name} image`}
+										onError={(e) => {
+											e.target.src = getDefaultImage();
+										}}
 									/>
-									<h5 className="mb-2 text-xl font-semibold text-gray-900 ">
-										{alumniInfo[index].name}
+									<h5 className="mb-2 text-xl font-semibold text-gray-900">
+										{alumni.name}
 									</h5>
-									<span className="text-sm text-gray-600 font-medium ">
-										{alumniInfo[index].designation}
-									</span>
+									<span className="text-sm text-gray-600 font-medium">
+                    {alumni.work_company}
+                  </span>
 									<span className="text-sm text-gray-500 mt-1">
-										{alumniInfo[index].batch}
-									</span>
+                    Batch: {alumni.batch_year}
+                  </span>
 								</div>
 							</div>
 						</div>

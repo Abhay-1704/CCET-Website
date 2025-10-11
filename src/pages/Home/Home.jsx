@@ -4,7 +4,6 @@ import NewsPanel from './NewsPanel'
 import NewsDetails from './NewsDetails'
 import Contact from './ContactUs'
 import AboutUsSection from './AboutUsSection'
-import OurAlumni from './OurAlumni'
 import NewAlumni from './NewAlumni'
 import Gallery from './Gallery'
 import EventCalendar from './EventCalendar'
@@ -44,7 +43,6 @@ function Home() {
       <Achievements />
       <Gallery />
       <NewAlumni />
-      {/* <OurAlumni /> */}
       <Contact />
     </div>
   )
