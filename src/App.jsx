@@ -57,7 +57,7 @@ import FingerPrintIssue2 from "./pages/FingerPrint/FingerPrint2.jsx";
 import Webmasters from "./pages/webmasters.jsx";
 import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx"
 
-import ExamNotice2 from "./pages/ExamNotice/ExamNotice2.jsx";
+import ExamNotice from "./pages/ExamNotice/ExamNotice.jsx";
 import Scholarship from './pages/Students-Section/Scholarship.jsx';
 import Forms from './pages/Forms/Forms.jsx';
 import NBA_CSE from "./pages/NBA/NBA_CSE";
@@ -72,6 +72,7 @@ import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
 import EceHOD from "./pages/ECE-Department/ece-hod.jsx";
 import EceTimeTable from "./pages/ECE-Department/ece-timetable.jsx";
 import EceSyllabus from "./pages/ECE-Department/ece-syllabus.jsx";
+import EceResearch from "./pages/ECE-Department/ece-research.jsx";
 
 //Applied Sciences Department
 import ASOverview from "./pages/AS-Department/ASOverview.jsx";
@@ -204,6 +205,7 @@ function App() {
                 <Route path="/ece/ece-hod" element={<EceHOD />} />
                 <Route path="/ece/timetable" element={<EceTimeTable />} />
                 <Route path="/ece/ece-syllabus" element={<EceSyllabus />} />
+                <Route path="/ece/research" element={<EceResearch />} />
 
                 {/* CSE Department */}
                 <Route path="/academics/cse/overview" element={<CseOverview />} />
@@ -245,7 +247,7 @@ function App() {
                 <Route path="/magazine/fingerprint-vii-1" element={<FingerPrintIssue1 />} />
                 <Route path="/magazine/fingerprint-vii-2" element={<FingerPrintIssue2 />} />
 
-                <Route path="/notices/exam-notice-2" element={<ExamNotice2 />} />
+                <Route path="/notices/exam-notice-2" element={<ExamNotice />} />
 
                 {/*Webmasters*/}
                 <Route path="/webmasters" element={<Webmasters />} />

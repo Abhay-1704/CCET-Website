@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Download } from 'lucide-react';
-import styles from './AcademicCalendar.module.css';
+import styles from './Report.module.css';
 
-const AcademicCalendar = () => {
+const ExamNotice = () => {
     const [pdfs, setPdfs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [activePdfIndex, setActivePdfIndex] = useState(0);
 
-    const TAB_ID = 43; // Academic Calendar tab ID
+    const TAB_ID = 70; // Exam Notice tab ID
 
     useEffect(() => {
         fetchPdfs();
@@ -25,12 +25,12 @@ const AcademicCalendar = () => {
             if (result.data && result.data.length > 0) {
                 setPdfs(result.data);
             } else {
-                setError("No academic calendars available");
+                setError("No exam notices available");
                 setPdfs([]);
             }
         } catch (err) {
-            setError("Error loading academic calendars");
-            console.error("Academic Calendar fetch error:", err);
+            setError("Error loading exam notices");
+            console.error("Exam Notice fetch error:", err);
             setPdfs([]);
         } finally {
             setLoading(false);
@@ -59,10 +59,10 @@ const AcademicCalendar = () => {
     if (loading) {
         return (
             <div className={styles.container}>
-                <h1 className={styles.heading}>Academic Calendar</h1>
+                <h1 className={styles.heading}>Exam Notice</h1>
                 <div className={styles.underline}></div>
                 <div className="flex justify-center items-center py-16">
-                    <span className="text-gray-500">Loading academic calendar...</span>
+                    <span className="text-gray-500">Loading exam notices...</span>
                 </div>
             </div>
         );
@@ -71,7 +71,7 @@ const AcademicCalendar = () => {
     if (error && pdfs.length === 0) {
         return (
             <div className={styles.container}>
-                <h1 className={styles.heading}>Academic Calendar</h1>
+                <h1 className={styles.heading}>Exam Notice</h1>
                 <div className={styles.underline}></div>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
                     <p className="text-red-700">{error}</p>
@@ -86,11 +86,10 @@ const AcademicCalendar = () => {
     return (
         <div className={styles.container}>
             <h1 className={styles.heading}>
-                {currentPdf?.pdf_name || 'Academic Calendar'}
+                {currentPdf?.pdf_name || 'Exam Notice'}
             </h1>
             <div className={styles.underline}></div>
 
-            {/* PDF Tabs - if multiple PDFs exist */}
             {pdfs.length > 1 && (
                 <div className="mb-6 flex flex-wrap gap-2 justify-center">
                     {pdfs.map((pdf, index) => (
@@ -112,13 +111,13 @@ const AcademicCalendar = () => {
             <div className={styles.pdfPlaceholder}>
                 <iframe
                     src={pdfUrl}
-                    title={currentPdf?.pdf_name || 'Academic Calendar'}
+                    title={currentPdf?.pdf_name || 'Exam Notice'}
                     className={styles.pdfViewer}
                     frameBorder="0"
                 >
                     <div className={styles.pdfFallback}>
                         <p>PDF Viewer Placeholder</p>
-                        <p>Academic Calendar will be displayed here</p>
+                        <p>Exam Notice will be displayed here</p>
                         <p>Your browser doesn't support PDF viewing. Please download the file.</p>
                     </div>
                 </iframe>
@@ -130,10 +129,10 @@ const AcademicCalendar = () => {
                 type="button"
             >
                 <Download size={20} />
-                Download {currentPdf?.pdf_name || 'Academic Calendar'}
+                Download {currentPdf?.pdf_name || 'Exam Notice'}
             </button>
         </div>
     );
 };
 
-export default AcademicCalendar;
+export default ExamNotice;
