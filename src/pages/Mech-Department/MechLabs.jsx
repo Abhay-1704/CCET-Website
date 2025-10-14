@@ -1,76 +1,94 @@
-import React from 'react';
-import SharedMechLayout from './SharedMechLayout';
-import styles from './MechLabs.module.css';
+import React, { useEffect, useState } from "react";
+import SharedMechLayout from "./SharedMechLayout";
+import styles from "./MechLabs.module.css";
 
 const MechLabs = () => {
-    const labsData = [
-        {
-            title: "Computer-Aided Design (CAD) Lab",
-            description: "The CAD laboratory of the college is one of the best in the region with state-of-the-art software and hardware. Students work with ANSYS, FLUENT, CATIA, Pro-Engineer, AutoDesk Inventor, and AutoCAD for design and simulation."
-        },
-        {
-            title: "Applied Thermodynamics Lab",
-            description: "Equipped with models, cut sections, and experimental setups to familiarize students with actual engines and performance measurement. Students gain hands-on experience with engine efficiency and thermodynamic cycles."
-        },
-        {
-            title: "Mechanics of Materials Lab",
-            description: "Provides knowledge to evaluate mechanical properties of materials. Facilities include creep testing, fatigue testing, torsion testing, and hardness testing machines along with basic material testing setups."
-        },
-        {
-            title: "Mechatronics Lab",
-            description: "This lab merges mechanical instruments with computers and electronics. Students learn hydraulics and pneumatics with simulation kits, hydraulic training setups, and pneumatic experimental equipment."
-        },
-        {
-            title: "Heat Transfer Lab",
-            description: "Demonstrates heat transfer processes like conduction, convection, and radiation. Students also perform experiments on heat exchangers, heat pipes, and calculate heat transfer coefficients and thermal conductivity."
-        },
-        {
-            title: "Fluid Mechanics and Machinery Lab",
-            description: "Focuses on studying turbines, pumps, and hydraulic equipment. Equipped with experimental setups to perform practical tests on fluid machinery and analyze their working principles."
-        },
-        {
-            title: "Theory of Machines & Vibrations Lab",
-            description: "Equipped with various working models to help students understand concepts of mechanisms, vibrations, and their measurement techniques."
-        },
-        {
-            title: "Refrigeration & Air Conditioning Lab",
-            description: "Provides hands-on learning of refrigeration and air conditioning systems. Equipped with refrigeration test rigs, vapour compression/absorption systems, air conditioners, ice plant setups, and cut-section models."
+  const [labsData, setLabsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLabs = async () => {
+      try {
+        const response = await fetch("https://ccet.ac.in/api/laboratories.php");
+        if (!response.ok) {
+          throw new Error("Failed to fetch labs data");
         }
-    ];
+        const data = await response.json();
+        // Map API data to expected structure
+        const formattedData = data.map((lab) => ({
+          title: lab.lab_name,
+          description: lab.lab_description,
+          image: lab.lab_image,
+        }));
+        setLabsData(formattedData);
+      } catch (error) {
+        console.error(error);
+        setLabsData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return (
-        <SharedMechLayout pageTitle="Laboratories">
-            <div className={styles.container}>
-                <header>
-                    <h1 className={styles.mechlabsheading}>Laboratories</h1>
-                    <div className={styles.headerLine}></div>
-                </header>
+    fetchLabs();
+  }, []);
 
-                <p className={styles.intro}>
-                    Knowledge without practical application is of no use, at least for a Mechanical Engineer.
-                    For this, we have all kinds of laboratories which include:
-                </p>
+  return (
+    <SharedMechLayout pageTitle="Laboratories">
+      <div className={styles.container}>
+        <header>
+          <h1 className={styles.Mechlabsheading}>Laboratories</h1>
+          <div className={styles.headerLine}></div>
+          <p className={styles.MechintroText}>
+            At Mech Department, students are challenged by a flexible,
+            thought-provoking curriculum and learn from faculty members who are
+            experts in their areas. The courses in the Computer Sc. &
+            Engineering are well organized to provide a wide spectrum of choices
+            to the students. The faculty and students have interest in wide
+            range of latest technologies that include Computer's Database
+            Systems, Artificial Intelligence, Computer Networks & Distributed
+            Computing, operating system, Computer Graphics, Mathematical
+            Modelling, OOPS, Advanced DBMS (OODBMS, Distributed DBMS etc.),
+            Software Engineering, Linux, Big Data, Computer Architecture, and
+            Embedded Systems etc. To support the learning and practices in above
+            technological area, Department of Mech have well equipped computer
+            justify, project lab and oracle sponsored lab that have various
+            Software Packages relevant to the Development of Minor and Major
+            Projects undertaken during the Coursework. All the state of Art
+            Facilities, Resources and Guidelines are provided to the students as
+            per their requirement.
+          </p>
+        </header>
 
-                <div className={styles.labsGrid}>
-                    {labsData.map((lab, index) => (
-                        <div key={index} className={styles.labCard}>
-                            <div className={styles.imagePlaceholder}>
-                                <span className={styles.dimensionLabel}>385px × 246px</span>
-                            </div>
-                            <div className={styles.labContent}>
-                                <h2 className={styles.labTitle}>{lab.title}</h2>
-                                <p className={styles.labDescription}>{lab.description}</p>
-                            </div>
-                        </div>
-                    ))}
+        <div className={styles.labsGrid}>
+          {loading ? (
+            <p>Loading laboratories...</p>
+          ) : labsData.length === 0 ? (
+            <p>No laboratories found.</p>
+          ) : (
+            labsData.map((lab, index) => (
+              <div key={index} className={styles.labCard}>
+                <div className={styles.imagePlaceholder}>
+                  {lab.image ? (
+                    <img src={lab.image} alt={lab.title} />
+                  ) : (
+                    <span className={styles.dimensionLabel}>385px × 246px</span>
+                  )}
                 </div>
+                <div className={styles.labContent}>
+                  <h2 className={styles.labTitle}>{lab.title}</h2>
+                  <p className={styles.labDescription}>{lab.description}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
-                <footer>
-                    <p>© 2023 University Laboratories. All rights reserved.</p>
-                </footer>
-            </div>
-        </SharedMechLayout>
-    );
+        <footer>
+          <p>© 2023 University Laboratories. All rights reserved.</p>
+        </footer>
+      </div>
+    </SharedMechLayout>
+  );
 };
 
 export default MechLabs;
