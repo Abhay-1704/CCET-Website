@@ -1,13 +1,27 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from "react-router-dom";
 import SharedCseLayout from './SharedCseLayout';
 import styles from './CseOverview.module.css';
 
-import cseDepartmentImage from '../../assets/CSE-Department/Cse-1.jpg';
-import codingCompetitionImage from '../../assets/CSE-Department/Cse-2.jpg';
+const API_BASE_URL = 'https://ccet.ac.in/api/overview.php';
+const DEPARTMENT_CODE = 'CSE';
 
 const CseOverview = () => {
     const animatedElementsRef = useRef([]);
+    const [departmentInfo, setDepartmentInfo] = useState(null);
+    const [programOutcomes, setProgramOutcomes] = useState([]);
+    const [specificOutcomes, setSpecificOutcomes] = useState([]);
+    const [objectives, setObjectives] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [featuredEvent, setFeaturedEvent] = useState(null);
+    const [quickLinks, setQuickLinks] = useState([]);
+    const [gallery, setGallery] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchAllData();
+    }, []);
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -24,233 +38,333 @@ const CseOverview = () => {
         });
 
         return () => observer.disconnect();
-    }, []);
+    }, [loading]);
+
+    const fetchAllData = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const [infoRes, outcomesRes, objectivesRes, eventsRes, linksRes, galleryRes] = await Promise.all([
+                fetch(`${API_BASE_URL}?entity=info&department_code=${DEPARTMENT_CODE}&is_active=true`),
+                fetch(`${API_BASE_URL}?entity=outcomes&department_code=${DEPARTMENT_CODE}&is_active=true`),
+                fetch(`${API_BASE_URL}?entity=objectives&department_code=${DEPARTMENT_CODE}&is_active=true`),
+                fetch(`${API_BASE_URL}?entity=events&department_code=${DEPARTMENT_CODE}&is_active=true`),
+                fetch(`${API_BASE_URL}?entity=links&department_code=${DEPARTMENT_CODE}&is_active=true`),
+                fetch(`${API_BASE_URL}?entity=gallery&department_code=${DEPARTMENT_CODE}&is_active=true&gallery_type=tour`)
+            ]);
+
+            const [infoData, outcomesData, objectivesData, eventsData, linksData, galleryData] = await Promise.all([
+                infoRes.json(),
+                outcomesRes.json(),
+                objectivesRes.json(),
+                eventsRes.json(),
+                linksRes.json(),
+                galleryRes.json()
+            ]);
+
+            if (Array.isArray(infoData) && infoData.length > 0) {
+                setDepartmentInfo(infoData[0]);
+            }
+
+            if (Array.isArray(outcomesData)) {
+                setProgramOutcomes(outcomesData.filter(o => o.outcome_type === 'general'));
+                setSpecificOutcomes(outcomesData.filter(o => o.outcome_type === 'specific'));
+            }
+
+            if (Array.isArray(objectivesData)) {
+                setObjectives(objectivesData);
+            }
+
+            if (Array.isArray(eventsData)) {
+                const featured = eventsData.find(e => e.is_featured);
+                let nonFeatured = eventsData.filter(e => !e.is_featured);
+
+                if (nonFeatured.length === 0 && eventsData.length > 0) {
+                    nonFeatured = eventsData.filter(e => featured ? e.id !== featured.id : true);
+                }
+
+                const displayEvents = nonFeatured.slice(0, 3);
+
+                setFeaturedEvent(featured);
+                setEvents(displayEvents);
+            }
+
+            if (Array.isArray(linksData)) {
+                setQuickLinks(linksData);
+            }
+
+            if (Array.isArray(galleryData)) {
+                console.log('Gallery data loaded:', galleryData);
+                setGallery(galleryData);
+            }
+        } catch (err) {
+            setError("Error loading department information");
+            console.error("Department data fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFullUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) return path;
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    if (loading) {
+        return (
+            <SharedCseLayout pageTitle="Overview">
+                <div className="flex justify-center items-center py-16">
+                    <span className="text-gray-500">Loading department information...</span>
+                </div>
+            </SharedCseLayout>
+        );
+    }
 
     return (
         <SharedCseLayout pageTitle="Overview">
             {/* About Section */}
-            <section ref={el => animatedElementsRef.current[0] = el} className={`${styles.aboutSection} ${styles.animateOnScroll}`}>
-                <div className={styles.aboutImage}>
-                    <img src={cseDepartmentImage} alt="Computer Science Engineering Department" />
-                </div>
-                <div className={styles.aboutContent}>
-                    <h3>ABOUT OUR DEPARTMENT</h3>
-                    <div className={styles.orangeLine}></div>
-                    <p>The Department of Computer Science and Engineering at CCET is committed to delivering high-quality education and fostering innovation in the field of computing. Our B.E. (CSE) program has been accredited by the National Board of Accreditation (NBA), recognizing our adherence to the highest academic standards and excellence in technical education.<br/><br/>The B.E. (Computer Science and Engineering) program was awarded NBA accreditation on February 12, 2025, demonstrating our commitment to producing competent professionals who meet industry and global standards.</p>
-                </div>
-            </section>
+            {departmentInfo && (
+                <section ref={el => animatedElementsRef.current[0] = el} className={`${styles.aboutSection} ${styles.animateOnScroll}`}>
+                    <div className={styles.aboutImage}>
+                        <img
+                            src={getFullUrl(departmentInfo.about_image)}
+                            alt={departmentInfo.department_name}
+                            onError={(e) => e.target.src = 'https://via.placeholder.com/600x400?text=Department+Image'}
+                        />
+                    </div>
+                    <div className={styles.aboutContent}>
+                        <h3>ABOUT OUR DEPARTMENT</h3>
+                        <div className={styles.orangeLine}></div>
+                        <p>{departmentInfo.about_text}</p>
+                        {departmentInfo.nba_accredited && departmentInfo.nba_accreditation_date && (
+                            <p className="mt-4 font-semibold">
+                                NBA Accreditation Date: {formatDate(departmentInfo.nba_accreditation_date)}
+                            </p>
+                        )}
+                    </div>
+                </section>
+            )}
 
             {/* Department Info Section */}
             <section className={styles.deptInfo}>
                 <div ref={el => animatedElementsRef.current[1] = el} className={`${styles.deptInfoContainer} ${styles.animateOnScroll}`}>
                     <div className={styles.deptInfoHeader}>
-                        <h2 style={{fontSize: '40px'}}>Department of Computer Science and Engineering</h2>
-                        <p style={{fontSize: '20px'}}>Excellence in education, research, and innovation</p>
-                    </div>
-
-                    {/* Vision */}
-                    <div ref={el => animatedElementsRef.current[2] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
-                        <div className={styles.yellowLine}></div>
-                        <h3>Vision</h3>
-                    </div>
-                    <div ref={el => animatedElementsRef.current[3] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                        <p>
-                            To produce self-motivated and globally competent technocrats equipped with computing, innovation, and human values for ever changing world and shape them towards serving the society.
+                        <h2 style={{fontSize: '40px'}}>
+                            {departmentInfo?.department_name || 'Department of Computer Science and Engineering'}
+                        </h2>
+                        <p style={{fontSize: '20px'}}>
+                            {departmentInfo?.tagline || 'Excellence in education, research, and innovation'}
                         </p>
                     </div>
 
+                    {/* Vision */}
+                    {departmentInfo?.vision && (
+                        <>
+                            <div ref={el => animatedElementsRef.current[2] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
+                                <div className={styles.yellowLine}></div>
+                                <h3>Vision</h3>
+                            </div>
+                            <div ref={el => animatedElementsRef.current[3] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
+                                <p>{departmentInfo.vision}</p>
+                            </div>
+                        </>
+                    )}
+
                     {/* Mission */}
-                    <div ref={el => animatedElementsRef.current[4] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
-                        <div className={styles.yellowLine}></div>
-                        <h3>Mission</h3>
-                    </div>
-                    <div ref={el => animatedElementsRef.current[5] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                        <ul>
-                            <li>To make the department a smart centre for learning, innovation and research, creativity, and entrepreneurship for the stakeholders.</li>
-                            <li>To inculcate a strong background in mathematical, theoretical, analytical, and practical knowledge in computer science and engineering.</li>
-                            <li>To promote interaction with institutions, industries and research organizations to enable them to develop as technocrats, entrepreneurs, and business leaders of the future.</li>
-                            <li>To provide a friendly environment while developing interpersonal skills to bring out technocrat's inherent talents for their all-round growth.</li>
-                        </ul>
-                    </div>
+                    {departmentInfo?.mission && (
+                        <>
+                            <div ref={el => animatedElementsRef.current[4] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
+                                <div className={styles.yellowLine}></div>
+                                <h3>Mission</h3>
+                            </div>
+                            <div ref={el => animatedElementsRef.current[5] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
+                                <ul>
+                                    {departmentInfo.mission.split('\n').filter(m => m.trim()).map((mission, index) => (
+                                        <li key={index}>{mission}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </>
+                    )}
 
                     {/* Program Outcomes */}
-                    <div ref={el => animatedElementsRef.current[6] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
-                        <div className={styles.yellowLine}></div>
-                        <h3>Program Outcomes</h3>
-                    </div>
-                    <div ref={el => animatedElementsRef.current[7] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                        <p>Graduates of the Computer Science and Engineering program will demonstrate:</p>
-                        <ul>
-                            <li>Engineering knowledge to solve complex engineering problems</li>
-                            <li>Problem analysis skills using first principles of mathematics and sciences</li>
-                            <li>Design solutions considering public health, safety, and environmental factors</li>
-                            <li>Ability to conduct investigations using research-based knowledge</li>
-                            <li>Proficiency in modern engineering tools and IT resources</li>
-                            <li>Understanding of societal, health, safety, and cultural responsibilities</li>
-                            <li>Knowledge of environmental impact and sustainable development</li>
-                            <li>Commitment to professional ethics and responsibilities</li>
-                            <li>Ability to work effectively in teams and multidisciplinary settings</li>
-                            <li>Effective communication skills with engineering community and society</li>
-                            <li>Project management and finance knowledge</li>
-                            <li>Preparation for life-long learning in technological changes</li>
-                        </ul>
-                    </div>
+                    {programOutcomes.length > 0 && (
+                        <>
+                            <div ref={el => animatedElementsRef.current[6] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
+                                <div className={styles.yellowLine}></div>
+                                <h3>Program Outcomes</h3>
+                            </div>
+                            <div ref={el => animatedElementsRef.current[7] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
+                                <p>Graduates of the Computer Science and Engineering program will demonstrate:</p>
+                                <ul>
+                                    {programOutcomes.map((outcome) => (
+                                        <li key={outcome.id}>{outcome.outcome_text}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </>
+                    )}
 
                     {/* Program Educational Objectives */}
-                    <div ref={el => animatedElementsRef.current[8] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
-                        <div className={styles.yellowLine}></div>
-                        <h3>Program Educational Objectives</h3>
-                    </div>
-                    <div ref={el => animatedElementsRef.current[9] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                        <ul>
-                            <li>Graduates will be technocrats who will be able to apply their mathematical, theoretical, analytical as well as practical skills in the design and implementation of need-based systems.</li>
-                            <li>Graduates will go for higher studies and research in technical and management disciplines.</li>
-                            <li>Graduates will work as technocrats, entrepreneurs, and business leaders of the future.</li>
-                        </ul>
-                    </div>
+                    {objectives.length > 0 && (
+                        <>
+                            <div ref={el => animatedElementsRef.current[8] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
+                                <div className={styles.yellowLine}></div>
+                                <h3>Program Educational Objectives</h3>
+                            </div>
+                            <div ref={el => animatedElementsRef.current[9] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
+                                <ul>
+                                    {objectives.map((objective) => (
+                                        <li key={objective.id}>{objective.objective_text}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </>
+                    )}
 
                     {/* Program Specific Outcomes */}
-                    <div ref={el => animatedElementsRef.current[10] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
-                        <div className={styles.yellowLine}></div>
-                        <h3>Program Specific Outcomes</h3>
-                    </div>
-                    <div ref={el => animatedElementsRef.current[11] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                        <p>Graduates will be able to:</p>
-                        <ul>
-                            <li>Understand the problem, think of the best suitable approach to solve the problem, develop and evaluate effective solutions.</li>
-                            <li>Excel in contemporary technologies being adopted by the industry and academia.</li>
-                            <li>Excel in various programming/project competitions and technological challenges laid by professional bodies.</li>
-                        </ul>
-                    </div>
+                    {specificOutcomes.length > 0 && (
+                        <>
+                            <div ref={el => animatedElementsRef.current[10] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
+                                <div className={styles.yellowLine}></div>
+                                <h3>Program Specific Outcomes</h3>
+                            </div>
+                            <div ref={el => animatedElementsRef.current[11] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
+                                <p>Graduates will be able to:</p>
+                                <ul>
+                                    {specificOutcomes.map((outcome) => (
+                                        <li key={outcome.id}>{outcome.outcome_text}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
 
             {/* Quick Links Section */}
-            <section className={styles.quickLinks}>
-                <h2 ref={el => animatedElementsRef.current[12] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Quick Links</h2>
-                <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
+            {quickLinks.length > 0 && (
+                <section className={styles.quickLinks}>
+                    <h2 ref={el => animatedElementsRef.current[12] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Quick Links</h2>
+                    <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
 
-                <div className={styles.linksGrid}>
-                    <Link to="/academics/cse/hod" ref={el => animatedElementsRef.current[13] = el} className={`${styles.linkCard} ${styles.animateOnScroll}`} data-page="HOD Desk">
-                        <div className={styles.linkIcon}>
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                        </div>
-                        <h4>HOD Desk</h4>
-                    </Link>
-
-                    <Link to="/academics/cse/csefaculty" ref={el => animatedElementsRef.current[14] = el} className={`${styles.linkCard} ${styles.animateOnScroll} ${styles.delay1}`} data-page="Faculty">
-                        <div className={styles.linkIcon}>
-                            <svg viewBox="0 0 24 24">
-                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                            </svg>
-                        </div>
-                        <h4>Faculty</h4>
-                    </Link>
-
-                    <Link to="/academics/cse/csesyllabus" ref={el => animatedElementsRef.current[15] = el} className={`${styles.linkCard} ${styles.animateOnScroll} ${styles.delay2}`} data-page="Syllabus">
-                        <div className={styles.linkIcon}>
-                            <svg viewBox="0 0 24 24">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
-                            </svg>
-                        </div>
-                        <h4>Syllabus</h4>
-                    </Link>
-
-                    <Link to="/academics/cse/cselabs" ref={el => animatedElementsRef.current[16] = el} className={`${styles.linkCard} ${styles.animateOnScroll}`} data-page="Laboratories">
-                        <div className={styles.linkIcon}>
-                            <svg viewBox="0 0 24 24">
-                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-                            </svg>
-                        </div>
-                        <h4>Laboratories</h4>
-                    </Link>
-
-                    <Link to="/academics/cse/cseresearch" ref={el => animatedElementsRef.current[17] = el} className={`${styles.linkCard} ${styles.animateOnScroll} ${styles.delay1}`} data-page="Research">
-                        <div className={styles.linkIcon}>
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                            </svg>
-                        </div>
-                        <h4>Research</h4>
-                    </Link>
-
-                    <Link to="/academics/cse/csetimetable" ref={el => animatedElementsRef.current[18] = el} className={`${styles.linkCard} ${styles.animateOnScroll} ${styles.delay2}`} data-page="Time Table">
-                        <div className={styles.linkIcon}>
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
-                            </svg>
-                        </div>
-                        <h4>Timetable</h4>
-                    </Link>
-                </div>
-            </section>
+                    <div className={styles.linksGrid}>
+                        {quickLinks.map((link, index) => (
+                            <Link
+                                key={link.id}
+                                to={link.link_url}
+                                ref={el => animatedElementsRef.current[13 + index] = el}
+                                className={`${styles.linkCard} ${styles.animateOnScroll} ${index % 3 === 1 ? styles.delay1 : index % 3 === 2 ? styles.delay2 : ''}`}
+                            >
+                                <div className={styles.linkIcon}>
+                                    {link.icon_svg ? (
+                                        <div dangerouslySetInnerHTML={{ __html: link.icon_svg }} />
+                                    ) : (
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                        </svg>
+                                    )}
+                                </div>
+                                <h4>{link.link_title}</h4>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* Events Section */}
-            <section className={styles.eventsSection}>
-                <h2 ref={el => animatedElementsRef.current[19] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Department Events</h2>
-                <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
+            {(featuredEvent || events.length > 0) && (
+                <section className={styles.eventsSection}>
+                    <h2 ref={el => animatedElementsRef.current[19] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Department Events</h2>
+                    <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
 
-                <div ref={el => animatedElementsRef.current[20] = el} className={`${styles.eventsHero} ${styles.animateOnScroll}`}>
-                    <div className={styles.eventsImage}>
-                        <img src={codingCompetitionImage} alt="Coding Competition" />
+                    {featuredEvent && (
+                        <div ref={el => animatedElementsRef.current[20] = el} className={`${styles.eventsHero} ${styles.animateOnScroll}`}>
+                            <div className={styles.eventsImage}>
+                                <img
+                                    src={getFullUrl(featuredEvent.event_image)}
+                                    alt={featuredEvent.event_title}
+                                    onError={(e) => e.target.src = 'https://via.placeholder.com/800x400?text=Event+Image'}
+                                />
+                            </div>
+                            <div className={styles.eventsContent}>
+                                <h3>{featuredEvent.event_title}</h3>
+                                <p>{featuredEvent.event_description}</p>
+                                {featuredEvent.event_date && (
+                                    <p className="text-sm mt-2 opacity-80">{formatDate(featuredEvent.event_date)}</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {events.length > 0 && (
+                        <div className={styles.eventsCards}>
+                            {events.map((event, index) => (
+                                <div
+                                    key={event.id}
+                                    ref={el => animatedElementsRef.current[21 + index] = el}
+                                    className={`${styles.eventCard} ${styles.animateOnScroll} ${index === 1 ? styles.delay1 : index === 2 ? styles.delay2 : ''}`}
+                                >
+                                    <div className={styles.eventCardHeader}>
+                                        <h4>
+                                            {event.event_title}
+                                            {event.event_date && <><br/>{formatDate(event.event_date)}</>}
+                                        </h4>
+                                    </div>
+                                    <div className={styles.eventCardContent}>
+                                        {event.event_description}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
+            )}
+
+            {/* Tour Section - Updated with Gallery Images */}
+            {gallery.length > 0 && (
+                <section className={styles.tourSection}>
+                    <h2 ref={el => animatedElementsRef.current[24] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>CSE Department Tour</h2>
+                    <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
+
+                    <div ref={el => animatedElementsRef.current[25] = el} className={`${styles.tourContainer} ${styles.animateOnScroll}`}>
+                        <div className={styles.galleryGrid}>
+                            {gallery.map((image, index) => (
+                                <div
+                                    key={image.id}
+                                    ref={el => animatedElementsRef.current[26 + index] = el}
+                                    className={`${styles.galleryItem} ${styles.animateOnScroll} ${index % 3 === 1 ? styles.delay1 : index % 3 === 2 ? styles.delay2 : ''}`}
+                                >
+                                    <img
+                                        src={getFullUrl(image.image_url)}
+                                        alt={image.alt_text || 'Department gallery image'}
+                                        onError={(e) => e.target.src = 'https://via.placeholder.com/400x300?text=Gallery+Image'}
+                                    />
+                                    {image.caption && (
+                                        <div className={styles.imageCaption}>
+                                            <p>{image.caption}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div className={styles.eventsContent}>
-                        <h3>National Coding Championship</h3>
-                        <p>Our students won first place in the National Coding Championship with their innovative algorithm that optimizes data processing by 60% while reducing computational complexity.</p>
-                        <a href="#" className={styles.learnMoreBtn}>Learn more --&gt;</a>
-                    </div>
+                </section>
+            )}
+
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center my-8">
+                    <p className="text-red-700">{error}</p>
                 </div>
-
-                <div className={styles.eventsCards}>
-                    <div ref={el => animatedElementsRef.current[21] = el} className={`${styles.eventCard} ${styles.animateOnScroll}`}>
-                        <div className={styles.eventCardHeader}>
-                            <h4>Tech Symposium on AI & Machine Learning<br/>18-19 October, 2025</h4>
-                        </div>
-                        <div className={styles.eventCardContent}>
-                            Join industry experts and academicians to discuss the latest trends in artificial intelligence, machine learning, and data science applications.
-                        </div>
-                    </div>
-
-                    <div ref={el => animatedElementsRef.current[22] = el} className={`${styles.eventCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                        <div className={styles.eventCardHeader}>
-                            <h4>Hackathon on Sustainable Tech Solutions<br/>5-6 November, 2025</h4>
-                        </div>
-                        <div className={styles.eventCardContent}>
-                            24-hour hackathon challenging students to develop technological solutions for environmental sustainability and social impact.
-                        </div>
-                    </div>
-
-                    <div ref={el => animatedElementsRef.current[23] = el} className={`${styles.eventCard} ${styles.animateOnScroll} ${styles.delay2}`}>
-                        <div className={styles.eventCardHeader}>
-                            <h4>Industry Connect Session<br/>22 November, 2025</h4>
-                        </div>
-                        <div className={styles.eventCardContent}>
-                            Interactive session with leading tech companies for placement opportunities, internships, and industry insights on emerging technologies.
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Tour Section */}
-            <section className={styles.tourSection}>
-                <h2 ref={el => animatedElementsRef.current[24] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>CSE Department Tour</h2>
-                <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
-
-                <div ref={el => animatedElementsRef.current[25] = el} className={`${styles.tourContainer} ${styles.animateOnScroll}`}>
-                    <h3>VIDEO / Carousel with pictures</h3>
-                </div>
-            </section>
+            )}
         </SharedCseLayout>
     );
 };
