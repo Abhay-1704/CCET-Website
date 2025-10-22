@@ -3,13 +3,8 @@ import { Link } from "react-router-dom";
 import SharedCivilLayout from './SharedCivilLayout';
 import styles from './CivilOverview.module.css';
 
-// Remove hardcoded image imports as they will be fetched via API
-// import civilDepartmentImage from '../../assets/Civil-Department/Civil-1.jpeg';
-// import bridgeCompetitionImage from '../../assets/Civil-Department/Civil-2.jpeg';
-
-// API Configuration
 const API_BASE_URL = 'https://ccet.ac.in/api/overview.php';
-const DEPARTMENT_CODE = 'CIVIL'; // Change to CIVIL
+const DEPARTMENT_CODE = 'CIVIL';
 
 const CivilOverview = () => {
     const animatedElementsRef = useRef([]);
@@ -24,12 +19,10 @@ const CivilOverview = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Initial data fetching
     useEffect(() => {
         fetchAllData();
     }, []);
 
-    // Intersection Observer for animations
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -45,7 +38,7 @@ const CivilOverview = () => {
         });
 
         return () => observer.disconnect();
-    }, [loading]); // Run when loading state changes (after data fetch)
+    }, [loading]);
 
     const fetchAllData = async () => {
         setLoading(true);
@@ -70,46 +63,40 @@ const CivilOverview = () => {
                 galleryRes.json()
             ]);
 
-            // Handle Department Info
             if (Array.isArray(infoData) && infoData.length > 0) {
                 setDepartmentInfo(infoData[0]);
             }
 
-            // Handle Outcomes
             if (Array.isArray(outcomesData)) {
                 setProgramOutcomes(outcomesData.filter(o => o.outcome_type === 'general'));
                 setSpecificOutcomes(outcomesData.filter(o => o.outcome_type === 'specific'));
             }
 
-            // Handle Objectives
             if (Array.isArray(objectivesData)) {
                 setObjectives(objectivesData);
             }
 
-            // Handle Events
             if (Array.isArray(eventsData)) {
                 const featured = eventsData.find(e => e.is_featured);
                 let nonFeatured = eventsData.filter(e => !e.is_featured);
 
-                // Fallback to non-featured if no explicit featured event exists
-                if (nonFeatured.length === eventsData.length && eventsData.length > 0) {
-                    // Ensure featured is not included in nonFeatured if it was implicitly selected as one of the first 3
+                // ✅ Fixed logic to ensure fallback when no featured or non-featured exist
+                if (nonFeatured.length === 0 && eventsData.length > 0) {
                     nonFeatured = eventsData.filter(e => featured ? e.id !== featured.id : true);
                 }
 
-                const displayEvents = nonFeatured.slice(0, 3); // Display up to 3 non-featured events
+                const displayEvents = nonFeatured.slice(0, 3);
 
                 setFeaturedEvent(featured);
                 setEvents(displayEvents);
             }
 
-            // Handle Quick Links
             if (Array.isArray(linksData)) {
                 setQuickLinks(linksData);
             }
 
-            // Handle Gallery
             if (Array.isArray(galleryData)) {
+                console.log('Gallery data loaded:', galleryData);
                 setGallery(galleryData);
             }
         } catch (err) {
@@ -123,7 +110,6 @@ const CivilOverview = () => {
     const getFullUrl = (path) => {
         if (!path) return '';
         if (path.startsWith('http://') || path.startsWith('https://')) return path;
-        // Assuming all asset paths are relative to the site root, like in CseOverview.jsx
         return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
     };
 
@@ -145,13 +131,6 @@ const CivilOverview = () => {
 
     return (
         <SharedCivilLayout pageTitle="Overview">
-            {/* Error Display */}
-            {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center my-8">
-                    <p className="text-red-700">{error}</p>
-                </div>
-            )}
-
             {/* About Section */}
             {departmentInfo && (
                 <section ref={el => animatedElementsRef.current[0] = el} className={`${styles.aboutSection} ${styles.animateOnScroll}`}>
@@ -165,10 +144,7 @@ const CivilOverview = () => {
                     <div className={styles.aboutContent}>
                         <h3>ABOUT OUR DEPARTMENT</h3>
                         <div className={styles.orangeLine}></div>
-                        {/* Split about_text by new lines to retain paragraphs */}
-                        {departmentInfo.about_text.split('\n').filter(p => p.trim()).map((paragraph, index) => (
-                            <p key={index}>{paragraph}</p>
-                        ))}
+                        <p>{departmentInfo.about_text}</p>
                         {departmentInfo.nba_accredited && departmentInfo.nba_accreditation_date && (
                             <p className="mt-4 font-semibold">
                                 NBA Accreditation Date: {formatDate(departmentInfo.nba_accreditation_date)}
@@ -182,10 +158,10 @@ const CivilOverview = () => {
             <section className={styles.deptInfo}>
                 <div ref={el => animatedElementsRef.current[1] = el} className={`${styles.deptInfoContainer} ${styles.animateOnScroll}`}>
                     <div className={styles.deptInfoHeader}>
-                        <h2 style={{fontSize: '40px'}}>
+                        <h2 style={{ fontSize: '40px' }}>
                             {departmentInfo?.department_name || 'Department of Civil Engineering'}
                         </h2>
-                        <p style={{fontSize: '20px'}}>
+                        <p style={{ fontSize: '20px' }}>
                             {departmentInfo?.tagline || 'Excellence in education, research, and innovation'}
                         </p>
                     </div>
@@ -212,7 +188,6 @@ const CivilOverview = () => {
                             </div>
                             <div ref={el => animatedElementsRef.current[5] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
                                 <ul>
-                                    {/* Mission is expected to be stored with newlines for list items */}
                                     {departmentInfo.mission.split('\n').filter(m => m.trim()).map((mission, index) => (
                                         <li key={index}>{mission}</li>
                                     ))}
@@ -221,7 +196,7 @@ const CivilOverview = () => {
                         </>
                     )}
 
-                    {/* Program Outcomes (General) */}
+                    {/* Program Outcomes */}
                     {programOutcomes.length > 0 && (
                         <>
                             <div ref={el => animatedElementsRef.current[6] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
@@ -247,8 +222,6 @@ const CivilOverview = () => {
                                 <h3>Program Educational Objectives</h3>
                             </div>
                             <div ref={el => animatedElementsRef.current[9] = el} className={`${styles.infoCard} ${styles.animateOnScroll} ${styles.delay1}`}>
-                                {/* The content here might need context text if it's not just a list, otherwise just the list */}
-                                {/* The original CivilOverview.jsx had a paragraph of text before the list, consider adding that to the database too if needed */}
                                 <ul>
                                     {objectives.map((objective) => (
                                         <li key={objective.id}>{objective.objective_text}</li>
@@ -258,7 +231,7 @@ const CivilOverview = () => {
                         </>
                     )}
 
-                    {/* Program Specific Outcomes (Specific) */}
+                    {/* Program Specific Outcomes */}
                     {specificOutcomes.length > 0 && (
                         <>
                             <div ref={el => animatedElementsRef.current[10] = el} className={`${styles.sectionHeading} ${styles.animateOnScroll}`}>
@@ -282,23 +255,22 @@ const CivilOverview = () => {
             {quickLinks.length > 0 && (
                 <section className={styles.quickLinks}>
                     <h2 ref={el => animatedElementsRef.current[12] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Quick Links</h2>
-                    <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
+                    <div className={styles.sectionUnderline} style={{ filter: 'none' }}></div>
 
                     <div className={styles.linksGrid}>
                         {quickLinks.map((link, index) => (
                             <Link
                                 key={link.id}
                                 to={link.link_url}
-                                ref={el => animatedElementsRef.current[13 + index] = el} // Adjust index if needed based on total animated elements before this
+                                ref={el => animatedElementsRef.current[13 + index] = el}
                                 className={`${styles.linkCard} ${styles.animateOnScroll} ${index % 3 === 1 ? styles.delay1 : index % 3 === 2 ? styles.delay2 : ''}`}
                             >
                                 <div className={styles.linkIcon}>
-                                    {/* Render icon_svg if available, otherwise fallback to a default star SVG */}
                                     {link.icon_svg ? (
                                         <div dangerouslySetInnerHTML={{ __html: link.icon_svg }} />
                                     ) : (
                                         <svg viewBox="0 0 24 24">
-                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                         </svg>
                                     )}
                                 </div>
@@ -312,11 +284,11 @@ const CivilOverview = () => {
             {/* Events Section */}
             {(featuredEvent || events.length > 0) && (
                 <section className={styles.eventsSection}>
-                    <h2 ref={el => animatedElementsRef.current[19 + quickLinks.length] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Department Events</h2>
-                    <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
+                    <h2 ref={el => animatedElementsRef.current[19] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Department Events</h2>
+                    <div className={styles.sectionUnderline} style={{ filter: 'none' }}></div>
 
                     {featuredEvent && (
-                        <div ref={el => animatedElementsRef.current[20 + quickLinks.length] = el} className={`${styles.eventsHero} ${styles.animateOnScroll}`}>
+                        <div ref={el => animatedElementsRef.current[20] = el} className={`${styles.eventsHero} ${styles.animateOnScroll}`}>
                             <div className={styles.eventsImage}>
                                 <img
                                     src={getFullUrl(featuredEvent.event_image)}
@@ -330,8 +302,6 @@ const CivilOverview = () => {
                                 {featuredEvent.event_date && (
                                     <p className="text-sm mt-2 opacity-80">{formatDate(featuredEvent.event_date)}</p>
                                 )}
-                                {/* Assuming link_url for event is event_location or a separate field, using a placeholder for now */}
-                                <Link to={featuredEvent.event_location || '#'} className={styles.learnMoreBtn}>Learn more --&gt;</Link>
                             </div>
                         </div>
                     )}
@@ -341,13 +311,13 @@ const CivilOverview = () => {
                             {events.map((event, index) => (
                                 <div
                                     key={event.id}
-                                    ref={el => animatedElementsRef.current[21 + quickLinks.length + index] = el} // Adjust index
+                                    ref={el => animatedElementsRef.current[21 + index] = el}
                                     className={`${styles.eventCard} ${styles.animateOnScroll} ${index === 1 ? styles.delay1 : index === 2 ? styles.delay2 : ''}`}
                                 >
                                     <div className={styles.eventCardHeader}>
                                         <h4>
                                             {event.event_title}
-                                            {event.event_date && <><br/>{formatDate(event.event_date)}</>}
+                                            {event.event_date && <><br />{formatDate(event.event_date)}</>}
                                         </h4>
                                     </div>
                                     <div className={styles.eventCardContent}>
@@ -360,18 +330,18 @@ const CivilOverview = () => {
                 </section>
             )}
 
-            {/* Tour Section - Updated with Gallery Images */}
+            {/* Tour Section */}
             {gallery.length > 0 && (
                 <section className={styles.tourSection}>
-                    <h2 ref={el => animatedElementsRef.current[24 + quickLinks.length + events.length] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Civil Department Tour</h2>
-                    <div className={styles.sectionUnderline} style={{filter: 'none'}}></div>
+                    <h2 ref={el => animatedElementsRef.current[24] = el} className={`${styles.sectionTitle} ${styles.animateOnScroll}`}>Civil Department Tour</h2>
+                    <div className={styles.sectionUnderline} style={{ filter: 'none' }}></div>
 
-                    <div ref={el => animatedElementsRef.current[25 + quickLinks.length + events.length] = el} className={`${styles.tourContainer} ${styles.animateOnScroll}`}>
+                    <div ref={el => animatedElementsRef.current[25] = el} className={`${styles.tourContainer} ${styles.animateOnScroll}`}>
                         <div className={styles.galleryGrid}>
                             {gallery.map((image, index) => (
                                 <div
                                     key={image.id}
-                                    ref={el => animatedElementsRef.current[26 + quickLinks.length + events.length + index] = el} // Adjust index
+                                    ref={el => animatedElementsRef.current[26 + index] = el}
                                     className={`${styles.galleryItem} ${styles.animateOnScroll} ${index % 3 === 1 ? styles.delay1 : index % 3 === 2 ? styles.delay2 : ''}`}
                                 >
                                     <img
@@ -389,6 +359,12 @@ const CivilOverview = () => {
                         </div>
                     </div>
                 </section>
+            )}
+
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center my-8">
+                    <p className="text-red-700">{error}</p>
+                </div>
             )}
         </SharedCivilLayout>
     );
