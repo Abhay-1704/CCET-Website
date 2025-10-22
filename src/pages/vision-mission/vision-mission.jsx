@@ -1,76 +1,98 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './vision-mission.css';
 import vision from '../../assets/header/vision-mission.png';
 
-
 const VisionMission = () => {
-  return (
-    <div className="container vision-mission-page">
-      <div className="container">
-        {/* Header with Background Image */}
-        <header className="header">
-          {/* Replace 'your-image-link.jpg' with your banner image URL */}
-          <img
-            src={vision}
-            alt="Department Banner"
-            className="banner-img"
-          />
-          {/* Decorative Overlay for Header */}
-          <div className="header-overlay">
-            <h1 className="header-title">Empowering Future Leaders</h1>
-            <p className="header-subtitle">Innovating through education and research</p>
+  const [visionMissionData, setVisionMissionData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://ccet.ac.in/api/vission-mission.php")
+        .then((response) => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          if (data && data.length > 0) {
+            setVisionMissionData(data[0]);
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching vision mission:", err);
+          setError(err.message || "Failed to fetch data");
+          setLoading(false);
+        });
+  }, []);
+
+  if (loading) {
+    return (
+        <div className="container vision-mission-page">
+          <div className="loading-container" style={{ textAlign: 'center', padding: '4rem' }}>
+            <p>Loading Vision & Mission data...</p>
           </div>
-        </header>
+        </div>
+    );
+  }
 
+  if (error || !visionMissionData) {
+    return (
+        <div className="container vision-mission-page">
+          <div className="error-container" style={{ textAlign: 'center', padding: '4rem', color: '#dc3545' }}>
+            <p>Error loading Vision & Mission data: {error}</p>
+            <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#666' }}>
+              Please contact the administrator or try again later.
+            </p>
+          </div>
+        </div>
+    );
+  }
 
-        {/* Objectives Section */}
-        <main className="main-content">
-          {/* Section Title */}
-          <h2 className="section-title">Objectives</h2>
-
-
-          {/* Vision and Mission */}
-          <section className="vision-mission-section">
-            <div className="vision-box card">
-              <h3>Vision</h3>
-              <div className="placeholder-text">To be a global leader in engineering education, fostering innovation and sustainable development.</div>
+  return (
+      <div className="container vision-mission-page">
+        <div className="container">
+          <header className="header">
+            <img
+                src={vision}
+                alt="Department Banner"
+                className="banner-img"
+            />
+            <div className="header-overlay">
+              <h1 className="header-title">Empowering Future Leaders</h1>
+              <p className="header-subtitle">Innovating through education and research</p>
             </div>
-            <div className="mission-box card">
-              <h3>Mission</h3>
-              <ul>
-                <li>To impart quality education promoting ethical values and professional excellence.</li>
-                <li>To inspire innovation and critical thinking through research and collaboration.</li>
-                <li>To nurture students into responsible global citizens.</li>
-              </ul>
-            </div>
-          </section>
+          </header>
 
+          {/* Objectives Section */}
+          <main className="main-content">
+            <h2 className="section-title">Objectives</h2>
 
-          {/* Program Educational Objectives */}
-          <section className="peo-section card">
-            <h2>Program Educational Objectives (PEOs)</h2>
-            <ul>
-              <li>Graduates will excel in professional careers and advanced studies.</li>
-              <li>Graduates will demonstrate leadership and teamwork skills.</li>
-              <li>Graduates will engage in lifelong learning and community service.</li>
-            </ul>
-          </section>
+            <section className="vision-mission-section">
+              <div className="vision-box card">
+                <h3>Vision</h3>
+                <div className="placeholder-text">
+                  {visionMissionData.vision_text}
+                </div>
+              </div>
 
-
-          {/* Program Specific Outcomes */}
-          <section className="pso-section">
-            <div className="pso-card card">
-              <h4>PSO1</h4>
-              <div className="placeholder-text">Apply core engineering knowledge to solve complex problems effectively.</div>
-            </div>
-            <div className="pso-card card">
-              <h4>PSO2</h4>
-              <div className="placeholder-text">Develop innovative solutions using modern tools and technologies.</div>
-            </div>
-          </section>
-        </main>
+              <div className="mission-box card">
+                <h3>Mission</h3>
+                <ul>
+                  {visionMissionData.mission_text
+                      .split('\n')
+                      .filter(item => item.trim())
+                      .map((item, index) => (
+                          <li key={index}>{item.trim()}</li>
+                      ))}
+                </ul>
+              </div>
+            </section>
+          </main>
+        </div>
       </div>
-    </div>
   );
 };
+
 export default VisionMission;
