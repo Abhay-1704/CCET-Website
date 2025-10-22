@@ -1,93 +1,115 @@
-import React, { useEffect, useState } from "react";
-import SharedMechLayout from "./SharedMechLayout";
-import styles from "./MechLabs.module.css";
+import React, { useEffect, useState } from 'react';
+import SharedMechLayout from './SharedMechLayout';
+import styles from './MechLabs.module.css';
+
+const API_BASE_URL = 'https://ccet.ac.in/api/laboratories.php';
+const DEPARTMENT = 'MECH';
 
 const MechLabs = () => {
-  const [labsData, setLabsData] = useState([]);
+  const [labs, setLabs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchLabs = async () => {
-      try {
-        const response = await fetch("https://ccet.ac.in/api/laboratories.php");
-        if (!response.ok) {
-          throw new Error("Failed to fetch labs data");
-        }
-        const data = await response.json();
-        // Map API data to expected structure
-        const formattedData = data.map((lab) => ({
-          title: lab.lab_name,
-          description: lab.lab_description,
-          image: lab.lab_image,
-        }));
-        setLabsData(formattedData);
-      } catch (error) {
-        console.error(error);
-        setLabsData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchLabs();
   }, []);
 
+  const fetchLabs = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}?department=${DEPARTMENT}`);
+      const data = await response.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        setLabs(data);
+      } else if (data.success === false) {
+        setError(data.error || "No laboratories data found");
+      } else {
+        setError("No laboratories available for this department");
+      }
+    } catch (err) {
+      setError("Error loading laboratories information");
+      console.error("Laboratories fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getFullUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+  };
+
+  if (loading) {
+    return (
+        <SharedMechLayout pageTitle="Laboratories">
+          <div className={styles.container}>
+            <div className={styles.loadingContainer}>
+              <span className={styles.loadingText}>Loading laboratories information...</span>
+            </div>
+          </div>
+        </SharedMechLayout>
+    );
+  }
+
   return (
-    <SharedMechLayout pageTitle="Laboratories">
-      <div className={styles.container}>
-        <header>
-          <h1 className={styles.Mechlabsheading}>Laboratories</h1>
-          <div className={styles.headerLine}></div>
-          <p className={styles.MechintroText}>
-            At Mech Department, students are challenged by a flexible,
-            thought-provoking curriculum and learn from faculty members who are
-            experts in their areas. The courses in the Computer Sc. &
-            Engineering are well organized to provide a wide spectrum of choices
-            to the students. The faculty and students have interest in wide
-            range of latest technologies that include Computer's Database
-            Systems, Artificial Intelligence, Computer Networks & Distributed
-            Computing, operating system, Computer Graphics, Mathematical
-            Modelling, OOPS, Advanced DBMS (OODBMS, Distributed DBMS etc.),
-            Software Engineering, Linux, Big Data, Computer Architecture, and
-            Embedded Systems etc. To support the learning and practices in above
-            technological area, Department of Mech have well equipped computer
-            justify, project lab and oracle sponsored lab that have various
-            Software Packages relevant to the Development of Minor and Major
-            Projects undertaken during the Coursework. All the state of Art
-            Facilities, Resources and Guidelines are provided to the students as
-            per their requirement.
+      <SharedMechLayout pageTitle="Laboratories">
+        <div className={styles.container}>
+          <header>
+            <h1 className={styles.mechlabsheading}>Laboratories</h1>
+            <div className={styles.headerLine}></div>
+          </header>
+
+          <p className={styles.intro}>
+            Knowledge without practical application is of no use, at least for a Mechanical Engineer.
+            For this, we have all kinds of laboratories which include:
           </p>
-        </header>
 
-        <div className={styles.labsGrid}>
-          {loading ? (
-            <p>Loading laboratories...</p>
-          ) : labsData.length === 0 ? (
-            <p>No laboratories found.</p>
-          ) : (
-            labsData.map((lab, index) => (
-              <div key={index} className={styles.labCard}>
-                <div className={styles.imagePlaceholder}>
-                  {lab.image ? (
-                    <img src={lab.image} alt={lab.title} />
-                  ) : (
-                    <span className={styles.dimensionLabel}>385px × 246px</span>
-                  )}
-                </div>
-                <div className={styles.labContent}>
-                  <h2 className={styles.labTitle}>{lab.title}</h2>
-                  <p className={styles.labDescription}>{lab.description}</p>
-                </div>
+          {labs.length > 0 ? (
+              <div className={styles.labsGrid}>
+                {labs.map((lab) => (
+                    <div key={lab.id} className={styles.labCard}>
+                      {lab.lab_image ? (
+                          <div className={styles.imageContainer}>
+                            <img
+                                src={getFullUrl(lab.lab_image)}
+                                alt={lab.lab_name}
+                                className={styles.labImage}
+                            />
+                          </div>
+                      ) : (
+                          <div className={styles.imagePlaceholder}>
+                            <span className={styles.dimensionLabel}>385px × 246px</span>
+                          </div>
+                      )}
+                      <div className={styles.labContent}>
+                        <h2 className={styles.labTitle}>{lab.lab_name}</h2>
+                        <p className={styles.labDescription}>
+                          {lab.lab_description || 'No description available'}
+                        </p>
+                      </div>
+                    </div>
+                ))}
               </div>
-            ))
+          ) : (
+              <div className={styles.noDataContainer}>
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.5, marginBottom: '20px' }}>
+                  <path d="M12 2L2 7V17L12 22L22 17V7L12 2ZM12 4.18L19.68 8L12 11.82L4.32 8L12 4.18ZM4 9.18L11 12.72V19.82L4 16.18V9.18ZM13 19.82V12.72L20 9.18V16.18L13 19.82Z" fill="#ccc"/>
+                </svg>
+                <p style={{ fontSize: '18px', color: '#777', textAlign: 'center' }}>
+                  {error || 'No laboratories data available'}
+                </p>
+              </div>
           )}
-        </div>
 
-        <footer>
-          <p>© 2023 University Laboratories. All rights reserved.</p>
-        </footer>
-      </div>
-    </SharedMechLayout>
+          <footer>
+            <p>© 2023 University Laboratories. All rights reserved.</p>
+          </footer>
+        </div>
+      </SharedMechLayout>
   );
 };
 
