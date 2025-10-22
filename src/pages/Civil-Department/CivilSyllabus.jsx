@@ -1,119 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SharedCivilLayout from './SharedCivilLayout';
 import styles from './CivilSyllabus.module.css';
 
+const API_BASE_URL = 'https://ccet.ac.in/api/syllabus.php';
+const DEPARTMENT = 'CIVIL';
+
 const CivilSyllabus = () => {
-    // State to store the fetched syllabus data
-    const [syllabusData, setSyllabusData] = useState([]);
-    // State to manage loading status
-    const [isLoading, setIsLoading] = useState(true);
-    // State to manage error status
+    const [syllabuses, setSyllabuses] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // API endpoint (Assuming the same endpoint is used for all departments)
-    const API_URL = 'https://ccet.ac.in/api/syllabus.php';
-
     useEffect(() => {
-        const fetchSyllabus = async () => {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                
-                // Filter the data for the 'CIVIL' department
-                const civilSyllabus = data.filter(item => item.department === 'CIVIL');
-                
-                // Sort by year (descending) to logically assign newest to 1st year
-                // This helps find the most current syllabus easily
-                civilSyllabus.sort((a, b) => b.year.localeCompare(a.year) || b.id.localeCompare(a.id));
-
-                setSyllabusData(civilSyllabus);
-                setError(null);
-
-            } catch (err) {
-                console.error("Failed to fetch syllabus:", err);
-                setError("Failed to load syllabus data. Please check the API source or try again later.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchSyllabus();
+        fetchSyllabuses();
     }, []);
 
-    // Find the syllabus items for specific academic years
-    // Based on the data you provided earlier, the 2025 CIVIL syllabus is available.
-    const firstYearSyllabus = syllabusData.find(item => item.year === '2025') || null;
-    
-    // Placeholder logic for 2nd Year (adjust year as needed if the API provides older data)
-    const secondYearSyllabus = syllabusData.find(item => item.year === '2024' || item.year === '2023') || null;
+    const fetchSyllabuses = async () => {
+        setLoading(true);
+        setError(null);
 
+        try {
+            const response = await fetch(`${API_BASE_URL}?department=${DEPARTMENT}`);
+            const data = await response.json();
 
-    // --- Helper function for rendering the PDF block ---
-    
-    const renderSyllabusContent = (item, yearText, batchYears) => (
-        <>
-            <div className={styles.yearHeading}>{yearText} ({batchYears})</div>
-            <div className={styles.pdfContainer}>
-                {item ? (
-                    <>
-                        <p className={styles.pdfLinkContainer}>
-                            {/* Download Link */}
-                            <a href={item.pdf} target="_blank" rel="noopener noreferrer" className={styles.pdfLink}>
-                                Download {yearText} Syllabus (Year {item.year})
-                            </a>
-                        </p>
-                        {/* EMBED THE PDF: Using a large iframe size (900px height) */}
-                        <iframe 
-                            src={item.pdf} 
-                            width="100%" 
-                            height="900px" // Large height for better viewing
-                            title={`${yearText} Syllabus`}
-                            className={styles.pdfIframe}
-                        >
-                            {/* Fallback content */}
-                            <p>Your browser does not support embedded PDF viewers. Please use the download link above.</p>
-                        </iframe>
-                    </>
-                ) : (
-                    // Display placeholder or No Data message if item is null
-                    <div className={styles.pdfPlaceholder}>
-                        PDF Viewer Placeholder ({yearText} Syllabus)
+            if (Array.isArray(data) && data.length > 0) {
+                setSyllabuses(data);
+            } else if (data.success === false) {
+                setError(data.error || "No syllabus data found");
+            } else {
+                setError("No syllabus available for this department");
+            }
+        } catch (err) {
+            setError("Error loading syllabus information");
+            console.error("Syllabus fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFullUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) return path;
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+    };
+
+    // Generate year label for display
+    const getYearLabel = (year) => {
+        // Check if it's a simple number
+        if (/^\d$/.test(year)) {
+            const num = parseInt(year);
+            const suffix = num === 1 ? 'st' : num === 2 ? 'nd' : num === 3 ? 'rd' : 'th';
+            return `${num}${suffix} Year`;
+        }
+        // Return as-is for other formats
+        return year;
+    };
+
+    if (loading) {
+        return (
+            <SharedCivilLayout pageTitle="Syllabus">
+                <div className={styles.body}>
+                    <div className={styles.loadingContainer}>
+                        <span className={styles.loadingText}>Loading syllabus information...</span>
                     </div>
-                )}
-            </div>
-        </>
-    );
-
-    // --- Conditional Rendering for Loading/Error States ---
-
-    if (isLoading) {
-        return (
-            <SharedCivilLayout pageTitle="Syllabus">
-                <div className={styles.body}>
-                    <h1 className={styles.heading}>Syllabus</h1>
-                    <div className={styles.underline}></div>
-                    <p>Loading Civil Engineering syllabus information...</p>
                 </div>
             </SharedCivilLayout>
         );
     }
 
-    if (error) {
-        return (
-            <SharedCivilLayout pageTitle="Syllabus">
-                <div className={styles.body}>
-                    <h1 className={styles.heading}>Syllabus</h1>
-                    <div className={styles.underline}></div>
-                    <p className={styles.errorText}>🚨 {error}</p>
-                </div>
-            </SharedCivilLayout>
-        );
-    }
-
-    // --- Main Component Render ---
     return (
         <SharedCivilLayout pageTitle="Syllabus">
             <div className={styles.body}>
@@ -121,18 +74,61 @@ const CivilSyllabus = () => {
                 <h1 className={styles.heading}>Syllabus</h1>
                 <div className={styles.underline}></div>
 
-                {/* 1st Year Section: Display the newest available syllabus */}
-                {renderSyllabusContent(
-                    firstYearSyllabus, 
-                    "1st Year", 
-                    "2024–2028"
-                )}
-                
-                {/* 2nd Year Section: Display the next available syllabus or placeholder */}
-                {renderSyllabusContent(
-                    secondYearSyllabus, 
-                    "2nd Year", 
-                    "2023–2027"
+                {/* Dynamic Syllabus Sections */}
+                {syllabuses.length > 0 ? (
+                    syllabuses.map((syllabus) => (
+                        <div key={syllabus.id} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div className={styles.yearHeading}>
+                                {getYearLabel(syllabus.year)}
+                            </div>
+                            <div className={styles.pdfContainer}>
+                                <iframe
+                                    src={getFullUrl(syllabus.pdf)}
+                                    className={styles.pdfIframe}
+                                    title={`${getYearLabel(syllabus.year)} Syllabus`}
+                                    frameBorder="0"
+                                />
+                                <div style={{ padding: '15px', textAlign: 'center', background: '#F3F7FF', borderTop: '2px solid #e0e0e0' }}>
+                                    <a
+                                        href={getFullUrl(syllabus.pdf)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles.pdfLink}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '10px',
+                                            padding: '12px 28px',
+                                            background: '#063068',
+                                            color: 'white',
+                                            textDecoration: 'none',
+                                            borderRadius: '8px',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: '0 2px 8px rgba(6, 48, 104, 0.2)'
+                                        }}
+                                    >
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 9H15V3H9V9H5L12 16L19 9ZM5 18V20H19V18H5Z" fill="currentColor"/>
+                                        </svg>
+                                        Download PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className={styles.pdfPlaceholder}>
+                        <div style={{ textAlign: 'center' }}>
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.5, marginBottom: '20px' }}>
+                                <path d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z" fill="#ccc"/>
+                            </svg>
+                            <p style={{ margin: 0, fontSize: '18px', color: '#777' }}>
+                                {error || 'No syllabus available'}
+                            </p>
+                        </div>
+                    </div>
                 )}
             </div>
         </SharedCivilLayout>
