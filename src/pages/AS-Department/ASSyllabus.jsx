@@ -1,127 +1,129 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SharedASLayout from './SharedASLayout';
 import styles from './ASSyllabus.module.css';
 
+const API_BASE_URL = 'https://ccet.ac.in/api/syllabus.php';
+const DEPARTMENT = 'AS';
+
 const ASSyllabus = () => {
-    // State to store the fetched syllabus data
-    const [syllabusData, setSyllabusData] = useState([]);
-    // State to manage loading status
-    const [isLoading, setIsLoading] = useState(true);
-    // State to manage error status
+    const [syllabuses, setSyllabuses] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // API endpoint
-    const API_URL = 'https://ccet.ac.in/api/syllabus.php'; // Assuming this is the correct public endpoint
-
     useEffect(() => {
-        const fetchSyllabus = async () => {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                
-                // Filter the data for the 'AS' department
-                const asSyllabus = data.filter(item => item.department === 'AS');
-                
-                // Sort by year (descending) to get the latest syllabus first
-                asSyllabus.sort((a, b) => b.year.localeCompare(a.year) || b.id.localeCompare(a.id));
-
-                setSyllabusData(asSyllabus);
-                setError(null);
-
-            } catch (err) {
-                console.error("Failed to fetch syllabus:", err);
-                setError("Failed to load syllabus data. Please try again later.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchSyllabus();
+        fetchSyllabuses();
     }, []);
 
-    // Find the latest AS syllabus (the first one after sorting)
-    const latestASSyllabus = syllabusData.length > 0 ? syllabusData[0] : null;
+    const fetchSyllabuses = async () => {
+        setLoading(true);
+        setError(null);
 
-    // --- Content Rendering Logic ---
+        try {
+            const response = await fetch(`${API_BASE_URL}?department=${DEPARTMENT}`);
+            const data = await response.json();
 
-    if (isLoading) {
+            if (Array.isArray(data) && data.length > 0) {
+                setSyllabuses(data);
+            } else if (data.success === false) {
+                setError(data.error || "No syllabus data found");
+            } else {
+                setError("No syllabus available for this department");
+            }
+        } catch (err) {
+            setError("Error loading syllabus information");
+            console.error("Syllabus fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFullUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) return path;
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+    };
+
+    const getYearLabel = (year) => {
+        if (/^\d$/.test(year)) {
+            const num = parseInt(year);
+            const suffix = num === 1 ? 'st' : num === 2 ? 'nd' : num === 3 ? 'rd' : 'th';
+            return `${num}${suffix} Year`;
+        }
+        return year;
+    };
+
+    if (loading) {
         return (
             <SharedASLayout pageTitle="Syllabus">
                 <div className={styles.body}>
-                    <h1 className={styles.heading}>Syllabus</h1>
-                    <div className={styles.underline}></div>
-                    <p>Loading syllabus information...</p>
+                    <div className={styles.loadingContainer}>
+                        <span className={styles.loadingText}>Loading syllabus information...</span>
+                    </div>
                 </div>
             </SharedASLayout>
         );
     }
-
-    if (error) {
-        return (
-            <SharedASLayout pageTitle="Syllabus">
-                <div className={styles.body}>
-                    <h1 className={styles.heading}>Syllabus</h1>
-                    <div className={styles.underline}></div>
-                    <p className={styles.errorText}>{error}</p>
-                </div>
-            </SharedASLayout>
-        );
-    }
-    
-    // Helper function to render the PDF link/embed
-    const renderSyllabus = (item, yearText) => (
-        <>
-            <div className={styles.yearHeading}>{yearText}</div>
-            <div className={styles.pdfContainer}>
-                {item ? (
-                    <>
-                        <p>
-                            {/* Provide a download link as a fallback */}
-                            <a href={item.pdf} target="_blank" rel="noopener noreferrer" className={styles.pdfLink}>
-                                Download {yearText} Syllabus (Year {item.year})
-                            </a>
-                        </p>
-                        {/* EMBED THE PDF USING IFRAME 
-                          Note: Some servers prevent embedding PDFs from other domains 
-                          using iframes (via X-Frame-Options or Content-Security-Policy headers).
-                          If the PDF doesn't load, this is the likely reason.
-                        */}
-                        <iframe 
-                            src={item.pdf} 
-                            width="100%" 
-                            height="600px" 
-                            title={`${yearText} Syllabus`}
-                            className={styles.pdfIframe}
-                        >
-                            {/* Fallback content for browsers that don't support iframes */}
-                            <p>Your browser does not support embedded PDF viewers. Please use the download link above.</p>
-                        </iframe>
-                    </>
-                ) : (
-                    <p className={styles.noData}>No syllabus found for this year.</p>
-                )}
-            </div>
-        </>
-    );
 
     return (
         <SharedASLayout pageTitle="Syllabus">
             <div className={styles.body}>
-                {/* Main Heading */}
                 <h1 className={styles.heading}>Syllabus</h1>
                 <div className={styles.underline}></div>
-
-                {/* 1st Year Section - Display the latest available AS syllabus (Year 2025) */}
-                {renderSyllabus(latestASSyllabus, `1st Year (${latestASSyllabus ? latestASSyllabus.year : '2025'} - Current)`)}
-                
-                {/* 2nd Year Section - Placeholder for the older syllabus */}
-                <div className={styles.yearHeading}>2nd Year (2023–2027)</div>
-                <div className={styles.pdfContainer}>
-                    <p className={styles.noData}>No specific 2nd Year syllabus found in the current API response for AS department.</p>
-                </div>
+                {syllabuses.length > 0 ? (
+                    syllabuses.map((syllabus) => (
+                        <div key={syllabus.id} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div className={styles.yearHeading}>
+                                {getYearLabel(syllabus.year)}
+                            </div>
+                            <div className={styles.pdfContainer}>
+                                <iframe
+                                    src={getFullUrl(syllabus.pdf)}
+                                    className={styles.pdfIframe}
+                                    title={`${getYearLabel(syllabus.year)} Syllabus`}
+                                    frameBorder="0"
+                                />
+                                <div style={{ padding: '15px', textAlign: 'center', background: '#F3F7FF', borderTop: '2px solid #e0e0e0' }}>
+                                    <a
+                                        href={getFullUrl(syllabus.pdf)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles.pdfLink}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '10px',
+                                            padding: '12px 28px',
+                                            background: '#063068',
+                                            color: 'white',
+                                            textDecoration: 'none',
+                                            borderRadius: '8px',
+                                            fontSize: '16px',
+                                            fontWeight: '600',
+                                            transition: 'all 0.3s ease',
+                                            boxShadow: '0 2px 8px rgba(6, 48, 104, 0.2)'
+                                        }}
+                                    >
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 9H15V3H9V9H5L12 16L19 9ZM5 18V20H19V18H5Z" fill="currentColor"/>
+                                        </svg>
+                                        Download PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className={styles.pdfPlaceholder}>
+                        <div style={{ textAlign: 'center' }}>
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.5, marginBottom: '20px' }}>
+                                <path d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z" fill="#ccc"/>
+                            </svg>
+                            <p style={{ margin: 0, fontSize: '18px', color: '#777' }}>
+                                {error || 'No syllabus available'}
+                            </p>
+                        </div>
+                    </div>
+                )}
             </div>
         </SharedASLayout>
     );

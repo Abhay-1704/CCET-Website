@@ -1,8 +1,5 @@
-/* Styling for ASSyllabus.js */
-
 .body {
     margin: 0;
-    /* Poppins font should be imported or available globally */
     font-family: 'Poppins', Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -17,6 +14,7 @@
     color: #1C2C4C;
     margin-bottom: 20px;
     line-height: 1.2;
+    text-align: center;
 }
 
 .underline {
@@ -38,11 +36,22 @@
     margin: 40px 0 20px;
 }
 
-/* This style is for the placeholder in the original JSX */
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+}
+
+.loadingText {
+    color: #777;
+    font-size: 18px;
+}
+
 .pdfPlaceholder {
-    width: 80%;
+    width: 90%;
     max-width: 1000px;
-    height: 600px;
+    height: 900px;
     border: 2px dashed #aaa;
     border-radius: 10px;
     background-color: #fff;
@@ -54,37 +63,35 @@
     font-size: 18px;
 }
 
-/* Styles for the embedded PDF or link container (used in the final React component)
-This ensures the embedded content maintains the desired size. 
-*/
 .pdfContainer {
-    width: 80%;
+    width: 90%;
     max-width: 1000px;
-    /* Removed fixed height here to allow the iframe/content to control height */
     background-color: #fff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     border-radius: 10px;
-    padding: 10px; /* Add padding if needed */
+    overflow: hidden;
+    margin-bottom: 30px;
 }
 
-/* Style for the embedded iframe */
 .pdfIframe {
     width: 100%;
-    height: 600px; /* Set the desired height for the PDF viewer */
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 10px;
+    height: 900px;
+    border: none;
+    display: block;
 }
 
-/* Styles for the download link and 'No data' messages */
 .pdfLink {
     color: #007bff;
     text-decoration: none;
     font-weight: 600;
+    display: inline-block;
 }
 
 .pdfLink:hover {
     text-decoration: underline;
+    background: #0a4a8a !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(6, 48, 104, 0.3) !important;
 }
 
 .noData {
@@ -92,4 +99,54 @@ This ensures the embedded content maintains the desired size.
     color: #777;
     font-style: italic;
     padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .heading {
+        font-size: 40px;
+    }
+
+    .body {
+        padding: 20px 10px;
+    }
+
+    .yearHeading {
+        font-size: 18px;
+        padding: 5px 12px;
+    }
+
+    .pdfContainer {
+        width: 95%;
+    }
+
+    .pdfIframe {
+        height: 500px;
+    }
+
+    .pdfPlaceholder {
+        width: 95%;
+        height: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .heading {
+        font-size: 32px;
+    }
+
+    .yearHeading {
+        font-size: 16px;
+    }
+
+    .pdfIframe {
+        height: 400px;
+    }
+
+    .pdfPlaceholder {
+        height: 400px;
+    }
+
+    .loadingText {
+        font-size: 16px;
+    }
 }
