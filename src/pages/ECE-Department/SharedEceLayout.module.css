@@ -1,5 +1,5 @@
 .container {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
   color: #333;
   background-color: white;
@@ -8,25 +8,24 @@
   overflow-x: hidden;
 }
 
-/* Static background for content */
 .contentBg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/CSE-Department/csebg.png");
+  background-image: url('../../assets/ECE-Department/ecebg.png');
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   z-index: -0.5;
-  opacity: 0.15;
+  opacity: 0.2;
 }
 
 .hero {
   height: 450px;
-  background: url("../../assets/CSE-Department/Cse-bg.jpg");
+  background: url('../../assets/ECE-Department/ece-bg.png');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -39,7 +38,7 @@
 }
 
 .hero::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -50,21 +49,16 @@
 }
 
 @keyframes heroOverlay {
-  0% {
-    background: rgba(6, 48, 104, 0.3);
-  }
-  100% {
-    background: rgba(6, 48, 104, 0.5);
-  }
+  0% { background: rgba(6, 48, 104, 0.3); }
+  100% { background: rgba(6, 48, 104, 0.5); }
 }
 
-/* Navigation Menu */
 .heroNav {
   position: absolute;
   top: 30px;
   right: 20px;
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 500;
   z-index: 3;
   opacity: 0;
@@ -97,18 +91,13 @@
 
 .heroNav span::before,
 .heroNav a::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.6s ease;
 }
 
@@ -137,7 +126,7 @@
 
 .heroTitle {
   font-size: 60px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 500;
   line-height: 70px;
   margin-bottom: 20px;
@@ -158,7 +147,7 @@
 .heroSubtitle {
   color: white;
   font-size: 20px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 400;
   line-height: 20px;
   opacity: 0;
@@ -198,18 +187,10 @@
   margin: 10px;
 }
 
-.statCircle:nth-child(1) {
-  animation-delay: 1.2s;
-}
-.statCircle:nth-child(2) {
-  animation-delay: 1.4s;
-}
-.statCircle:nth-child(3) {
-  animation-delay: 1.6s;
-}
-.statCircle:nth-child(4) {
-  animation-delay: 1.8s;
-}
+.statCircle:nth-child(1) { animation-delay: 1.2s; }
+.statCircle:nth-child(2) { animation-delay: 1.4s; }
+.statCircle:nth-child(3) { animation-delay: 1.6s; }
+.statCircle:nth-child(4) { animation-delay: 1.8s; }
 
 @keyframes scaleIn {
   to {
@@ -239,30 +220,26 @@
 
 .statNumber {
   font-size: 20px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 700;
-  color: #eef300;
+  color: #EEF300;
   margin-bottom: 5px;
 }
 
-.statNumber.yellow {
-  color: #ebff00;
-}
+.statNumber.yellow { color: #EBFF00; }
 
 .statLabel {
   width: 81px;
   text-align: center;
   color: white;
   font-size: 12px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   line-height: 12px;
 }
 
 @keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
@@ -273,12 +250,8 @@
 }
 
 @keyframes growLine {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 /* Current Page Indicator */
@@ -288,7 +261,7 @@
   right: 30px;
   color: white;
   font-size: 40px;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-style: italic;
   font-weight: 700;
   padding: 8px 16px;
@@ -304,7 +277,6 @@
   word-wrap: break-word;
 }
 
-/* Page Content */
 .pageContent {
   position: relative;
   z-index: 1;
@@ -313,7 +285,6 @@
   box-sizing: border-box;
 }
 
-/* Mobile Menu Button */
 .mobileMenuButton {
   display: none;
   position: fixed;
@@ -336,7 +307,6 @@
   transform: translateY(-2px);
 }
 
-/* Mobile Menu Overlay */
 .mobileMenuOverlay {
   display: none;
   position: fixed;
@@ -357,7 +327,6 @@
   pointer-events: auto;
 }
 
-/* Mobile Menu */
 .mobileMenu {
   position: fixed;
   top: 0;
@@ -431,7 +400,6 @@
   background: #052752;
 }
 
-/* Responsive Design */
 @media (max-width: 1200px) {
   .hero {
     padding: 60px;
@@ -514,7 +482,7 @@
   }
 
   .heroNav {
-    display: none; /* Hide the main nav on mobile */
+    display: none;
   }
 
   .mobileMenuButton {

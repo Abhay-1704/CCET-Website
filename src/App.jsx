@@ -66,13 +66,13 @@ import NBA_MECH from "./pages/NBA/NBA_MECH";
 import NBA_CIVIL from "./pages/NBA/NBA_CE";
 
 // ECE Department
-import EceOverview from "./pages/ECE-Department/ece-overview.jsx";
-import ECE_Faculty from "./pages/ECE-Department/ece-faculty.jsx";
-import EceLabs from "./pages/ECE-Department/ece-labs.jsx";
-import EceHOD from "./pages/ECE-Department/ece-hod.jsx";
-import EceTimeTable from "./pages/ECE-Department/ece-timetable.jsx";
-import EceSyllabus from "./pages/ECE-Department/ece-syllabus.jsx";
-import EceResearch from "./pages/ECE-Department/ece-research.jsx";
+import EceOverview from "./pages/ECE-Department/EceOverview.jsx"
+import EceFaculty from "./pages/ECE-Department/EceFaculty.jsx";
+import EceHod from "./pages/ECE-Department/EceHod.jsx";
+import EceLabs from "./pages/ECE-Department/EceLabs.jsx";
+import EceTimeTable from "./pages/ECE-Department/EceTimeTable.jsx";
+import EceSyllabus from "./pages/ECE-Department/EceSyllabus.jsx";
+import EceResearch from "./pages/ECE-Department/EceResearch.jsx";
 
 //Applied Sciences Department
 import ASOverview from "./pages/AS-Department/ASOverview.jsx";
@@ -199,13 +199,13 @@ function App() {
                 <Route path="/news" element={<NewsDetails />} />
 
                 {/* ECE Department */}
-                <Route path="/ece" element={<EceOverview />} />
-                <Route path="/ece/ece-faculty" element={<ECE_Faculty />} />
-                <Route path="/ece/ece-labs" element={<EceLabs />} />
-                <Route path="/ece/ece-hod" element={<EceHOD />} />
-                <Route path="/ece/timetable" element={<EceTimeTable />} />
-                <Route path="/ece/ece-syllabus" element={<EceSyllabus />} />
-                <Route path="/ece/research" element={<EceResearch />} />
+                <Route path="/academics/ece/overview" element={<EceOverview />} />
+                <Route path="/academics/ece/ecefaculty" element={<EceFaculty />} />
+                <Route path="/academics/ece/hod" element={<EceHod />} />
+                <Route path="/academics/ece/ecetimetable" element={<EceTimeTable />} />
+                <Route path="/academics/ece/ecesyllabus" element={<EceSyllabus />} />
+                <Route path="/academics/ece/ecelabs" element={<EceLabs />} />
+                <Route path="/academics/ece/eceresearch" element={<EceResearch />} />
 
                 {/* CSE Department */}
                 <Route path="/academics/cse/overview" element={<CseOverview />} />
