@@ -1,18 +1,99 @@
-import React from "react";
-import bookResearch from "../../assets/ECE-Department/book_research.png";
-import boxIdea from "../../assets/ECE-Department/box_idea.png";
-import money from "../../assets/ECE-Department/money.png";
-import paper from "../../assets/ECE-Department/paper.png";
+import React, { useState, useEffect } from "react";
 import ECEQuickLinksSidebar from "./sidebar";
 import ECEHeader from "./ece_header";
 
+// API endpoint URL
+const HODS_API_URL = "https://ccet.ac.in/api/hods.php";
+
 function EceHOD() {
+    const [hod, setHod] = useState(null); // State to store ECE HOD data
+    const [loading, setLoading] = useState(true); // State to manage loading
+    const [error, setError] = useState(false); // State to manage errors
+
+    // Fetch HOD data on component mount
+    useEffect(() => {
+        const fetchHodData = async () => {
+            try {
+                // Real API fetch call 
+                const response = await fetch(HODS_API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json(); // Data is the array of HOD objects
+
+                // Find the ECE HOD from the fetched array
+                const eceHod = data.find(
+                    (p) => p.department === "Electronics & Communication Engineering"
+                );
+                
+                if (eceHod) {
+                    // Process and set the HOD state
+                    const imageUrl = eceHod.image.startsWith("/") ? eceHod.image : `/${eceHod.image}`;
+                    // Extract contact and area of interest using regex (as they are in the 'description' field)
+                    const contactMatch = eceHod.description.match(/Contact: (\d+)/);
+                    const areaMatch = eceHod.description.match(/Area of Interest: (.*?)(\n|$)/);
+
+                    setHod({
+                        name: eceHod.name,
+                        designation: eceHod.designation,
+                        email: eceHod.email,
+                        image: imageUrl,
+                        contact: contactMatch ? contactMatch[1] : 'N/A',
+                        areaOfInterest: areaMatch ? areaMatch[1].trim() : 'N/A',
+                    });
+                } else {
+                    console.warn("ECE HOD data not found in the API response.");
+                }
+
+            } catch (err) {
+                console.error("Error fetching HOD data:", err);
+                setError(true);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchHodData();
+    }, []);
+
     const stats = [
         { value: "17+", label: "Years\nof Service" },
         { value: "20", label: "Faculty\nMembers" },
         { value: "400", label: "Students" },
         { value: "100", label: "Courses\nOffered", highlight: true }
     ];
+
+    // --- Conditional Rendering ---
+    if (loading) {
+        return <div className="text-center py-10">Loading HOD information...</div>;
+    }
+
+    if (error) {
+        return <div className="text-center py-10 text-red-600">Error loading HOD data. Please check the network connection or API endpoint.</div>;
+    }
+
+    // Default/Fallback data structure if HOD is still null (e.g., if ECE HOD wasn't found)
+    const displayHod = hod || {
+        name: "HOD Name Not Found",
+        designation: "Department Head",
+        email: "contact@ccet.ac.in",
+        image: "/images/hod.jpg",
+        contact: 'N/A',
+        areaOfInterest: 'N/A',
+    };
+    
+    // Default message content (as it's not provided in the API fields)
+    const hodMessage = (
+        <>
+            <p>
+                With technology spreading its domain to all walks of life, there is a need to upgrade the ever-widening knowledge base. CCET has risen to the occasion, and resolves to provide talented, skilled and highly competent technical human resource to the industrial society. Education is imparted in the institute in a manner that each student realizes his responsibility at enhancing the present skills and shaping the future.
+            </p>
+            <p>
+                In its endeavour to foster an optimum blend of self-discipline and consistency, the college provides robust curriculum to attune to the scientific scenario of the industry. It commits to serve the society with versatile expertise in the field. I always strive to empower students with efforts to fulfill societal obligations with distinction. I invite all potential seekers to participate in the campus recruitment program.
+            </p>
+        </>
+    );
+
     return (
         <div className="bg-white min-h-screen font-serif">
             <ECEQuickLinksSidebar />
@@ -49,21 +130,19 @@ function EceHOD() {
                 {/* HOD's Message */}
                 <section className="md:bg-gradient-to-r md:from-blue-900 md:to-slate-900 text-white rounded-xl p-6 md:p-10 flex flex-col md:flex-row items-center mb-8">
                     <img
-                        src="/images/hod.jpg"
-                        alt="Dr. Davinder Singh Saini"
+                        src={displayHod.image}
+                        alt={displayHod.name}
                         className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-full mr-6 mb-4 md:mb-0"
                     />
                     <div>
-                        <h2 className="text-lg font-semibold">Dr. Davinder Singh Saini</h2>
-                        <p>Professor &amp; Head, ECE</p>
-                        <p>Email-ID: dsaini@ccet.ac.in</p>
+                        <h2 className="text-lg font-semibold">{displayHod.name}</h2>
+                        <p>{displayHod.designation}</p>
+                        <p>Email-ID: {displayHod.email}</p>
+                        {displayHod.contact !== 'N/A' && <p>Contact: {displayHod.contact}</p>}
+                        {displayHod.areaOfInterest !== 'N/A' && <p>Area of Interest: {displayHod.areaOfInterest}</p>}
+
                         <div className="mt-4 space-y-3 text-base">
-                            <p>
-                                With technology spreading its domain to all walks of life, there is a need to upgrade the ever-widening knowledge base. CCET has risen to the occasion, and resolves to provide talented, skilled and highly competent technical human resource to the industrial society. Education is imparted in the institute in a manner that each student realizes his responsibility at enhancing the present skills and shaping the future.
-                            </p>
-                            <p>
-                                In its endeavour to foster an optimum blend of self-discipline and consistency, the college provides robust curriculum to attune to the scientific scenario of the industry. It commits to serve the society with versatile expertise in the field. I always strive to empower students with efforts to fulfill societal obligations with distinction. I invite all potential seekers to participate in the campus recruitment program.
-                            </p>
+                            {hodMessage}
                         </div>
                     </div>
                 </section>
@@ -122,7 +201,7 @@ function EceHOD() {
                             {/* Publications Icon */}
                             <div className="mb-2 w-12 h-12 flex justify-center items-center">
                                 <img
-                                    src={bookResearch}
+                                    src="/placeholder_icon.png"
                                     alt="Publications"
                                     className="w-10 h-10 object-contain"
                                 />
@@ -134,7 +213,7 @@ function EceHOD() {
                             {/* Patents Icon */}
                             <div className="mb-2 w-12 h-12 flex justify-center items-center">
                                 <img
-                                    src={boxIdea}
+                                    src="/placeholder_icon.png"
                                     alt="Patents"
                                     className="w-10 h-10 object-contain"
                                 />
@@ -145,7 +224,7 @@ function EceHOD() {
                         <div className="flex flex-col items-center">
                             {/* Funding Icon */}
                             <div className="mb-2 w-12 h-12 flex justify-center items-center">
-                                <img src={money} alt="Funding" className="w-10 h-10 object-contain" />
+                                <img src="/placeholder_icon.png" alt="Funding" className="w-10 h-10 object-contain" />
                             </div>
                             <div className="text-2xl font-bold">20</div>
                             <div className="text-base">Funding (in Lakhs)</div>
@@ -153,7 +232,7 @@ function EceHOD() {
                         <div className="flex flex-col items-center">
                             {/* Projects Icon */}
                             <div className="mb-2 w-12 h-12 flex justify-center items-center">
-                                <img src={paper} alt="Projects" className="w-10 h-10 object-contain" />
+                                <img src="/placeholder_icon.png" alt="Projects" className="w-10 h-10 object-contain" />
                             </div>
                             <div className="text-2xl font-bold">50</div>
                             <div className="text-base">Projects</div>
