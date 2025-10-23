@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ECEHeader from "./ece_header";
-import ECEQuickLinksSidebar from "./sidebar";
 import SharedEceLayout from "./SharedEceLayout";
 import styles from "./EceFaculty.module.css";
 
