@@ -1,14 +1,77 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './History.module.css';
-import bgImage from '../../assets/History/bg-image.jpeg';
-import coreValueImage from '../../assets/History/Core-Value.png';
+
+const API_BASE_URL = 'https://ccet.ac.in/api/history.php';
 
 const History = () => {
     const observerRef = useRef(null);
+    const [timelineData, setTimelineData] = useState([]);
+    const [visionData, setVisionData] = useState(null);
+    const [missionData, setMissionData] = useState(null);
+    const [coreValuesData, setCoreValuesData] = useState(null);
+    const [heroData, setHeroData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Set background image as CSS variable
-        document.documentElement.style.setProperty('--bg-image', `url(${bgImage})`);
+        fetchHistoryData();
+    }, []);
+
+    const fetchHistoryData = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const [timelineRes, visionRes, missionRes, coreValuesRes, heroRes] = await Promise.all([
+                fetch(`${API_BASE_URL}?section=timeline&is_active=true`),
+                fetch(`${API_BASE_URL}?section=vision&is_active=true`),
+                fetch(`${API_BASE_URL}?section=mission&is_active=true`),
+                fetch(`${API_BASE_URL}?section=core_values&is_active=true`),
+                fetch(`${API_BASE_URL}?section=hero&is_active=true`)
+            ]);
+
+            const [timelineJson, visionJson, missionJson, coreValuesJson, heroJson] = await Promise.all([
+                timelineRes.json(),
+                visionRes.json(),
+                missionRes.json(),
+                coreValuesRes.json(),
+                heroRes.json()
+            ]);
+
+            if (Array.isArray(timelineJson)) {
+                setTimelineData(timelineJson);
+            }
+
+            if (Array.isArray(visionJson) && visionJson.length > 0) {
+                setVisionData(visionJson[0]);
+            }
+
+            if (Array.isArray(missionJson) && missionJson.length > 0) {
+                setMissionData(missionJson[0]);
+            }
+
+            if (Array.isArray(coreValuesJson) && coreValuesJson.length > 0) {
+                setCoreValuesData(coreValuesJson[0]);
+            }
+
+            if (Array.isArray(heroJson) && heroJson.length > 0) {
+                setHeroData(heroJson[0]);
+            }
+        } catch (err) {
+            setError("Error loading history information");
+            console.error("History data fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (loading) return;
+
+        if (heroData?.image_url) {
+            const bgUrl = getFullUrl(heroData.image_url);
+            document.documentElement.style.setProperty('--bg-image', `url(${bgUrl})`);
+        }
 
         const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -100px 0px' };
         observerRef.current = new IntersectionObserver((entries) => {
@@ -27,7 +90,7 @@ const History = () => {
             if (observerRef.current) observerRef.current.disconnect();
             document.documentElement.style.removeProperty('--bg-image');
         };
-    }, []);
+    }, [loading, heroData]);
 
     const handleTimelineItemClick = (e) => {
         const year = e.currentTarget.querySelector(`.${styles.timelineYear}`);
@@ -61,88 +124,122 @@ const History = () => {
         }
     };
 
+    const getFullUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) return path;
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+    };
+
+    if (loading) {
+        return (
+            <div className={styles.historyWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.loadingContainer}>
+                        <span className={styles.loadingText}>Loading history information...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className={styles.historyWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.errorContainer}>
+                        <p className={styles.errorText}>{error}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className={styles.historyWrapper}>
             <div className={styles.container}>
-                {/* Hero Section */}
                 <section className={styles.heroSection}>
                     <div className={styles.heroOverlay}></div>
                     <div className={styles.historyContent}>
-                        <h1 className={`${styles.historyTitle} ${styles.scaleIn}`}>History</h1>
+                        <h1 className={`${styles.historyTitle} ${styles.scaleIn}`}>
+                            {heroData?.title || 'History'}
+                        </h1>
 
-                        <div className={styles.timeline}>
-                            <div
-                                className={`${styles.timelineItem} ${styles.fadeInLeft}`}
-                                onClick={handleTimelineItemClick}
-                                onMouseEnter={handleTimelineItemHover}
-                            >
-                                <div className={styles.timelineYear}>1959</div>
-                                <div className={styles.timelineDescription}>
-                                    Established as Central Polytechnic Chandigarh (CPC) to address the shortage of
-                                    technical personnel, offering diploma programs in Civil, Electrical, Mechanical,
-                                    Electronics & Communication, and other engineering disciplines
-                                </div>
-                                <div className={styles.timelineConnector}></div>
+                        {timelineData.length > 0 && (
+                            <div className={styles.timeline}>
+                                {timelineData.map((item, index) => (
+                                    <div
+                                        key={item.id}
+                                        className={`${styles.timelineItem} ${index % 2 === 0 ? styles.fadeInLeft : styles.fadeInRight}`}
+                                        onClick={handleTimelineItemClick}
+                                        onMouseEnter={handleTimelineItemHover}
+                                    >
+                                        <div className={styles.timelineYear}>{item.year}</div>
+                                        <div className={styles.timelineDescription}>
+                                            {item.description}
+                                        </div>
+                                        {index < timelineData.length - 1 && (
+                                            <div className={styles.timelineConnector}></div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
+                        )}
 
-                            <div
-                                className={`${styles.timelineItem} ${styles.fadeInRight}`}
-                                onClick={handleTimelineItemClick}
-                                onMouseEnter={handleTimelineItemHover}
-                            >
-                                <div className={styles.timelineYear}>2002</div>
-                                <div className={styles.timelineDescription}>
-                                    Upgraded from CPC to Chandigarh College of Engineering and Technology (CCET) with
-                                    introduction of Degree Wing offering Bachelor of Engineering programs in Computer
-                                    Science, Electronics & Electrical Communication, Civil, and Mechanical Engineering
-                                </div>
-                                <div className={styles.timelineConnector}></div>
+                        {heroData?.description && (
+                            <div className={`${styles.accreditationBadge} ${styles.scaleIn}`}>
+                                {heroData.description}
                             </div>
-
-                            <div
-                                className={`${styles.timelineItem} ${styles.fadeInLeft}`}
-                                onClick={handleTimelineItemClick}
-                                onMouseEnter={handleTimelineItemHover}
-                            >
-                                <div className={styles.timelineYear}>Today</div>
-                                <div className={styles.timelineDescription}>
-                                    The only technical college in Chandigarh offering both diplomas and degrees, with
-                                    modern infrastructure on 32-acre campus near Shivalik ranges and Sukhna Lake,
-                                    affiliated with Panjab University and approved by AICTE
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={`${styles.accreditationBadge} ${styles.scaleIn}`}>
-                            NBA Accreditation
-                        </div>
+                        )}
                     </div>
                 </section>
 
-                {/* Mission Section */}
                 <section className={styles.missionSection}>
-                    <div className={`${styles.sectionHeader} ${styles.fadeIn}`}>Vision</div>
-                    <div className={`${styles.contentBox} ${styles.fadeInLeft}`}>
-                        Chandigarh College of Engineering and Technology aims to be a centre of excellence for imparting
-                        technical education and serving the society with self-motivated and highly competent
-                        technocrats.
-                    </div>
+                    {visionData && (
+                        <>
+                            <div className={`${styles.sectionHeader} ${styles.fadeIn}`}>
+                                {visionData.title}
+                            </div>
+                            <div className={`${styles.contentBox} ${styles.fadeInLeft}`}>
+                                {visionData.description}
+                            </div>
+                        </>
+                    )}
 
-                    <div className={`${styles.sectionHeader} ${styles.fadeIn}`}>Mission</div>
-                    <div className={`${styles.contentBox} ${styles.missionContent} ${styles.fadeInRight}`}>
-                        • To provide high quality and value-based technical education.<br /><br />
-                        • To establish a centre of excellence in emerging and cutting-edge technologies by encouraging
-                        research and consultancy in collaboration with industry and organizations of repute.<br /><br />
-                        • To foster a transformative learning environment for technocrats focused on inter-disciplinary
-                        knowledge; problem-solving; leadership, communication, and interpersonal skills.<br /><br />
-                        • To imbibe the spirit of entrepreneurship and innovation for the development of enterprising
-                        leaders for contributing to Nation progress and Humanity.
-                    </div>
+                    {missionData && (
+                        <>
+                            <div className={`${styles.sectionHeader} ${styles.fadeIn}`}>
+                                {missionData.title}
+                            </div>
+                            <div className={`${styles.contentBox} ${styles.missionContent} ${styles.fadeInRight}`}>
+                                <div dangerouslySetInnerHTML={{
+                                    __html: missionData.description.replace(/\n/g, '<br /><br />')
+                                }} />
+                            </div>
+                        </>
+                    )}
 
-                    <div className={`${styles.sectionHeader} ${styles.fadeIn}`}>Core Values</div>
-                    <div className={`${styles.coreValues} ${styles.scaleIn}`}>
-                        <img src={coreValueImage} alt="Core Values" className={styles.coreValuesImage} />
-                    </div>
+                    {coreValuesData && (
+                        <>
+                            <div className={`${styles.sectionHeader} ${styles.fadeIn}`}>
+                                {coreValuesData.title}
+                            </div>
+                            {coreValuesData.image_url ? (
+                                <div className={`${styles.coreValues} ${styles.scaleIn}`}>
+                                    <img
+                                        src={getFullUrl(coreValuesData.image_url)}
+                                        alt={coreValuesData.title}
+                                        className={styles.coreValuesImage}
+                                    />
+                                </div>
+                            ) : coreValuesData.description && (
+                                <div className={`${styles.contentBox} ${styles.fadeInLeft}`}>
+                                    <div dangerouslySetInnerHTML={{
+                                        __html: coreValuesData.description.replace(/\n/g, '<br /><br />')
+                                    }} />
+                                </div>
+                            )}
+                        </>
+                    )}
                 </section>
             </div>
         </div>
