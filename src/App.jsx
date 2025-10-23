@@ -33,7 +33,6 @@ import Doctorate from "./pages/Doctorate/PhdProgrammes.jsx";
 import Degree from "./pages/Degree/Degree.jsx";
 import Tenders from "./pages/Tenders/Tenders.jsx";
 import History from "./pages/History/History.jsx";
-import RecentUpdates from "./pages/RecentUpdates.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
 import NewsDetails from "./pages/Home/NewsDetails.jsx";
 import Canteen from "./pages/Canteen/Canteen.jsx";
@@ -55,8 +54,8 @@ import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx";
 import FingerPrintIssue1 from "./pages/FingerPrint/FingerPrint1.jsx";
 import FingerPrintIssue2 from "./pages/FingerPrint/FingerPrint2.jsx";
 import Webmasters from "./pages/webmasters.jsx";
-import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx"
-
+import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy/Privacy&Policy.jsx";
 import ExamNotice from "./pages/ExamNotice/ExamNotice.jsx";
 import Scholarship from './pages/Students-Section/Scholarship.jsx';
 import Forms from './pages/Forms/Forms.jsx';
@@ -246,11 +245,11 @@ function App() {
                 {/* Notices */}
                 <Route path="/magazine/fingerprint-vii-1" element={<FingerPrintIssue1 />} />
                 <Route path="/magazine/fingerprint-vii-2" element={<FingerPrintIssue2 />} />
-
                 <Route path="/notices/exam-notice-2" element={<ExamNotice />} />
 
                 {/*Webmasters*/}
                 <Route path="/webmasters" element={<Webmasters />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
             </Routes>
             <Footer />
