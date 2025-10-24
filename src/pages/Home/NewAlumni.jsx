@@ -6,7 +6,6 @@ const NewAlumni = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [activeIndex, setActiveIndex] = useState(0);
-	const [isPaused, setIsPaused] = useState(false);
 
 	useEffect(() => {
 		fetchAlumni();
@@ -19,7 +18,7 @@ const NewAlumni = () => {
 	}, [alumniData.length]);
 
 	useEffect(() => {
-		if (alumniData.length <= 1 || isPaused) return;
+		if (alumniData.length <= 1) return;
 
 		const interval = setInterval(() => {
 			setActiveIndex((prev) => {
@@ -31,7 +30,7 @@ const NewAlumni = () => {
 		}, 3000);
 
 		return () => clearInterval(interval);
-	}, [alumniData.length, isPaused]);
+	}, [alumniData.length]);
 
 	const fetchAlumni = async () => {
 		setLoading(true);
@@ -111,11 +110,7 @@ const NewAlumni = () => {
 	const items = alumniData.length;
 
 	return (
-		<div
-			className=""
-			onMouseEnter={() => setIsPaused(true)}
-			onMouseLeave={() => setIsPaused(false)}
-		>
+		<div className="">
 			<div className="text-center m-2 p-2">
 				<h2 className="text-4xl lg:text-5xl font-bold text-gray-700 dark:text-[#30709aff] mb-4 relative inline-block">
 					Our Alumni
