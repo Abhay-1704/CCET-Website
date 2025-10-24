@@ -36,6 +36,19 @@
 .update-item {
   display: inline-block;
   margin-right: 60px;
+  position: relative;
+}
+
+.update-item::after {
+  content: '|';
+  position: absolute;
+  right: -30px;
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.update-item:last-child::after {
+  display: none;
 }
 
 .new-tag {
@@ -79,5 +92,9 @@
 
   .update-item {
     margin-right: 30px;
+  }
+
+  .update-item::after {
+    right: -15px;
   }
 }

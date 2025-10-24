@@ -9,7 +9,7 @@ import Gallery from './Gallery'
 import EventCalendar from './EventCalendar'
 import bannerImg from "../../assets/home/banner.png"
 import Achievements from './Achievements';
-import RecentUpdates from "../RecentUpdates.jsx";
+import RecentUpdates from "./RecentUpdates.jsx";
 
 function Home() {
   return (
