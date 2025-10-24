@@ -141,18 +141,14 @@ export default function NewsPanel() {
           </button>
         </div>
         <div className="news-link-wrapper">
-          <button
-              className="news-link"
-              onClick={() => {
-                if (newsItems[activeIndex].link) {
-                  window.open(getFullUrl(newsItems[activeIndex].link), '_blank');
-                } else {
-                  navigate("/event-calendar");
-                }
-              }}
-          >
-            READ MORE
-          </button>
+            <button
+                className="news-link"
+                onClick={() => {
+                    window.open(getFullUrl(newsItems[activeIndex].link), '_blank');
+                }}
+            >
+                READ MORE
+            </button>
         </div>
       </div>
   );

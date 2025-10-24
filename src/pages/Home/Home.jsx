@@ -1,5 +1,5 @@
 import NoticePanel from './NoticePanel'
-import VisionMission from './LatestEvents'
+import VisionMission from './VissionMission.jsx'
 import NewsPanel from './NewsPanel'
 import NewsDetails from './NewsDetails'
 import Contact from './ContactUs'
@@ -9,7 +9,7 @@ import Gallery from './Gallery'
 import EventCalendar from './EventCalendar'
 import bannerImg from "../../assets/home/banner.png"
 import Achievements from './Achievements';
-import RecentUpdates from "../RecentUpdates.jsx";  
+import RecentUpdates from "../RecentUpdates.jsx";
 
 function Home() {
   return (
@@ -38,7 +38,7 @@ function Home() {
           <NewsPanel />
         </div>
       </div>
-
+        <EventCalendar />
       <NoticePanel />
       <Achievements />
       <Gallery />
