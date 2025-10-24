@@ -1,135 +1,155 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import styles from './SportsFacility.module.css';
 
-// Removed: import profileImage from '../../assets/CSE-Department/sarabjeet_singh.jpg';
-// Removed: import sportsBgImage from '../../assets/Sports/Sports-bg.jpg';
+import sportsBgImage from '../../assets/Sports/Sports-bg.jpg';
+
+const BASE_API_URL = 'https://ccet.ac.in/api/sports.php';
+const OFFICIAL_IMAGE_LINK_TYPE = 'official_image';
 
 const SportsFacility = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [carouselImages, setCarouselImages] = useState([]);
     const [teams, setTeams] = useState([]);
-    const [official, setOfficial] = useState(null);
-    const [athleticMeetPdfLink, setAthleticMeetPdfLink] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [officials, setOfficials] = useState([]);
+    const [athleticMeetLink, setAthleticMeetLink] = useState(null); // New state for PDF link
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Function to fetch data from a given API endpoint
-    const fetchData = async (url, setData, transform = (data) => data) => {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            setData(transform(data));
-        } catch (error) {
-            console.error(`Error fetching data from ${url}:`, error);
-            // Optionally set a component-wide error state
-            setError('Failed to load some data. Please try again.');
+    const getFullResourceUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+            return path;
         }
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
     };
 
     useEffect(() => {
-        const fetchAllData = async () => {
-            setIsLoading(true);
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
 
-            // 1. Fetch Gallery Images
-            await fetchData(
-                'https://ccet.ac.in/api/sports.php?entity=gallery',
-                setCarouselImages,
-                (data) => data.map(item => ({
-                    src: item.image_url,
-                    alt: item.image_alt,
-                    title: item.image_alt || 'Sports Facility Image'
-                }))
-            );
+            const fetchEntity = async (entity, extraQuery = '') => {
+                try {
+                    const response = await fetch(`${BASE_API_URL}?entity=${entity}&is_active=true${extraQuery}`);
+                    const result = await response.json();
 
-            // 2. Fetch Sports Official
-            await fetchData(
-                'https://ccet.ac.in/api/sports.php?entity=official',
-                setOfficial,
-                (data) => data.length > 0 ? data[0] : null // Assuming one official
-            );
+                    if (Array.isArray(result) && result.length > 0) {
+                        return result;
+                    } else if (result.success === false) {
+                        console.warn(`No active ${entity} found: ${result.error}`);
+                        return [];
+                    } else {
+                        return [];
+                    }
+                } catch (err) {
+                    console.error(`Error loading sports ${entity}:`, err);
+                    return [];
+                }
+            };
 
-            // 3. Fetch Teams
-            await fetchData(
-                'https://ccet.ac.in/api/sports.php?entity=teams',
-                setTeams,
-                (data) => data.map((item, index) => ({
-                    srNo: index + 1, // Using index+1 for Sr. No. in the absence of a 'srNo' field
-                    team: item.team_name,
-                    captain: item.captain_name,
-                    branch: item.branch
-                }))
-            );
+            const [galleryData, teamsData, officialsData, resultsLinksData, officialLinksData] = await Promise.all([
+                fetchEntity('gallery'),
+                fetchEntity('teams'),
+                fetchEntity('officials'),
+                // Fetch the specific 'results' link type
+                fetchEntity('links', '&link_type=results'),
+                // Fetch the official images link type for image lookup
+                fetchEntity('links', `&link_type=${OFFICIAL_IMAGE_LINK_TYPE}`)
+            ]);
 
-            // 4. Fetch PDF Link
-            await fetchData(
-                'https://ccet.ac.in/api/sports.php?entity=links',
-                setAthleticMeetPdfLink,
-                (data) => data.find(item => item.link_type === 'PDF')?.link_url || null // Find the first PDF link
-            );
+            const mappedGallery = galleryData.map(item => ({
+                src: getFullResourceUrl(item.image_url),
+                alt: item.image_alt || 'Sports Image',
+                title: item.image_alt || 'Sports Facility',
+            }));
 
-            setIsLoading(false);
+            const mappedTeams = teamsData.map((item, index) => ({
+                srNo: index + 1,
+                team: item.team_name,
+                captain: item.captain_name,
+                branch: item.branch,
+            }));
+
+            const mappedOfficials = officialsData.map(item => {
+                const imageLink = officialLinksData.find(link =>
+                    link.link_text && item.name &&
+                    link.link_text.trim().toLowerCase() === item.name.trim().toLowerCase()
+                );
+
+                const imageUrl = imageLink && imageLink.link_url
+                    ? getFullResourceUrl(imageLink.link_url)
+                    : 'https://via.placeholder.com/400x400?text=No+Image';
+
+                return {
+                    ...item,
+                    image: imageUrl,
+                };
+            });
+
+            const pdfLink = resultsLinksData.length > 0 ? resultsLinksData[0] : null;
+
+            setCarouselImages(mappedGallery);
+            setTeams(mappedTeams);
+            setOfficials(mappedOfficials);
+            setAthleticMeetLink(pdfLink);
+            setLoading(false);
+
+            if (mappedGallery.length === 0 && mappedTeams.length === 0 && mappedOfficials.length === 0 && !pdfLink) {
+                setError("No sports data (gallery, teams, officials, or results) could be loaded from the server.");
+            }
         };
 
-        fetchAllData();
+        fetchData();
     }, []);
 
-    // Carousel auto-slide effect
     useEffect(() => {
-        if (carouselImages.length > 0) {
-            const slideInterval = setInterval(() => {
-                setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-            }, 5000);
-
-            return () => clearInterval(slideInterval);
-        }
+        if (carouselImages.length === 0) return;
+        const slideInterval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+        }, 5000);
+        return () => clearInterval(slideInterval);
     }, [carouselImages.length]);
 
-    // Carousel navigation handlers
-    const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-    };
+    const nextSlide = () => { setCurrentSlide((prev) => (prev + 1) % carouselImages.length); };
+    const prevSlide = () => { setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length); };
+    const goToSlide = (index) => { setCurrentSlide(index); };
 
-    const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
-    };
-
-    const goToSlide = (index) => {
-        setCurrentSlide(index);
-    };
-
-    // Render loading or error state
-    if (isLoading) {
-        return <div className={styles.loading}>Loading Sports Facility data...</div>;
+    if (loading) {
+        return (
+            <div className={styles.pageWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Sports Facility<div className={styles.underline}></div></h1>
+                    </div>
+                    <div className="flex justify-center items-center py-16">
+                        <span className="text-gray-500">Loading sports data...</span>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
-    if (error) {
-        return <div className={styles.error}>{error}</div>;
+    if (error && carouselImages.length === 0 && teams.length === 0 && officials.length === 0 && !athleticMeetLink) {
+        return (
+            <div className={styles.pageWrapper}>
+                <div className={styles.container}>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Sports Facility<div className={styles.underline}></div></h1>
+                    </div>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                        <p className="text-red-700">⚠️ {error}</p>
+                    </div>
+                </div>
+            </div>
+        );
     }
-
-    // Official data for rendering (use fetched data or a placeholder/fallback)
-    const officialData = official || {
-        name: 'Dr. Sarabjeet Singh (Fallback)',
-        designation: 'Sports In-charge',
-        email: 'sports@ccet.ac.in',
-        mobile: '9463739413'
-    };
-
-    // Placeholder for the background image path
-    const sportsBgImagePlaceholder = '/placeholder-sports-bg.jpg';
-    // Placeholder for the profile image path
-    const profileImagePlaceholder = '/placeholder-profile.jpg';
-
 
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.backgroundImage}>
-                {/* Replaced sportsBgImage with placeholder */}
-                <img src={sportsBgImagePlaceholder} alt="Sports Background Placeholder" />
+                <img src={sportsBgImage} alt="Sports Background" />
             </div>
             <div className={styles.container}>
                 <div className={styles.header}>
@@ -139,51 +159,47 @@ const SportsFacility = () => {
                     </h1>
                 </div>
 
-                {/* Carousel Section */}
-                <div className={styles.carouselSection}>
-                    <div className={styles.carousel}>
-                        <div className={styles.carouselContainer}>
-                            {carouselImages.length > 0 ? (
-                                <>
-                                    <div
-                                        className={styles.carouselTrack}
-                                        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                                    >
-                                        {carouselImages.map((image, index) => (
-                                            <div key={index} className={styles.carouselSlide}>
-                                                <img
-                                                    src={image.src}
-                                                    alt={image.alt}
-                                                    className={styles.carouselImage}
-                                                />
-                                                <div className={styles.carouselCaption}>
-                                                    <h3>{image.title}</h3>
-                                                </div>
+                {carouselImages.length > 0 && (
+                    <div className={styles.carouselSection}>
+                        <div className={styles.carousel}>
+                            <div className={styles.carouselContainer}>
+                                <div
+                                    className={styles.carouselTrack}
+                                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                                >
+                                    {carouselImages.map((image, index) => (
+                                        <div key={index} className={styles.carouselSlide}>
+                                            <img
+                                                src={image.src}
+                                                alt={image.alt}
+                                                className={styles.carouselImage}
+                                                onError={(e) => {
+                                                    e.target.src = 'https://via.placeholder.com/1200x500?text=Image+Load+Error';
+                                                }}
+                                            />
+                                            <div className={styles.carouselCaption}>
+                                                <h3>{image.title}</h3>
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    ))}
+                                </div>
 
-                                    <button
-                                        className={`${styles.carouselNav} ${styles.carouselNavPrev}`}
-                                        onClick={prevSlide}
-                                        aria-label="Previous slide"
-                                    >
-                                        <ChevronLeft size={24} />
-                                    </button>
-                                    <button
-                                        className={`${styles.carouselNav} ${styles.carouselNavNext}`}
-                                        onClick={nextSlide}
-                                        aria-label="Next slide"
-                                    >
-                                        <ChevronRight size={24} />
-                                    </button>
-                                </>
-                            ) : (
-                                <p>No gallery images available.</p>
-                            )}
-                        </div>
+                                <button
+                                    className={`${styles.carouselNav} ${styles.carouselNavPrev}`}
+                                    onClick={prevSlide}
+                                    aria-label="Previous slide"
+                                >
+                                    <ChevronLeft size={24} />
+                                </button>
+                                <button
+                                    className={`${styles.carouselNav} ${styles.carouselNavNext}`}
+                                    onClick={nextSlide}
+                                    aria-label="Next slide"
+                                >
+                                    <ChevronRight size={24} />
+                                </button>
+                            </div>
 
-                        {carouselImages.length > 0 && (
                             <div className={styles.carouselDots}>
                                 {carouselImages.map((_, index) => (
                                     <button
@@ -194,11 +210,14 @@ const SportsFacility = () => {
                                     />
                                 ))}
                             </div>
-                        )}
+                        </div>
                     </div>
-                </div>
+                )}
+                {carouselImages.length === 0 && (
+                    <p className="text-center text-gray-500 py-4">No active gallery images available.</p>
+                )}
 
-                {/* Fit India Link Section */}
+
                 <div className={styles.fitIndiaSection}>
                     <div className={styles.fitIndiaLink}>
                         <Link to="/fit-india" className={styles.linkButton}>
@@ -207,86 +226,91 @@ const SportsFacility = () => {
                     </div>
                 </div>
 
-                {/* Teams Section */}
                 <div className={styles.teamsSection}>
                     <h2 className={styles.sectionTitle}>Existing Teams</h2>
                     {teams.length > 0 ? (
                         <div className={styles.tableContainer}>
                             <table className={styles.teamsTable}>
                                 <thead>
-                                    <tr>
-                                        <th>Sr. No</th>
-                                        <th>Team</th>
-                                        <th>Captain</th>
-                                        <th>Branch</th>
-                                    </tr>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Team</th>
+                                    <th>Captain</th>
+                                    <th>Branch</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {teams.map((team) => (
-                                        <tr key={team.srNo}>
-                                            <td>{team.srNo}</td>
-                                            <td>{team.team}</td>
-                                            <td>{team.captain}</td>
-                                            <td>{team.branch}</td>
-                                        </tr>
-                                    ))}
+                                {teams.map((team, index) => (
+                                    <tr key={index}>
+                                        <td>{team.srNo}</td>
+                                        <td>{team.team}</td>
+                                        <td>{team.captain}</td>
+                                        <td>{team.branch}</td>
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
                         </div>
                     ) : (
-                        <p>No existing teams information available.</p>
+                        <p className="text-center text-gray-500 py-4">No active teams data available.</p>
                     )}
                 </div>
 
-                {/* Official Section */}
                 <div className={styles.officialSection}>
                     <h2 className={styles.sectionTitle}>Sports Official(s)</h2>
-                    {officialData && (
-                        <div className={styles.officialCard}>
-                            <div className={styles.profileImageContainer}>
-                                <img
-                                    // Replaced profileImage with placeholder
-                                    src={profileImagePlaceholder}
-                                    alt={officialData.name}
-                                    className={styles.profileImage}
-                                />
-                            </div>
-                            <div className={styles.officialInfo}>
-                                <h3 className={styles.officialName}>{officialData.name}</h3>
-                                <p className={styles.officialTitle}>{officialData.designation}</p>
-                                <div className={styles.contactInfo}>
-                                    <div className={styles.contactItem}>
-                                        <strong>Email:</strong>
-                                        <a href={`mailto:${officialData.email}`} className={styles.contactLink}>
-                                            {officialData.email}
-                                        </a>
+                    <div className={styles.officialCardsContainer}>
+                        {officials.length > 0 ? (
+                            officials.map((official, index) => (
+                                <div key={index} className={styles.officialCard}>
+                                    <div className={styles.profileImageContainer}>
+                                        <img
+                                            src={official.image}
+                                            alt={official.name}
+                                            className={styles.profileImage}
+                                            onError={(e) => {
+                                                e.target.src = 'https://via.placeholder.com/200x200?text=No+Image';
+                                            }}
+                                        />
                                     </div>
-                                    <div className={styles.contactItem}>
-                                        <strong>Mobile:</strong>
-                                        <a href={`tel:${officialData.mobile}`} className={styles.contactLink}>
-                                            {officialData.mobile}
-                                        </a>
+                                    <div className={styles.officialInfo}>
+                                        <h3 className={styles.officialName}>{official.name}</h3>
+                                        <p className={styles.officialTitle}>{official.designation}</p>
+                                        <div className={styles.contactInfo}>
+                                            <div className={styles.contactItem}>
+                                                <Mail size={16} />
+                                                <a href={`mailto:${official.email}`} className={styles.contactLink}>
+                                                    {official.email || 'N/A'}
+                                                </a>
+                                            </div>
+                                            <div className={styles.contactItem}>
+                                                <Phone size={16} />
+                                                <a href={`tel:${official.mobile}`} className={styles.contactLink}>
+                                                    {official.mobile || 'N/A'}
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    )}
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-500 py-4 w-full">No active sports officials data available.</p>
+                        )}
+                    </div>
                 </div>
 
-                {/* Results Section */}
                 <div className={styles.resultsSection}>
                     <h2 className={styles.sectionTitle}>Official Athletic Meet Results</h2>
-                    {athleticMeetPdfLink ? (
+                    {athleticMeetLink && athleticMeetLink.link_url ? (
                         <div className={styles.pdfContainer}>
                             <embed
-                                src={athleticMeetPdfLink}
+                                src={getFullResourceUrl(athleticMeetLink.link_url)}
                                 type="application/pdf"
                                 className={styles.pdfViewer}
-                                title="Athletic Meet Results"
+                                title={athleticMeetLink.link_text || "Athletic Meet Results"}
                             />
                         </div>
                     ) : (
-                        <p>Athletic Meet Result PDF not available.</p>
+                        <p className="text-center text-gray-500 py-4">No official athletic meet results link available.</p>
                     )}
                 </div>
             </div>
@@ -295,7 +319,3 @@ const SportsFacility = () => {
 };
 
 export default SportsFacility;
-
-
-
-// SportsFacility.jsx
