@@ -98,9 +98,6 @@ export default function FAQ() {
         try {
             const response = await fetch('https://ccet.ac.in/api/faq.php?table=user_questions', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
                     question: newQuestion.trim(),
                 }),
