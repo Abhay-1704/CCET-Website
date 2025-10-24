@@ -92,14 +92,14 @@ const SharedMechLayout = ({ children, pageTitle }) => {
                 <div className={styles.heroRight}>
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={styles.statNumber}>35+</div>
+                            <div className={styles.statNumber}>25+</div>
                         </div>
                         <div className={styles.statLabel}>Years<br/>of Service</div>
                     </div>
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>22</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>22+</div>
                         </div>
                         <div className={styles.statLabel}>Faculty Members</div>
                     </div>
@@ -113,7 +113,7 @@ const SharedMechLayout = ({ children, pageTitle }) => {
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>450+</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>250+</div>
                         </div>
                         <div className={styles.statLabel}>Students</div>
                     </div>

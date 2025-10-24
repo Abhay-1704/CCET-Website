@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./index.css";
 
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
 import NoPage from "./pages/Nopage/NoPage.jsx";
 import FAQ from "./pages/FAQ/faq";
 import Nss from "./pages/Nss/Nss.jsx";
@@ -116,6 +117,7 @@ import ComputerCentre from "./pages/ComputerCentre/ComputerCentre.jsx";
 function App() {
     return (
         <HashRouter>
+            <ScrollToTop />
             <Header />
             <Routes>
                 {/* Home & Default */}

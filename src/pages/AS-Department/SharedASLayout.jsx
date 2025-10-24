@@ -92,14 +92,14 @@ const SharedASLayout = ({ children, pageTitle }) => {
                 <div className={styles.heroRight}>
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={styles.statNumber}>4</div>
+                            <div className={styles.statNumber}>6</div>
                         </div>
                         <div className={styles.statLabel}>Core<br/>Domains</div>
                     </div>
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>12+</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>5+</div>
                         </div>
                         <div className={styles.statLabel}>Faculty Members</div>
                     </div>

@@ -93,21 +93,21 @@ const SharedEceLayout = ({ children, pageTitle }) => {
 
             <div className={styles.statCircle}>
               <div className={styles.circle}>
-                <div className={`${styles.statNumber} ${styles.orange}`}>12</div>
+                <div className={`${styles.statNumber} ${styles.orange}`}>12+</div>
               </div>
               <div className={styles.statLabel}>Faculty Members</div>
             </div>
 
             <div className={styles.statCircle}>
               <div className={styles.circle}>
-                <div className={styles.statNumber}>10</div>
+                <div className={styles.statNumber}>10+</div>
               </div>
               <div className={styles.statLabel}>Specialized<br/>Labs</div>
             </div>
 
             <div className={styles.statCircle}>
               <div className={styles.circle}>
-                <div className={`${styles.statNumber} ${styles.orange}`}>500+</div>
+                <div className={`${styles.statNumber} ${styles.orange}`}>300+</div>
               </div>
               <div className={styles.statLabel}>Students</div>
             </div>
