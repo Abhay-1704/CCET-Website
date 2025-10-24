@@ -120,7 +120,7 @@ function Achievements() {
 
         <div
             id="achievements-scroll"
-            className="achievements-scroll h-96 overflow-hidden space-y-6 pr-2"
+            className="achievements-scroll h-[600px] overflow-hidden space-y-6 pr-2"
         >
           {Object.keys(groupedAchievements).length > 0 ? (
               Object.entries(groupedAchievements).map(([type, items]) => (

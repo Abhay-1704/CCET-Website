@@ -37,7 +37,7 @@ export default function VisionMission() {
 
 				<div
 					id="vision-mission-container"
-					className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-grow"
+					className="grid grid-cols-1 gap-8 flex-grow"
 				>
 					{/* Vision Section */}
 					<div
