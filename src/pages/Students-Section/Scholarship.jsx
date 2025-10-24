@@ -1,101 +1,136 @@
-// Scholarship.jsx
-
 import React, { useState, useEffect } from 'react';
 import './Scholarship.css';
-// import bhaskarImage from "../../assets/scholarship_BhaskarGupta.jpg"; // Remove static import
+
+const BASE_API_URL = 'https://ccet.ac.in/api/scholarships.php';
 
 const Scholarship = () => {
-    // State to hold the scholarship nodal officer's data
-    const [nodalOfficer, setNodalOfficer] = useState(null);
-    // State to hold the scholarship information link data
-    const [scholarshipInfo, setScholarshipInfo] = useState(null);
-    // State to handle loading status
-    const [isLoading, setIsLoading] = useState(true);
-    // State to handle errors
+    const [incharges, setIncharges] = useState([]);
+    const [infoLinks, setInfoLinks] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchScholarshipData = async () => {
-            try {
-                // Fetch Nodal Officer Data
-                const officerResponse = await fetch('https://ccet.ac.in/api/scholarships.php');
-                if (!officerResponse.ok) {
-                    throw new Error(`HTTP error! status: ${officerResponse.status}`);
-                }
-                const officerData = await officerResponse.json();
-                if (officerData.length > 0) {
-                    setNodalOfficer(officerData[0]);
-                }
+    const getFullResourceUrl = (path) => {
+        if (!path) return '';
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+            return path;
+        }
+        return `https://ccet.ac.in/${path.startsWith('/') ? path.slice(1) : path}`;
+    };
 
-                // Fetch Scholarship Information Link Data
-                const infoResponse = await fetch('https://ccet.ac.in/api/scholarships.php?table=info');
-                if (!infoResponse.ok) {
-                    throw new Error(`HTTP error! status: ${infoResponse.status}`);
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+
+            // Helper function to fetch data for a specific table
+            const fetchEntity = async (table, extraQuery = '') => {
+                try {
+                    const response = await fetch(`${BASE_API_URL}?table=${table}&is_active=true${extraQuery}`);
+                    const result = await response.json();
+
+                    if (Array.isArray(result) && result.length > 0) {
+                        return result;
+                    } else if (result.success === false) {
+                        if (result.error !== "No records found with that keyword" && result.error !== "No filter provided (id/email/keyword required)") {
+                            console.warn(`No active ${table} found: ${result.error}`);
+                        }
+                        return [];
+                    } else {
+                        return [];
+                    }
+                } catch (err) {
+                    console.error(`Error loading scholarship ${table}:`, err);
+                    return [];
                 }
-                const infoData = await infoResponse.json();
-                if (infoData.length > 0) {
-                    setScholarshipInfo(infoData[0]);
-                }
-            } catch (err) {
-                console.error("Failed to fetch scholarship data:", err);
-                setError("Failed to load scholarship details. Please try again later.");
-            } finally {
-                setIsLoading(false);
+            };
+
+            const [inchargeData, infoData] = await Promise.all([
+                fetchEntity('incharge'),
+                fetchEntity('info')
+            ]);
+
+            const mappedIncharges = inchargeData.map(item => ({
+                ...item,
+                imageUrl: item.image
+                    ? getFullResourceUrl(item.image)
+                    : 'https://via.placeholder.com/200x200?text=Incharge+Image',
+            }));
+
+            setIncharges(mappedIncharges);
+
+            const mappedInfoLinks = infoData.map(item => ({
+                title: item.title,
+                url: getFullResourceUrl(item.file_url),
+            }));
+            setInfoLinks(mappedInfoLinks);
+
+            setLoading(false);
+
+            if (inchargeData.length === 0 && infoData.length === 0) {
+                setError("No scholarship data could be loaded from the server.");
             }
         };
 
-        fetchScholarshipData();
-    }, []); // Empty dependency array means this runs once on mount
+        fetchData();
+    }, []);
 
-    if (isLoading) {
-        return <p>Loading scholarship information...</p>;
-    }
-
-    if (error) {
-        return <p className="error-message">{error}</p>;
+    if (loading) {
+        return (
+            <div className="scholarship-section" style={{textAlign: 'center', padding: '50px'}}>
+                <h1>Scholarships</h1>
+                <p>Loading scholarship data...</p>
+            </div>
+        );
     }
 
     return (
         <div>
             <section className="scholarship-section">
                 <h1>Scholarships</h1>
-                <h3>Scholarship Incharge</h3>
+                <h3>Scholarship Incharge{incharges.length > 1 ? 's' : ''}</h3>
 
-                {/* Dynamically render Nodal Officer Card */}
-                {nodalOfficer ? (
-                    <div className="scholarship-card">
-                        {/* Use the image URL from the API */}
-                        <img src={nodalOfficer.image} alt={nodalOfficer.name} />
-                        <div className="card-content">
-                            <h4>{nodalOfficer.name}</h4>
-                            <p><em>{nodalOfficer.designation}</em></p>
-                            <p>Email: <a href={`mailto:${nodalOfficer.email}`}>{nodalOfficer.email}</a></p>
+                {incharges.length > 0 ? (
+                    incharges.map((incharge, index) => (
+                        <div className="scholarship-card" key={index}>
+                            <img
+                                src={incharge.imageUrl}
+                                alt={incharge.name}
+                                onError={(e) => { e.target.src = 'https://via.placeholder.com/200x200?text=Incharge+Image'; }}
+                            />
+                            <div className="card-content">
+                                <h4>{incharge.name}</h4>
+                                <p><em>{incharge.designation}</em></p>
+                                <p>Email: <a href={`mailto:${incharge.email}`}>{incharge.email}</a></p>
+                            </div>
                         </div>
-                    </div>
+                    ))
                 ) : (
-                    <p>Nodal officer information not available.</p>
+                    error ? (
+                        <p style={{color: 'red'}}>Error: {error}</p>
+                    ) : (
+                        <p>No active scholarship incharge found.</p>
+                    )
                 )}
 
-                {/* Dynamically render Related Information */}
                 <div className="related-info">
                     <h3>Related Information:</h3>
-                    <ul>
-                        {scholarshipInfo ? (
-                            <li>
-                                <a 
-                                    // Use the file_url from the API
-                                    href={scholarshipInfo.file_url} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                >
-                                    {/* Use the title from the API */}
-                                    {scholarshipInfo.title}
-                                </a>
-                            </li>
-                        ) : (
-                            <li>Information link not available.</li>
-                        )}
-                    </ul>
+                    {infoLinks.length > 0 ? (
+                        <ul>
+                            {infoLinks.map((link, index) => (
+                                <li key={index}>
+                                    <a
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {link.title}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No related scholarship documents found.</p>
+                    )}
                 </div>
             </section>
 
