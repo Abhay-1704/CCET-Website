@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 // Icons - Added more icons for the new data fields from the API
 import { Mail, Phone, Building2, GraduationCap, Sparkles, MapPin } from 'lucide-react';
-import bannerImage from './Images/banner.png'; // Static banner image is kept
+import bannerImage from '../../assets/Principal/banner.png'; // Static banner image is kept
 
 const PrincipalDesk = () => {
   // State to hold the principal's data, loading status, and any errors

@@ -93,14 +93,14 @@ const SharedCivilLayout = ({ children, pageTitle }) => {
                 <div className={styles.heroRight}>
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={styles.statNumber}>35+</div>
+                            <div className={styles.statNumber}>25+</div>
                         </div>
                         <div className={styles.statLabel}>Years<br/>of Service</div>
                     </div>
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>25</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>15+</div>
                         </div>
                         <div className={styles.statLabel}>Faculty Members</div>
                     </div>
@@ -114,7 +114,7 @@ const SharedCivilLayout = ({ children, pageTitle }) => {
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>500+</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>300+</div>
                         </div>
                         <div className={styles.statLabel}>Students</div>
                     </div>

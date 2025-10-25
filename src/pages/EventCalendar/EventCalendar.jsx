@@ -1,315 +1,321 @@
-import React, { useState } from 'react';
-import styles from './EventCalendar.module.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { Search, Calendar, MapPin, Filter, X, Clock, ArrowUp, ArrowDown } from "lucide-react";
 
-const EventCalendar = () => {
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [hoveredCard, setHoveredCard] = useState(null);
-    const [selectedEvent, setSelectedEvent] = useState(null);
+const API_BASE_URL = 'https://ccet.ac.in/api/event-calender.php';
 
-    // Sample event data
-    const events = [
-        {
-            id: 1,
-            title: "Annual Tech Symposium 2025",
-            date: "March 15, 2025",
-            time: "9:00 AM - 5:00 PM",
-            category: "Conference",
-            description: "Join industry leaders and innovators for a day of cutting-edge technology discussions and networking opportunities.",
-            fullDescription: "The Annual Tech Symposium brings together the brightest minds in technology to discuss emerging trends, share innovative solutions, and network with industry professionals. This year's theme focuses on AI, blockchain, and sustainable technology solutions. Featured speakers include renowned experts from Silicon Valley, academic researchers, and startup founders who will share their insights on the future of technology.",
-            location: "CCET Main Auditorium",
-            organizer: "CCET Tech Department",
-            contact: "tech@ccet.edu.in",
-            registrationRequired: true,
-            capacity: "500 attendees",
-            speakers: ["Dr. Sarah Johnson - AI Expert", "Mark Thompson - Blockchain Specialist", "Prof. Raj Kumar - Sustainable Tech"],
-            image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=250&fit=crop"
-        },
-        {
-            id: 2,
-            title: "Student Research Presentation",
-            date: "March 20, 2025",
-            time: "2:00 PM - 6:00 PM",
-            category: "Academic",
-            description: "Students showcase their innovative research projects and compete for the best presentation award.",
-            fullDescription: "This annual event showcases the outstanding research work conducted by CCET students across various engineering disciplines. Students will present their final year projects, research papers, and innovative solutions to real-world problems. Judges from industry and academia will evaluate presentations, and winners will receive cash prizes and publication opportunities.",
-            location: "Engineering Block - Room 301",
-            organizer: "Academic Affairs Office",
-            contact: "academic@ccet.edu.in",
-            registrationRequired: false,
-            capacity: "200 attendees",
-            speakers: ["Students from all departments"],
-            image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=250&fit=crop"
-        },
-        {
-            id: 3,
-            title: "Industry-Academia Workshop",
-            date: "March 25, 2025",
-            time: "10:00 AM - 4:00 PM",
-            category: "Workshop",
-            description: "Collaborative workshop bringing together industry experts and academic researchers.",
-            fullDescription: "This workshop aims to bridge the gap between industry requirements and academic research. Industry experts will share current market trends and challenges, while academicians will present their latest research findings. Interactive sessions will help identify collaboration opportunities and joint research projects.",
-            location: "Conference Hall A",
-            organizer: "Industry Relations Cell",
-            contact: "industry@ccet.edu.in",
-            registrationRequired: true,
-            capacity: "150 attendees",
-            speakers: ["Industry Leaders", "Faculty Members", "Research Scholars"],
-            image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&h=250&fit=crop"
-        },
-        {
-            id: 4,
-            title: "AI and Machine Learning Seminar",
-            date: "April 2, 2025",
-            time: "11:00 AM - 3:00 PM",
-            category: "Seminar",
-            description: "Explore the latest developments in artificial intelligence and machine learning applications.",
-            fullDescription: "Join us for an in-depth exploration of artificial intelligence and machine learning technologies. This seminar will cover the latest developments in deep learning, neural networks, natural language processing, and computer vision. Participants will learn about practical applications in various industries and get hands-on experience with popular ML frameworks.",
-            location: "Computer Science Lab",
-            organizer: "CS Department",
-            contact: "cs@ccet.edu.in",
-            registrationRequired: true,
-            capacity: "100 attendees",
-            speakers: ["Dr. Amit Sharma - ML Researcher", "Priya Patel - Data Scientist"],
-            image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop"
-        },
-        {
-            id: 5,
-            title: "Career Fair 2025",
-            date: "April 10, 2025",
-            time: "9:00 AM - 6:00 PM",
-            category: "Career",
-            description: "Meet top recruiters and explore career opportunities in engineering and technology sectors.",
-            fullDescription: "The annual CCET Career Fair brings together leading companies and organizations looking to hire talented graduates. Students can explore job opportunities, internships, and career paths in various fields including software development, mechanical engineering, electrical engineering, and management. Representatives from top companies will conduct on-spot interviews and provide career guidance.",
-            location: "CCET Campus Ground",
-            organizer: "Placement Cell",
-            contact: "placements@ccet.edu.in",
-            registrationRequired: false,
-            capacity: "1000+ attendees",
-            speakers: ["HR Representatives from 50+ companies"],
-            image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=250&fit=crop"
-        },
-        {
-            id: 6,
-            title: "Green Technology Innovation Summit",
-            date: "April 15, 2025",
-            time: "9:30 AM - 5:30 PM",
-            category: "Conference",
-            description: "Sustainable technology solutions for a greener future - featuring expert panels and exhibitions.",
-            fullDescription: "This summit focuses on sustainable technology solutions and environmental innovation. Experts will discuss renewable energy technologies, waste management systems, green building materials, and sustainable manufacturing processes. The event includes exhibitions of green technology products, panel discussions on environmental policies, and workshops on implementing sustainable practices.",
-            location: "Environmental Sciences Building",
-            organizer: "Environmental Engineering Department",
-            contact: "env@ccet.edu.in",
-            registrationRequired: true,
-            capacity: "300 attendees",
-            speakers: ["Environmental Scientists", "Policy Makers", "Green Tech Entrepreneurs"],
-            image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&h=250&fit=crop"
-        }
-    ];
+const formatEventDate = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    const categories = ['All', 'Conference', 'Academic', 'Workshop', 'Seminar', 'Career'];
-
-    const filteredEvents = events.filter(event => {
-        const matchesCategory = selectedCategory === 'All' || event.category === selectedCategory;
-        const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event.category.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesCategory && matchesSearch;
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    const isUpcoming = date >= today;
+    const formattedDate = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
     });
 
-    const handleEventClick = (event) => {
-        setSelectedEvent(event);
-    };
+    return { day, month, year, isUpcoming, formattedDate };
+};
 
-    const handleBackToCalendar = () => {
-        setSelectedEvent(null);
-    };
+const EventCard = React.memo(({ event }) => {
+    const { day, month, formattedDate, year, isUpcoming } = formatEventDate(event.date);
 
-    const EventDetailsPage = ({ event, onBack }) => (
-        <div className={styles.eventDetailsContainer}>
-            <button className={styles.backButton} onClick={onBack}>
-                ← Back to Events Calendar
-            </button>
-
-            <div className={styles.eventDetailsHeader}>
-                <img
-                    src={event.image}
-                    alt={event.title}
-                    className={styles.eventDetailsImage}
-                />
-                <div className={styles.eventDetailsOverlay}>
-                    <span className={styles.eventDetailsCategoryBadge}>{event.category}</span>
-                    <h1 className={styles.eventDetailsTitle}>{event.title}</h1>
-                    <div className={styles.eventDetailsBasicInfo}>
-                        <div className={styles.eventDetailsInfoItem}>
-                            <span className={styles.eventDetailsIcon}>📅</span>
-                            <span>{event.date} at {event.time}</span>
-                        </div>
-                        <div className={styles.eventDetailsInfoItem}>
-                            <span className={styles.eventDetailsIcon}>📍</span>
-                            <span>{event.location}</span>
-                        </div>
-                        <div className={styles.eventDetailsInfoItem}>
-                            <span className={styles.eventDetailsIcon}>👥</span>
-                            <span>{event.capacity}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className={styles.eventDetailsContent}>
-                <div className={styles.eventDetailsMain}>
-                    <section className={styles.eventDetailsSection}>
-                        <h2 className={styles.eventDetailsSectionTitle}>About This Event</h2>
-                        <p className={styles.eventDetailsDescription}>{event.fullDescription}</p>
-                    </section>
-
-                    <section className={styles.eventDetailsSection}>
-                        <h2 className={styles.eventDetailsSectionTitle}>Speakers & Presenters</h2>
-                        <ul className={styles.eventDetailsSpeakersList}>
-                            {event.speakers.map((speaker, index) => (
-                                <li key={index} className={styles.eventDetailsSpeaker}>{speaker}</li>
-                            ))}
-                        </ul>
-                    </section>
-
-                    <section className={styles.eventDetailsSection}>
-                        <h2 className={styles.eventDetailsSectionTitle}>Event Details</h2>
-                        <div className={styles.eventDetailsGrid}>
-                            <div className={styles.eventDetailsGridItem}>
-                                <strong>Organizer:</strong> {event.organizer}
+    return (
+        <div className="w-full sm:w-1/2 lg:w-1/3 p-2">
+            <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 overflow-hidden h-full flex flex-col">
+                <div className="p-4 flex-grow">
+                    <div className="flex justify-between items-start mb-3">
+                        <div className="flex items-center space-x-3">
+                            <div className={`text-center rounded-lg p-2 ${isUpcoming ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`} style={{ minWidth: '50px' }}>
+                                <div className="font-bold text-lg leading-none">{day}</div>
+                                <div className="text-xs uppercase leading-none">{month}</div>
                             </div>
-                            <div className={styles.eventDetailsGridItem}>
-                                <strong>Contact:</strong> {event.contact}
-                            </div>
-                            <div className={styles.eventDetailsGridItem}>
-                                <strong>Registration:</strong> {event.registrationRequired ? 'Required' : 'Not Required'}
-                            </div>
-                            <div className={styles.eventDetailsGridItem}>
-                                <strong>Capacity:</strong> {event.capacity}
+                            <div>
+                                <div className="text-sm font-medium text-gray-700">{formattedDate}</div>
+                                <div className="text-xs text-gray-500">{year}</div>
                             </div>
                         </div>
-                    </section>
-                </div>
 
-                <div className={styles.eventDetailsSidebar}>
-                    <div className={styles.eventDetailsCard}>
-                        <h3 className={styles.eventDetailsCardTitle}>Quick Info</h3>
-                        <div className={styles.eventDetailsQuickInfo}>
-                            <div className={styles.eventDetailsQuickInfoItem}>
-                                <span className={styles.eventDetailsIcon}>📅</span>
-                                <div>
-                                    <strong>{event.date}</strong>
-                                    <br />
-                                    <small>{event.time}</small>
-                                </div>
-                            </div>
-                            <div className={styles.eventDetailsQuickInfoItem}>
-                                <span className={styles.eventDetailsIcon}>📍</span>
-                                <div>
-                                    <strong>Location</strong>
-                                    <br />
-                                    <small>{event.location}</small>
-                                </div>
-                            </div>
-                            <div className={styles.eventDetailsQuickInfoItem}>
-                                <span className={styles.eventDetailsIcon}>✉️</span>
-                                <div>
-                                    <strong>Contact</strong>
-                                    <br />
-                                    <small>{event.contact}</small>
-                                </div>
-                            </div>
-                        </div>
+                        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${isUpcoming ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {isUpcoming ? 'Upcoming' : 'Past'}
+                        </span>
                     </div>
 
-                    <div className={styles.eventDetailsCard}>
-                        <h3 className={styles.eventDetailsCardTitle}>Actions</h3>
-                        <button className={styles.eventDetailsActionButton}>
-                            Register for Event
-                        </button>
-                        <button className={styles.eventDetailsActionButtonSecondary}>
-                            Add to Calendar
-                        </button>
-                        <button className={styles.eventDetailsActionButtonSecondary}>
-                            Share Event
-                        </button>
-                    </div>
+                    <h3 className="text-lg font-extrabold text-gray-900 mb-1 leading-tight">
+                        {event.title}
+                    </h3>
+
+                    {event.location && (
+                        <div className="flex items-center text-sm text-gray-600 mb-2">
+                            <MapPin size={14} className="mr-1 text-indigo-500" />
+                            <span className="truncate">{event.location}</span>
+                        </div>
+                    )}
+
+                    {event.description && (
+                        <p className="text-gray-500 text-sm mb-3 line-clamp-2">
+                            {event.description}
+                        </p>
+                    )}
                 </div>
+
+                {event.event_type && (
+                    <div className="p-4 pt-0 border-t border-gray-100">
+                        <span className="inline-flex items-center px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-full">
+                            <Filter size={10} className="mr-1" />
+                            {event.event_type}
+                        </span>
+                    </div>
+                )}
             </div>
         </div>
     );
+});
 
-    if (selectedEvent) {
-        return <EventDetailsPage event={selectedEvent} onBack={handleBackToCalendar} />;
+const EventCalendarPage = () => {
+    const [events, setEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedEventType, setSelectedEventType] = useState("");
+    const [eventTypes, setEventTypes] = useState([]);
+    const [filterView, setFilterView] = useState("all"); // all, upcoming, past
+    const [showFilters, setShowFilters] = useState(false); // For mobile menu toggle
+
+    const fetchEvents = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${API_BASE_URL}?is_active=true`);
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                setEvents(data);
+                const types = [...new Set(data.map(e => e.event_type).filter(Boolean))];
+                setEventTypes(types);
+            } else if (data && data.success === false) {
+                setError(data.error || "Failed to load events");
+            } else {
+                setError("Received unexpected data format from the server.");
+            }
+        } catch (err) {
+            setError("Error loading events. Check network connection.");
+            console.error("Event fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchEvents();
+    }, [fetchEvents]);
+
+    const filterEvents = useCallback(() => {
+        let filtered = [...events];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // 1. Apply time filter
+        if (filterView === "upcoming") {
+            filtered = filtered.filter(event => new Date(event.date) >= today);
+        } else if (filterView === "past") {
+            filtered = filtered.filter(event => new Date(event.date) < today);
+        }
+
+        if (selectedEventType) {
+            filtered = filtered.filter(event => event.event_type === selectedEventType);
+        }
+
+        if (searchTerm) {
+            const term = searchTerm.toLowerCase();
+            filtered = filtered.filter(event =>
+                event.title?.toLowerCase().includes(term) ||
+                event.description?.toLowerCase().includes(term) ||
+                event.location?.toLowerCase().includes(term)
+            );
+        }
+
+        setFilteredEvents(filtered);
+    }, [events, searchTerm, selectedEventType, filterView]);
+
+    useEffect(() => {
+        filterEvents();
+    }, [filterEvents]);
+
+    const clearFilters = () => {
+        setSearchTerm("");
+        setSelectedEventType("");
+        setFilterView("all");
+    };
+
+    const hasActiveFilters = searchTerm || selectedEventType || filterView !== "all";
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-3"></div>
+                    <p className="text-gray-600">Loading events...</p>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <h1 className={styles.title}>
-                    Latest News
-                    <div className={styles.underline}></div>
-                </h1>
+        <div className="min-h-screen bg-gray-50 pb-10">
+            <div className="bg-white shadow-md">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-1">Event Calendar</h1>
+                    <p className="text-gray-500">Discover upcoming and past events</p>
+                </div>
             </div>
 
-            <div className={styles.filtersContainer}>
-                {categories.map(category => (
-                    <button
-                        key={category}
-                        className={`${styles.filterButton} ${selectedCategory === category ? styles.filterButtonActive : ''}`}
-                        onClick={() => setSelectedCategory(category)}
-                    >
-                        {category}
-                    </button>
-                ))}
-
-                <input
-                    type="text"
-                    placeholder="Search events..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={styles.searchBox}
-                />
-            </div>
-
-            {filteredEvents.length > 0 ? (
-                <div className={styles.eventsGrid}>
-                    {filteredEvents.map((event, index) => (
-                        <div
-                            key={event.id}
-                            className={`${styles.eventCard} ${styles.cardAnimation} ${hoveredCard === event.id ? styles.eventCardHover : ''}`}
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                            onMouseEnter={() => setHoveredCard(event.id)}
-                            onMouseLeave={() => setHoveredCard(null)}
-                            onClick={() => handleEventClick(event)}
+            <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                    {/* Filter Toggle for Mobile */}
+                    <div className="lg:hidden flex justify-between items-center mb-3">
+                        <button
+                            onClick={() => setShowFilters(!showFilters)}
+                            className="flex items-center px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition"
                         >
-                            <img
-                                src={event.image}
-                                alt={event.title}
-                                className={styles.eventImage}
-                            />
-                            <div className={styles.eventContent}>
-                                <span className={styles.eventCategory}>{event.category}</span>
-                                <h3 className={styles.eventTitle}>{event.title}</h3>
-                                <p className={styles.eventDate}>{event.date}</p>
-                                <p className={styles.eventDescription}>{event.description}</p>
-                                <div className={styles.eventLocation}>
-                                    <span>📍</span>
-                                    <span>{event.location}</span>
+                            <Filter size={16} className="mr-2" />
+                            {showFilters ? 'Hide Filters' : 'Show Filters'}
+                        </button>
+                        {hasActiveFilters && (
+                            <button
+                                onClick={clearFilters}
+                                className="text-sm text-gray-500 hover:text-red-600 flex items-center"
+                                title="Clear all filters"
+                            >
+                                <X size={16} className="mr-1" />
+                                Clear
+                            </button>
+                        )}
+                    </div>
+
+                    <div className={`lg:flex lg:items-end lg:space-x-4 transition-all duration-300 ${showFilters ? 'block' : 'hidden'}`}>
+                        {/* Search Bar */}
+                        <div className="flex-1 min-w-0 mb-3 lg:mb-0">
+                            <label htmlFor="search" className="block text-sm font-semibold text-gray-700 sr-only">Search Events</label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Search size={18} className="text-gray-400" />
+                                </div>
+                                <input
+                                    id="search"
+                                    type="text"
+                                    className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm placeholder-gray-500"
+                                    placeholder="Search by title, description, or location..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="w-full lg:w-1/4 mb-3 lg:mb-0">
+                            <label htmlFor="eventType" className="block text-sm font-semibold text-gray-700 sr-only">Event Type</label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Filter size={18} className="text-gray-400" />
+                                </div>
+                                <select
+                                    id="eventType"
+                                    className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-sm appearance-none"
+                                    value={selectedEventType}
+                                    onChange={(e) => setSelectedEventType(e.target.value)}
+                                >
+                                    <option value="">All Types</option>
+                                    {eventTypes.map(type => (
+                                        <option key={type} value={type}>{type}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <ArrowDown size={14} className="text-gray-400" />
                                 </div>
                             </div>
                         </div>
+
+                        <div className="w-full lg:w-auto mb-3 lg:mb-0">
+                            <label className="block text-sm font-semibold text-gray-700 sr-only">Time Period</label>
+                            <div className="flex rounded-lg shadow-sm overflow-hidden">
+                                {["all", "upcoming", "past"].map((view) => (
+                                    <button
+                                        key={view}
+                                        type="button"
+                                        className={`px-3 py-2 text-sm font-medium transition duration-150 ease-in-out ${
+                                            filterView === view
+                                                ? "bg-indigo-600 text-white shadow-inner"
+                                                : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
+                                        } ${view === 'all' ? 'rounded-l-lg' : ''} ${view === 'past' ? 'rounded-r-lg' : ''} ${view !== 'all' && view !== 'past' ? 'border-r border-l' : ''}`}
+                                        onClick={() => setFilterView(view)}
+                                    >
+                                        {view.charAt(0).toUpperCase() + view.slice(1)}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {hasActiveFilters && (
+                            <div className="hidden lg:block w-auto">
+                                <button
+                                    className="p-2.5 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 hover:text-red-600 transition"
+                                    onClick={clearFilters}
+                                    title="Clear all filters"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-2 text-sm text-gray-500">
+                        {hasActiveFilters
+                            ? `Showing ${filteredEvents.length} of ${events.length} total events.`
+                            : `${events.length} total events.`
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                {error && (
+                    <div className="p-4 rounded-lg bg-red-100 text-red-800 border border-red-200" role="alert">
+                        <p className="font-semibold">Error:</p> {error}
+                    </div>
+                )}
+
+                {filteredEvents.length === 0 && !error && (
+                    <div className="text-center py-16 bg-white rounded-xl shadow-lg mt-4">
+                        <Calendar size={64} className="text-gray-300 mx-auto mb-4" />
+                        <h4 className="text-xl font-semibold text-gray-700">No events found</h4>
+                        <p className="text-gray-500 mt-2">
+                            {hasActiveFilters
+                                ? "Try adjusting your filters to see more events."
+                                : "There are no events available at the moment."}
+                        </p>
+                        {hasActiveFilters && (
+                            <button className="mt-4 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" onClick={clearFilters}>
+                                Clear Filters
+                            </button>
+                        )}
+                    </div>
+                )}
+
+                <div className="flex flex-wrap -m-2 mt-4">
+                    {filteredEvents.map((event) => (
+                        <EventCard key={event.id} event={event} />
                     ))}
                 </div>
-            ) : (
-                <div className={styles.noResults}>
-                    No events found matching your criteria.
-                </div>
-            )}
+            </div>
         </div>
     );
 };
 
-export default EventCalendar;
+export default EventCalendarPage;

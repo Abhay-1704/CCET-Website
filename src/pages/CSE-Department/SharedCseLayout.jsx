@@ -99,21 +99,21 @@ const SharedCseLayout = ({ children, pageTitle }) => {
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>14</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>10+</div>
                         </div>
                         <div className={styles.statLabel}>Faculty Members</div>
                     </div>
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={styles.statNumber}>15</div>
+                            <div className={styles.statNumber}>15+</div>
                         </div>
                         <div className={styles.statLabel}>Specialized<br/>Labs</div>
                     </div>
 
                     <div className={styles.statCircle}>
                         <div className={styles.circle}>
-                            <div className={`${styles.statNumber} ${styles.yellow}`}>600+</div>
+                            <div className={`${styles.statNumber} ${styles.yellow}`}>400+</div>
                         </div>
                         <div className={styles.statLabel}>Students</div>
                     </div>

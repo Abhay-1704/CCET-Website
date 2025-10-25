@@ -6,14 +6,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./index.css";
 
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
 import NoPage from "./pages/Nopage/NoPage.jsx";
 import FAQ from "./pages/FAQ/faq";
 import Nss from "./pages/Nss/Nss.jsx";
 import VisionMission from "./pages/vision-mission/vision-mission.jsx";
 import Infrastructure from "./pages/infrastructure/infrastructure.jsx";
 import Convocation from "./pages/Convocation/Convocation.jsx";
-import AntiRagging from "./pages/Students-Section/Student-Welfare/Anti-Ragging/AntiRagging.jsx";
-import AntiRaggingCommittee from "./pages/Students-Section/Student-Welfare/Anti-Ragging-Committee/AntiRaggingCommittee.jsx";
+import AntiRagging from "./pages/Anti-Ragging/AntiRagging.jsx";
+import AntiRaggingCommittee from "./pages/Anti-Ragging-Committee/AntiRaggingCommittee.jsx";
 import Academicheads from "./pages/AcadmicHeads/Academicheads.jsx";
 import Courses from "./pages/Courses/Courses.jsx";
 import Principal from "./pages/Principal/Principal.jsx";
@@ -24,10 +25,9 @@ import AcademicProspectusPage from "./pages/Academic-Prospectus/AcademicProspect
 import ContactUs from "./pages/ContactUs/ContactUs.jsx";
 import NIRF from "./pages/NIRF/nirf.jsx";
 import HelpDesk from "./pages/HelpDesk/HelpDesk.jsx";
-import Examinations from "./pages/Examinations/Examinations.jsx";
 import ECell from "./pages/ECell/ECell.jsx";
 import SportsFacility from "./pages/Sports/SportsFacility.jsx";
-import FitIndiaPage from "./pages/Students-Section/Academics/FitIndia/FitIndiaPage.jsx";
+import FitIndiaPage from "./pages/FitIndia/FitIndiaPage.jsx";
 import Leet from "./pages/Degree-PU-LEET/Degree-pu-leet.jsx";
 import Doctorate from "./pages/Doctorate/PhdProgrammes.jsx";
 import Degree from "./pages/Degree/Degree.jsx";
@@ -39,13 +39,13 @@ import Canteen from "./pages/Canteen/Canteen.jsx";
 import AdmissionNotices from "./pages/AdmissionNotices/AdmissionNotices.jsx";
 import EventCalendar from "./pages/EventCalendar/EventCalendar.jsx";
 import AcademicCalendar from "./pages/AcademicCalendar/AcademicCalendar.jsx";
-import StudentCouncil from "./pages/Students-Section/StudentCouncil.jsx";
+import StudentCouncil from "./pages/Student-Council/StudentCouncil.jsx";
 import EoaLatest from "./pages/MandatoryDisclosure/EoaLatest.jsx";
 import Partone from "./pages/MandatoryDisclosure/ApplicationPart-1.jsx";
 import Parttwo from "./pages/MandatoryDisclosure/ApplicationPart-2.jsx";
 import DeficiencyReport from "./pages/MandatoryDisclosure/DeficiencyReport.jsx";
 import OldEOA from "./pages/MandatoryDisclosure/OldEoas.jsx";
-import CampusVirtualTour from "./pages/CampusVirtualTour.jsx";
+import CampusVirtualTour from "./pages/CampusTour/CampusVirtualTour.jsx";
 import Classrooms from "./pages/Classrooms/Classrooms.jsx";
 import CampusMap from "./pages/CampusMap/CampusMap.jsx";
 import StudentWelfare from "./pages/StudentWelfare/StudentWelfare.jsx";
@@ -53,11 +53,11 @@ import BoysHostel from "./pages/BoysHostel/BoysHostel.jsx";
 import GirlsHostel from "./pages/GirlsHostel/GirlsHostel.jsx";
 import FingerPrintIssue1 from "./pages/FingerPrint/FingerPrint1.jsx";
 import FingerPrintIssue2 from "./pages/FingerPrint/FingerPrint2.jsx";
-import Webmasters from "./pages/webmasters.jsx";
+import Webmasters from "./pages/Webmasters/webmasters.jsx";
 import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy/Privacy&Policy.jsx";
 import ExamNotice from "./pages/ExamNotice/ExamNotice.jsx";
-import Scholarship from './pages/Students-Section/Scholarship.jsx';
+import Scholarship from './pages/Scholarship/Scholarship.jsx';
 import Forms from './pages/Forms/Forms.jsx';
 import NBA_CSE from "./pages/NBA/NBA_CSE";
 import NBA_ECE from "./pages/NBA/NBA_ECE";
@@ -117,6 +117,7 @@ import ComputerCentre from "./pages/ComputerCentre/ComputerCentre.jsx";
 function App() {
     return (
         <HashRouter>
+            <ScrollToTop />
             <Header />
             <Routes>
                 {/* Home & Default */}
@@ -174,7 +175,6 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/prospectus" element={<AcademicProspectusPage />} />
                 <Route path="/academics/nirf" element={<NIRF />} />
-                <Route path="/examination" element={<Examinations />} />
                 <Route path="/academics/calendar" element={<AcademicCalendar />} />
                 <Route path="/academics/eoa-report-latest" element={<EoaLatest />} />
                 <Route path="/academics/application-part-1" element={<Partone />} />
