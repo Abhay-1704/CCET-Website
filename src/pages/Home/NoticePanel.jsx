@@ -143,7 +143,7 @@ export default function NoticePanel() {
 
           <div className="text-center mt-8">
             <button
-                onClick={() => navigate("/news")}
+                onClick={() => navigate("/notices")}
                 className="inline-block bg-yellow-500 text-black font-bold px-6 py-3 rounded-lg shadow-md hover:bg-yellow-600 transition-colors duration-300"
                 style={{ fontSize: "1.1rem" }}
             >

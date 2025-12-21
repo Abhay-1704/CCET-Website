@@ -34,7 +34,7 @@ import Degree from "./pages/Degree/Degree.jsx";
 import Tenders from "./pages/Tenders/Tenders.jsx";
 import History from "./pages/History/History.jsx";
 import StudentChaptersandClubs from "./pages/StudentChaptersandClubs/StudentChaptersandClubs.jsx";
-import NewsDetails from "./pages/Home/NewsDetails.jsx";
+import NoticeDetails from "./pages/Home/NoticeDetails.jsx";
 import Canteen from "./pages/Canteen/Canteen.jsx";
 import AdmissionNotices from "./pages/AdmissionNotices/AdmissionNotices.jsx";
 import EventCalendar from "./pages/EventCalendar/EventCalendar.jsx";
@@ -195,7 +195,7 @@ function App() {
                 <Route path="/ecell" element={<ECell />} />
 
                 {/* News */}
-                <Route path="/news" element={<NewsDetails />} />
+                <Route path="/notices" element={<NoticeDetails />} />
 
                 {/* ECE Department */}
                 <Route path="/academics/ece/overview" element={<EceOverview />} />
