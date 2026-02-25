@@ -59,7 +59,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy/Privacy&Policy.jsx";
 import ExamNotice from "./pages/ExamNotice/ExamNotice.jsx";
 import Scholarship from "./pages/Scholarship/Scholarship.jsx";
 import Forms from "./pages/Forms/Forms.jsx";
-import Rti from "./pages/Rti/Rti.jsx";
+import Rti from "./pages/RTI/Rti.jsx";
 import Downloads from "./pages/Downloads/Downloads.jsx"
 import NBA_CSE from "./pages/NBA/NBA_CSE";
 import NBA_ECE from "./pages/NBA/NBA_ECE";
