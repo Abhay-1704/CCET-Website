@@ -57,8 +57,10 @@ import Webmasters from "./pages/Webmasters/webmasters.jsx";
 import OfficialCCET from "./pages/Officials-Page/OfficialsPage.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy/Privacy&Policy.jsx";
 import ExamNotice from "./pages/ExamNotice/ExamNotice.jsx";
-import Scholarship from './pages/Scholarship/Scholarship.jsx';
-import Forms from './pages/Forms/Forms.jsx';
+import Scholarship from "./pages/Scholarship/Scholarship.jsx";
+import Forms from "./pages/Forms/Forms.jsx";
+import Rti from "./pages/Rti/Rti.jsx";
+import Downloads from "./pages/Downloads/Downloads.jsx"
 import NBA_CSE from "./pages/NBA/NBA_CSE";
 import NBA_ECE from "./pages/NBA/NBA_ECE";
 import NBA_MECH from "./pages/NBA/NBA_MECH";
@@ -124,6 +126,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/event-calendar" element={<EventCalendar />} />
                 <Route path="*" element={<NoPage />} />
+                <Route path="/rti" element={<Rti />} />
+                <Route path="/downloads" element={<Downloads />} />
 
                 {/* Static Pages */}
                 <Route path="/faq" element={<FAQ />} />
