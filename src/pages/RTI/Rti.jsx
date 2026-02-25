@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./RTI.module.css";
+import styles from "./Rti.module.css";
 
 const RTI = () => {
     const [documents, setDocuments] = useState([]);
